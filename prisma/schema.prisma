@@ -1,0 +1,414 @@
+// Ápice 360 — schema de dados do site institucional + painel de administração.
+// Padrão de i18n: tabelas de tradução relacionais (<Model>Translation) em vez de
+// colunas _pt/_en, para permitir adicionar idiomas sem migrar tabelas de conteúdo
+// e para que o admin use um único componente <LocaleTabs> genérico.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Locale {
+  PT
+  EN
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+enum PageKey {
+  HOME
+  QUEM_SOMOS
+  SERVICOS
+  PORTFOLIO
+  BLOG
+  CONTACTO
+  AREA_ARQUITETO
+}
+
+enum ServiceType {
+  LSF
+  REMODELACAO
+}
+
+enum ProjectCategory {
+  LSF
+  REMODELACAO
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum LeadType {
+  CONTACT
+  BUDGET
+  ARCHITECT_PARTNERSHIP
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+model User {
+  id           String     @id @default(cuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  role         Role       @default(EDITOR)
+  isActive     Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  blogPosts    BlogPost[] @relation("PostAuthor")
+}
+
+model SiteSettings {
+  id                 String                    @id @default("singleton")
+  phone              String?
+  whatsappCommercial String?
+  whatsappGeneral    String?
+  email              String?
+  addressLine        String?
+  addressCity        String?
+  addressPostalCode  String?
+  addressCountry     String?                   @default("Portugal")
+  mapEmbedUrl        String?
+  socialFacebook     String?
+  socialInstagram    String?
+  socialLinkedin     String?
+  socialYoutube      String?
+  defaultOgImageUrl  String?
+  updatedAt          DateTime                  @updatedAt
+  translations       SiteSettingsTranslation[]
+}
+
+model SiteSettingsTranslation {
+  id                    String       @id @default(cuid())
+  siteSettingsId        String
+  siteSettings          SiteSettings @relation(fields: [siteSettingsId], references: [id], onDelete: Cascade)
+  locale                Locale
+  footerDescription     String?
+  showroomText          String?
+  defaultSeoTitle       String?
+  defaultSeoDescription String?
+
+  @@unique([siteSettingsId, locale])
+}
+
+model Cta {
+  id           String           @id @default(cuid())
+  key          String           @unique
+  url          String
+  style        String?          @default("primary")
+  iconName     String?
+  isActive     Boolean          @default(true)
+  updatedAt    DateTime         @updatedAt
+  translations CtaTranslation[]
+}
+
+model CtaTranslation {
+  id     String @id @default(cuid())
+  ctaId  String
+  cta    Cta    @relation(fields: [ctaId], references: [id], onDelete: Cascade)
+  locale Locale
+  label  String
+
+  @@unique([ctaId, locale])
+}
+
+model PageSeo {
+  id           String               @id @default(cuid())
+  page         PageKey              @unique
+  ogImageUrl   String?
+  translations PageSeoTranslation[]
+}
+
+model PageSeoTranslation {
+  id          String  @id @default(cuid())
+  pageSeoId   String
+  pageSeo     PageSeo @relation(fields: [pageSeoId], references: [id], onDelete: Cascade)
+  locale      Locale
+  title       String
+  description String
+
+  @@unique([pageSeoId, locale])
+}
+
+/// Blocos de conteúdo genéricos e reutilizáveis: Home (parceiros/porquê-escolher/
+/// resultados/blog-preview), Quem Somos (história/método/valores), Serviços
+/// (modelo chave-na-mão), Contacto (triagem/showroom).
+model PageSection {
+  id           String                   @id @default(cuid())
+  page         PageKey
+  key          String
+  order        Int                      @default(0)
+  imageUrl     String?
+  iconName     String?
+  isActive     Boolean                  @default(true)
+  translations PageSectionTranslation[]
+  items        PageSectionItem[]
+
+  @@unique([page, key])
+}
+
+model PageSectionTranslation {
+  id         String      @id @default(cuid())
+  sectionId  String
+  section    PageSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  locale     Locale
+  eyebrow    String?
+  heading    String?
+  subheading String?
+  body       String?
+  ctaLabel   String?
+
+  @@unique([sectionId, locale])
+}
+
+/// Itens repetíveis dentro de uma secção: bullets do "porquê escolher", pilares
+/// do "método", "valores", features de serviços simples, etc.
+model PageSectionItem {
+  id           String                       @id @default(cuid())
+  sectionId    String
+  section      PageSection                  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  order        Int                          @default(0)
+  iconName     String?
+  imageUrl     String?
+  numberLabel  String?
+  translations PageSectionItemTranslation[]
+}
+
+model PageSectionItemTranslation {
+  id     String          @id @default(cuid())
+  itemId String
+  item   PageSectionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  locale Locale
+  title  String
+  body   String?
+
+  @@unique([itemId, locale])
+}
+
+model Stat {
+  id           String            @id @default(cuid())
+  iconName     String?
+  value        String
+  order        Int               @default(0)
+  isActive     Boolean           @default(true)
+  translations StatTranslation[]
+}
+
+model StatTranslation {
+  id     String @id @default(cuid())
+  statId String
+  stat   Stat   @relation(fields: [statId], references: [id], onDelete: Cascade)
+  locale Locale
+  label  String
+
+  @@unique([statId, locale])
+}
+
+model Partner {
+  id         String  @id @default(cuid())
+  name       String
+  logoUrl    String
+  websiteUrl String?
+  order      Int     @default(0)
+  isActive   Boolean @default(true)
+}
+
+model Testimonial {
+  id           String                   @id @default(cuid())
+  authorName   String
+  location     String?
+  avatarUrl    String?
+  rating       Int?                     @default(5)
+  showOnHome   Boolean                  @default(true)
+  order        Int                      @default(0)
+  isActive     Boolean                  @default(true)
+  translations TestimonialTranslation[]
+}
+
+model TestimonialTranslation {
+  id            String      @id @default(cuid())
+  testimonialId String
+  testimonial   Testimonial @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
+  locale        Locale
+  quote         String
+
+  @@unique([testimonialId, locale])
+}
+
+model Service {
+  id           String               @id @default(cuid())
+  type         ServiceType          @unique
+  imageUrl     String?
+  ctaKey       String?
+  translations ServiceTranslation[]
+  features     ServiceFeature[]
+}
+
+model ServiceTranslation {
+  id        String  @id @default(cuid())
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  locale    Locale
+  cardLabel String
+  title     String
+  intro     String
+
+  @@unique([serviceId, locale])
+}
+
+model ServiceFeature {
+  id           String                      @id @default(cuid())
+  serviceId    String
+  service      Service                     @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  order        Int                         @default(0)
+  iconName     String?
+  translations ServiceFeatureTranslation[]
+}
+
+model ServiceFeatureTranslation {
+  id        String         @id @default(cuid())
+  featureId String
+  feature   ServiceFeature @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  locale    Locale
+  title     String
+  body      String?
+
+  @@unique([featureId, locale])
+}
+
+model PortfolioProject {
+  id             String               @id @default(cuid())
+  slug           String               @unique
+  category       ProjectCategory
+  isFeatured     Boolean              @default(false)
+  locationLabel  String?
+  clientName     String?
+  clientLocation String?
+  coverImageUrl  String?
+  order          Int                  @default(0)
+  isPublished    Boolean              @default(true)
+  publishedAt    DateTime?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  translations   ProjectTranslation[]
+  images         ProjectImage[]
+}
+
+model ProjectTranslation {
+  id               String           @id @default(cuid())
+  projectId        String
+  project          PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  locale           Locale
+  title            String
+  shortDescription String?
+  challenge        String?
+  methodology      String?
+  result           String?
+  testimonialQuote String?
+
+  @@unique([projectId, locale])
+}
+
+model ProjectImage {
+  id        String           @id @default(cuid())
+  projectId String
+  project   PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  order     Int              @default(0)
+}
+
+model BlogCategory {
+  id           String                    @id @default(cuid())
+  order        Int                       @default(0)
+  translations BlogCategoryTranslation[]
+  posts        BlogPost[]
+}
+
+model BlogCategoryTranslation {
+  id         String       @id @default(cuid())
+  categoryId String
+  category   BlogCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  locale     Locale
+  name       String
+  slug       String
+
+  @@unique([categoryId, locale])
+  @@unique([locale, slug])
+}
+
+model BlogPost {
+  id               String                @id @default(cuid())
+  categoryId       String?
+  category         BlogCategory?         @relation(fields: [categoryId], references: [id])
+  authorId         String?
+  author           User?                 @relation("PostAuthor", fields: [authorId], references: [id])
+  featuredImageUrl String?
+  status           PostStatus            @default(DRAFT)
+  publishedAt      DateTime?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  translations     BlogPostTranslation[]
+  comments         BlogComment[]
+}
+
+model BlogPostTranslation {
+  id             String   @id @default(cuid())
+  postId         String
+  post           BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  locale         Locale
+  slug           String
+  title          String
+  excerpt        String?
+  bodyHtml       String
+  seoTitle       String?
+  seoDescription String?
+
+  @@unique([postId, locale])
+  @@unique([locale, slug])
+}
+
+model BlogComment {
+  id           String        @id @default(cuid())
+  postId       String
+  post         BlogPost      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorName   String
+  authorEmail  String
+  body         String
+  status       CommentStatus @default(PENDING)
+  likeCount    Int           @default(0)
+  dislikeCount Int           @default(0)
+  createdAt    DateTime      @default(now())
+}
+
+model LeadSubmission {
+  id         String     @id @default(cuid())
+  type       LeadType
+  name       String
+  email      String
+  phone      String?
+  message    String?
+  sourcePage String?
+  locale     Locale
+  status     LeadStatus @default(NEW)
+  createdAt  DateTime   @default(now())
+}

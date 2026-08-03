@@ -1,0 +1,174 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Colors — ported 1:1 from the Ápice 360 LP design system */
+  --color-primary: #ff5f00;
+  --color-on-primary: #ffffff;
+
+  --color-background: #181818;
+  --color-background-alt: #131313;
+  --color-on-background: #e5e2e1;
+
+  --color-surface: #1c1c1c;
+  --color-on-surface: #e5e2e1;
+  --color-surface-variant: #454544;
+  --color-on-surface-variant: #e4bfb1;
+
+  --color-surface-container-lowest: #171717;
+  --color-surface-container-low: #252423;
+  --color-surface-container: #2a2928;
+  --color-surface-container-high: #353534;
+  --color-surface-container-highest: #413f3e;
+
+  --color-outline: #ab8a7d;
+  --color-outline-variant: #5b4137;
+
+  /* Fonts — Montserrat (headings), Inter (body), JetBrains Mono (labels) */
+  --font-heading: var(--font-montserrat), sans-serif;
+  --font-sans: var(--font-inter), sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  /* Custom type scale from the LP */
+  --text-headline-xl: 4rem;
+  --text-headline-xl--line-height: 1.125;
+  --text-headline-xl--letter-spacing: -0.02em;
+  --text-headline-xl--font-weight: 800;
+
+  --text-headline-lg: 2.5rem;
+  --text-headline-lg--line-height: 1.2;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-md: 1.5rem;
+  --text-headline-md--line-height: 1.33;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.56;
+
+  --text-body-md: 1rem;
+  --text-body-md--line-height: 1.5;
+
+  --text-label-mono: 0.75rem;
+  --text-label-mono--line-height: 1.33;
+  --text-label-mono--letter-spacing: 0.05em;
+  --text-label-mono--font-weight: 500;
+
+  /* Keyframe-driven utilities */
+  --animate-pulse-glow: pulse-glow 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-bounce-slow: bounce-slow 2s ease-in-out infinite;
+  --animate-fade-up: fade-up 0.8s ease-out forwards;
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 15px rgba(255, 95, 0, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 35px rgba(255, 95, 0, 0.8);
+  }
+}
+
+@keyframes bounce-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+body {
+  background-color: var(--color-background);
+  background-image: radial-gradient(#333333 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--color-on-surface);
+  overflow-x: hidden;
+}
+
+@layer components {
+  /* Orange glow border used on feature cards */
+  .neon-border {
+    border: 1px solid rgba(255, 95, 0, 0.3);
+    box-shadow: 0 0 10px rgba(255, 95, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  .neon-border:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 20px rgba(255, 95, 0, 0.4);
+  }
+
+  /* Frosted glass panel */
+  .glass-effect {
+    backdrop-filter: blur(20px);
+    background: rgba(19, 19, 19, 0.7);
+  }
+
+  /* Orange-to-beige gradient headline text */
+  .gradient-text {
+    background: linear-gradient(90deg, #ff5f00 0%, #ffc099 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Floating label form fields */
+  .floating-label-container {
+    position: relative;
+  }
+  .floating-label-container input:focus + label,
+  .floating-label-container input:not(:placeholder-shown) + label,
+  .floating-label-container textarea:focus + label,
+  .floating-label-container textarea:not(:placeholder-shown) + label {
+    transform: translateY(-24px) scale(0.85);
+    color: var(--color-primary);
+  }
+  .floating-label-container label {
+    position: absolute;
+    left: 1rem;
+    top: 1rem;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    color: var(--color-outline);
+  }
+
+  /* Scroll-reveal base state — flipped to visible by the <Reveal> component */
+  .reveal-hidden {
+    opacity: 0;
+    transform: translateY(3rem);
+    transition:
+      opacity 0.8s ease-out,
+      transform 0.8s ease-out;
+  }
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-hidden,
+  .reveal-visible {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .animate-pulse-glow,
+  .animate-bounce-slow {
+    animation: none !important;
+  }
+}
