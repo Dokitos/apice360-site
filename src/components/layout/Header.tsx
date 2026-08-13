@@ -2,39 +2,39 @@ import Link from "next/link";
 import { getCta } from "@/lib/content";
 import { NAV_LINKS } from "@/lib/nav";
 import { Button } from "@/components/ui/Button";
+import { Logo } from "@/components/ui/Logo";
+import { RandomLetterSwap } from "@/components/ui/RandomLetterSwap";
 import { MobileNav } from "@/components/layout/MobileNav";
 
 export async function Header() {
   const budgetCta = await getCta("header_budget");
 
   return (
-    <header className="sticky top-0 z-50 glass-effect border-b border-outline-variant/10">
-      <div className="mx-auto flex h-[72px] max-w-[1280px] items-center justify-between px-5 md:px-20">
-        <Link href="/" className="flex items-center gap-2">
-          <span className="font-heading text-headline-md font-bold tracking-tighter text-primary">
-            ÁPICE 360
-          </span>
+    <header className="sticky top-0 z-50 border-b border-white/5 bg-background/40 backdrop-blur-xl">
+      <div className="mx-auto flex h-[76px] max-w-[1600px] items-center justify-between gap-6 px-5 md:px-10">
+        <Link href="/" className="shrink-0">
+          <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-5 xl:flex 2xl:gap-7">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="font-mono text-label-mono uppercase tracking-widest text-on-surface-variant transition-colors hover:text-primary"
+              className="whitespace-nowrap text-[13px] font-medium tracking-wide text-on-surface-variant transition-colors hover:text-primary"
             >
-              {link.label}
+              <RandomLetterSwap label={link.label} />
             </Link>
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden shrink-0 xl:block">
           {budgetCta ? (
-            <Button href={budgetCta.url} variant="cta-outline" size="md">
+            <Button href={budgetCta.url} variant="cta" size="sm">
               {budgetCta.label}
             </Button>
           ) : (
-            <Button href="/contacto" variant="cta-outline" size="md">
+            <Button href="/contacto" variant="cta" size="sm">
               Faça seu Orçamento
             </Button>
           )}

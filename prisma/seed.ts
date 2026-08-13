@@ -28,15 +28,15 @@ async function seedAdminAndSettings() {
   });
 
   const siteSettingsData = {
-    phone: "+351 210 000 000",
-    whatsappCommercial: "https://wa.me/351912345678",
-    whatsappGeneral: "https://wa.me/351912345678",
+    phone: "+351 924 107 846",
+    whatsappCommercial: "https://wa.me/351924107846",
+    whatsappGeneral: "https://wa.me/351924107846",
     email: "geral@apice360.com",
-    addressLine: "Rua da Engenharia, 123",
-    addressCity: "Lisboa",
-    addressPostalCode: "1000-100",
+    addressLine: "Rua Bento Gonçalves, 62",
+    addressCity: "Seixal",
+    addressPostalCode: "",
     addressCountry: "Portugal",
-    mapEmbedUrl: "https://www.google.com/maps?q=Lisboa,Portugal&output=embed",
+    mapEmbedUrl: "https://www.google.com/maps?q=Rua+Bento+Gonçalves+62+Seixal+Portugal&output=embed",
     socialFacebook: "https://facebook.com",
     socialInstagram: "https://instagram.com",
     socialLinkedin: "https://linkedin.com",
@@ -52,7 +52,7 @@ async function seedAdminAndSettings() {
     PT: {
       footerDescription:
         "Referência em tecnologia Light Steel Frame em Portugal. Engenharia de alta performance para construções duráveis e sustentáveis.",
-      showroomText: "Agende uma visita e conheça o nosso escritório e galpão de exposição.",
+      showroomText: "Venha conhecer o nosso showroom no Seixal e toda a estrutura em LSF de perto. Esperamos por si!",
       defaultSeoTitle: "Ápice 360 | Construção em Light Steel Frame de Alta Performance",
       defaultSeoDescription:
         "Estruturas em LSF - Light Steel Frame e Remodelações completas para transformar o seu espaço com tecnologia, rapidez e excelência.",
@@ -60,7 +60,7 @@ async function seedAdminAndSettings() {
     EN: {
       footerDescription:
         "A reference in Light Steel Frame technology in Portugal. High-performance engineering for durable, sustainable construction.",
-      showroomText: "Book a visit and get to know our office and showroom warehouse.",
+      showroomText: "Come visit our showroom in Seixal and see the LSF structure up close. We look forward to it!",
       defaultSeoTitle: "Ápice 360 | High-Performance Light Steel Frame Construction",
       defaultSeoDescription:
         "LSF - Light Steel Frame structures and full renovations to transform your space with technology, speed and excellence.",
@@ -79,9 +79,10 @@ async function seedAdminAndSettings() {
 }
 
 async function seedCtas() {
+  const WA = "https://wa.me/351924107846";
   const ctas = [
-    { key: "header_budget", url: "https://wa.me/351912345678", iconName: "bolt", labelPt: "Faça seu Orçamento", labelEn: "Get a Quote" },
-    { key: "home_hero", url: "https://wa.me/351912345678", iconName: "bolt", labelPt: "Fazer Simulação pelo WhatsApp", labelEn: "Get a Quote on WhatsApp" },
+    { key: "header_budget", url: WA, iconName: "bolt", labelPt: "Faça seu Orçamento", labelEn: "Get a Quote" },
+    { key: "home_hero", url: WA, iconName: "bolt", labelPt: "Falar com a Nossa Equipa", labelEn: "Talk to Our Team" },
     { key: "why_choose_services", url: "/servicos", iconName: "architecture", labelPt: "Conheça Nossos Serviços", labelEn: "See Our Services" },
     { key: "results_portfolio", url: "/portfolio", iconName: "photo_library", labelPt: "Conheça Nosso Portfólio", labelEn: "See Our Portfolio" },
     { key: "blog_see_more", url: "/blog", iconName: "menu_book", labelPt: "Ver Mais Artigos", labelEn: "See More Articles" },
@@ -93,7 +94,7 @@ async function seedCtas() {
     { key: "project_detail_budget", url: "/contacto", iconName: "bolt", labelPt: "Faça seu Orçamento", labelEn: "Get a Quote" },
     {
       key: "contact_whatsapp_commercial",
-      url: "https://wa.me/351912345678",
+      url: WA,
       iconName: "chat",
       labelPt: "Clique Aqui e Converse com a Nossa Equipa Comercial",
       labelEn: "Click Here to Chat with Our Sales Team",
@@ -103,7 +104,7 @@ async function seedCtas() {
   for (const cta of ctas) {
     await prisma.cta.upsert({
       where: { key: cta.key },
-      update: {},
+      update: { url: cta.url, iconName: cta.iconName },
       create: {
         key: cta.key,
         url: cta.url,
@@ -153,7 +154,46 @@ async function upsertSection(
   }[] = [],
 ) {
   const existing = await prisma.pageSection.findUnique({ where: { page_key: { page, key } } });
-  if (existing) return existing;
+
+  // Seed content is only meant to seed the initial state — once the client starts
+  // editing via /admin this reseed path is not run again against that data.
+  if (existing) {
+    await prisma.pageSectionItem.deleteMany({ where: { sectionId: existing.id } });
+    return prisma.pageSection.update({
+      where: { id: existing.id },
+      data: {
+        order: data.order ?? 0,
+        imageUrl: data.imageUrl,
+        translations: {
+          upsert: [
+            {
+              where: { sectionId_locale: { sectionId: existing.id, locale: "PT" } },
+              update: { eyebrow: data.eyebrowPt, heading: data.headingPt, subheading: data.subheadingPt, body: data.bodyPt },
+              create: { locale: "PT", eyebrow: data.eyebrowPt, heading: data.headingPt, subheading: data.subheadingPt, body: data.bodyPt },
+            },
+            {
+              where: { sectionId_locale: { sectionId: existing.id, locale: "EN" } },
+              update: { eyebrow: data.eyebrowEn, heading: data.headingEn, subheading: data.subheadingEn, body: data.bodyEn },
+              create: { locale: "EN", eyebrow: data.eyebrowEn, heading: data.headingEn, subheading: data.subheadingEn, body: data.bodyEn },
+            },
+          ],
+        },
+        items: {
+          create: items.map((item) => ({
+            order: item.order,
+            iconName: item.iconName,
+            numberLabel: item.numberLabel,
+            translations: {
+              create: [
+                { locale: "PT", title: item.titlePt, body: item.bodyPt },
+                { locale: "EN", title: item.titleEn, body: item.bodyEn },
+              ],
+            },
+          })),
+        },
+      },
+    });
+  }
 
   return prisma.pageSection.create({
     data: {
@@ -198,15 +238,15 @@ async function upsertSection(
 
 async function seedPageSections() {
   await upsertSection("HOME", "hero", {
-    imageUrl: img("hero-house", 1920, 1080),
-    eyebrowPt: "Engenharia de Precisão Certificada",
-    eyebrowEn: "Certified Precision Engineering",
-    headingPt: "Sua Casa Concluída na Metade do Tempo com a Segurança do Aço Leve.",
-    headingEn: "Your Home Completed in Half the Time, with the Safety of Light Steel.",
+    imageUrl: "/images/hero-lsf-house.png",
+    eyebrowPt: "O Modelo de Construção Mais Utilizado em Portugal",
+    eyebrowEn: "Portugal's Most Widely Used Construction Model",
+    headingPt: "A Sua Moradia Pronta Até 3x Mais Rápido, Com a Segurança do Aço Leve.",
+    headingEn: "Your Home Ready Up to 3x Faster, With the Safety of Light Steel.",
     subheadingPt:
-      "Construa com a inteligência do Light Steel Frame. Unimos tecnologia estrutural de ponta e máxima eficiência térmica para entregar o seu sonho com precisão milimétrica.",
+      "Construímos com a inteligência do Light Steel Frame: precisão milimétrica, conforto térmico e acústico superior, e uma equipa própria que acompanha a sua obra do início ao fim. Cuidamos do seu projeto, em Portugal.",
     subheadingEn:
-      "Build with the intelligence of Light Steel Frame. We combine cutting-edge structural technology with maximum thermal efficiency to deliver your dream with millimetric precision.",
+      "We build with the intelligence of Light Steel Frame: millimetric precision, superior thermal and acoustic comfort, and an in-house team that follows your project from start to finish. We take care of your project, in Portugal.",
   });
 
   await upsertSection("HOME", "partners", {
@@ -220,7 +260,7 @@ async function seedPageSections() {
     "HOME",
     "why_choose",
     {
-      imageUrl: img("lsf-structure", 1200, 900),
+      imageUrl: "/images/lsf-detail-1.png",
       eyebrowPt: "Porquê Escolher a Ápice 360",
       eyebrowEn: "Why Choose Ápice 360",
       headingPt: "Porque uma obra de alto valor exige mais do que promessas — exige controlo total.",
@@ -228,9 +268,9 @@ async function seedPageSections() {
     },
     [
       { order: 0, iconName: "groups", titlePt: "Equipa Própria e Especializada", titleEn: "In-house Specialized Team" },
-      { order: 1, iconName: "bolt", titlePt: "Velocidade e Eficiência com LSF", titleEn: "Speed and Efficiency with LSF" },
-      { order: 2, iconName: "verified", titlePt: 'Controlo Total "Chave na Mão"', titleEn: 'Total "Turnkey" Control' },
-      { order: 3, iconName: "shield", titlePt: "Garantia Estrutural e Transparência", titleEn: "Structural Warranty and Transparency" },
+      { order: 1, iconName: "bolt", titlePt: "Rapidez sem Perder Qualidade", titleEn: "Speed Without Losing Quality" },
+      { order: 2, iconName: "thermostat", titlePt: "Conforto Térmico e Acústico Superior", titleEn: "Superior Thermal and Acoustic Comfort" },
+      { order: 3, iconName: "shield", titlePt: "Durabilidade e Resistência a Sismos", titleEn: "Durability and Earthquake Resistance" },
     ],
   );
 
@@ -249,7 +289,7 @@ async function seedPageSections() {
   });
 
   await upsertSection("QUEM_SOMOS", "intro", {
-    imageUrl: img("team-action", 1400, 900),
+    imageUrl: "/images/lsf-detail-2.png",
     headingPt: "Ápice 360: Nascidos para Solucionar a Insegurança da Construção em Portugal.",
     headingEn: "Ápice 360: Born to Solve the Insecurity of Construction in Portugal.",
     bodyPt:
@@ -431,14 +471,16 @@ async function seedPageSections() {
 }
 
 async function seedStats() {
-  const count = await prisma.stat.count();
-  if (count > 0) return console.log("Stats já existem, a saltar.");
+  // Real figures from the LP — always resync (stats are not expected to be
+  // hand-edited before the client's first content pass in /admin).
+  await prisma.stat.deleteMany({});
 
   const stats = [
-    { value: "120+", iconName: "home_work", labelPt: "Obras Realizadas", labelEn: "Completed Projects", order: 0 },
-    { value: "18.000+", iconName: "straighten", labelPt: "M² Construídos", labelEn: "M² Built", order: 1 },
-    { value: "25+", iconName: "groups", labelPt: "Colaboradores Próprios", labelEn: "In-house Team Members", order: 2 },
-    { value: "97%", iconName: "thumb_up", labelPt: "Satisfação do Cliente", labelEn: "Client Satisfaction", order: 3 },
+    { value: "+60", iconName: "verified", labelPt: "Obras Realizadas", labelEn: "Completed Projects", order: 0 },
+    { value: "+8", iconName: "military_tech", labelPt: "Anos em Portugal", labelEn: "Years in Portugal", order: 1 },
+    { value: "100%", iconName: "groups", labelPt: "Equipa Própria", labelEn: "In-house Team", order: 2 },
+    { value: "Top 5%", iconName: "workspace_premium", labelPt: "Scoring em Portugal", labelEn: "Scoring in Portugal", order: 3 },
+    { value: "Showroom", iconName: "storefront", labelPt: "Para Atendimento", labelEn: "For Visits", order: 4 },
   ];
 
   for (const stat of stats) {
@@ -568,11 +610,16 @@ async function seedServices() {
   ];
 
   const lsfExisting = await prisma.service.findUnique({ where: { type: "LSF" } });
-  if (!lsfExisting) {
+  if (lsfExisting) {
+    await prisma.service.update({
+      where: { type: "LSF" },
+      data: { imageUrl: "/images/lsf-detail-1.png" },
+    });
+  } else {
     await prisma.service.create({
       data: {
         type: "LSF",
-        imageUrl: img("lsf-service", 1200, 900),
+        imageUrl: "/images/lsf-detail-1.png",
         ctaKey: "services_lsf_advantages",
         translations: {
           create: [
@@ -607,11 +654,16 @@ async function seedServices() {
   }
 
   const remodelacaoExisting = await prisma.service.findUnique({ where: { type: "REMODELACAO" } });
-  if (!remodelacaoExisting) {
+  if (remodelacaoExisting) {
+    await prisma.service.update({
+      where: { type: "REMODELACAO" },
+      data: { imageUrl: "/images/hero-lsf-house.png" },
+    });
+  } else {
     await prisma.service.create({
       data: {
         type: "REMODELACAO",
-        imageUrl: img("remodelacao-service", 1200, 900),
+        imageUrl: "/images/hero-lsf-house.png",
         ctaKey: "services_remodelacao_cta",
         translations: {
           create: [

@@ -5,7 +5,7 @@ import { cn } from "@/lib/cn";
 import { Icon } from "@/components/ui/Icon";
 
 const buttonStyles = cva(
-  "inline-flex items-center justify-center gap-3 font-bold uppercase tracking-wide transition-all disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center gap-3 rounded-full font-bold uppercase tracking-wide transition-all disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -14,9 +14,10 @@ const buttonStyles = cva(
           "border border-primary text-primary bg-primary/5 hover:bg-primary hover:text-on-primary",
         ghost:
           "border border-outline-variant text-on-surface hover:bg-primary hover:border-primary hover:text-on-primary",
-        link: "text-primary underline-offset-4 hover:underline normal-case font-medium tracking-normal",
+        link: "text-primary underline-offset-4 hover:underline normal-case font-medium tracking-normal rounded-none",
       },
       size: {
+        sm: "px-5 py-2.5 text-xs",
         md: "px-6 py-3 text-sm",
         lg: "px-10 py-6 text-lg",
       },

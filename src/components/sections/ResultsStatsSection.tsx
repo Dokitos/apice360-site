@@ -17,9 +17,11 @@ export function ResultsStatsSection({ heading, body, stats, cta }: ResultsStatsS
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <h2 className="mb-4 font-heading text-headline-lg text-primary">{heading}</h2>
         {body ? <p className="mx-auto mb-16 max-w-2xl text-on-surface-variant">{body}</p> : null}
-        <div className="mb-16 grid grid-cols-2 gap-10 md:grid-cols-4">
-          {stats.map((stat) => (
-            <StatItem key={stat.id} value={stat.value} label={stat.label} icon={stat.iconName ?? undefined} />
+        <div className="mb-16 grid grid-cols-2 gap-10 md:grid-cols-5">
+          {stats.map((stat, i) => (
+            <div key={stat.id} className={i === stats.length - 1 && stats.length % 2 === 1 ? "col-span-2 md:col-span-1" : undefined}>
+              <StatItem value={stat.value} label={stat.label} icon={stat.iconName ?? undefined} />
+            </div>
           ))}
         </div>
         {cta ? (
