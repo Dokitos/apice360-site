@@ -3,6 +3,7 @@ import { getSiteSettings } from "@/lib/content";
 import { NAV_LINKS } from "@/lib/nav";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
+import { PrivacyLink } from "@/components/layout/PrivacyLink";
 
 const SERVICE_LINKS = [
   { href: "/servicos#lsf", label: "LSF" },
@@ -76,7 +77,7 @@ export async function Footer() {
             ) : null}
           </div>
 
-          <div className="grid grid-cols-2 gap-12 sm:grid-cols-2">
+          <div className="grid grid-cols-2 gap-12 sm:grid-cols-3">
             <div>
               <h5 className="mb-8 font-mono text-label-mono uppercase tracking-widest text-primary">
                 Navegação
@@ -103,6 +104,16 @@ export async function Footer() {
                     </Link>
                   </li>
                 ))}
+              </ul>
+            </div>
+            <div className="col-span-2 sm:col-span-1">
+              <h5 className="mb-8 font-mono text-label-mono uppercase tracking-widest text-primary">
+                Legal
+              </h5>
+              <ul className="space-y-4">
+                <li>
+                  <PrivacyLink />
+                </li>
               </ul>
             </div>
           </div>

@@ -3,6 +3,8 @@ import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { ScrollToTopButton } from "@/components/layout/ScrollToTopButton";
 import { WhatsAppFloatingButton } from "@/components/layout/WhatsAppFloatingButton";
+import { CookieConsent } from "@/components/layout/CookieConsent";
+import { Analytics } from "@/components/layout/Analytics";
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +15,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <Footer />
       <ScrollToTopButton />
       <WhatsAppFloatingButton />
+      <CookieConsent />
+      <Analytics />
     </>
   );
 }

@@ -80,11 +80,18 @@ async function seedAdminAndSettings() {
 
 async function seedCtas() {
   const WA = "https://wa.me/351924107846";
+  const waWith = (message: string) => `${WA}?text=${encodeURIComponent(message)}`;
   const ctas = [
     { key: "header_budget", url: WA, iconName: "bolt", labelPt: "Faça seu Orçamento", labelEn: "Get a Quote" },
     { key: "home_hero", url: WA, iconName: "bolt", labelPt: "Falar com a Nossa Equipa", labelEn: "Talk to Our Team" },
     { key: "why_choose_services", url: "/servicos", iconName: "architecture", labelPt: "Conheça Nossos Serviços", labelEn: "See Our Services" },
-    { key: "results_portfolio", url: "/portfolio", iconName: "photo_library", labelPt: "Conheça Nosso Portfólio", labelEn: "See Our Portfolio" },
+    {
+      key: "results_portfolio",
+      url: waWith("Olá! Gostava de agendar uma visita ao showroom da Ápice 360."),
+      iconName: "bolt",
+      labelPt: "Agendar uma Visita",
+      labelEn: "Schedule a Visit",
+    },
     { key: "blog_see_more", url: "/blog", iconName: "menu_book", labelPt: "Ver Mais Artigos", labelEn: "See More Articles" },
     { key: "about_talk_to_team", url: "/contacto", iconName: "chat", labelPt: "Converse com Nossa Equipa", labelEn: "Talk to Our Team" },
     { key: "services_lsf_advantages", url: "/contacto", iconName: "bolt", labelPt: "Conheça as Vantagens do LSF", labelEn: "Discover LSF Advantages" },
@@ -275,10 +282,10 @@ async function seedPageSections() {
   );
 
   await upsertSection("HOME", "results", {
-    headingPt: "Resultados que constroem confiança.",
-    headingEn: "Results that build trust.",
-    bodyPt: "Cada obra entregue é mais do que um número — é a prova do nosso compromisso com a excelência, a precisão e a satisfação de cada cliente.",
-    bodyEn: "Every completed project is more than a number — it's proof of our commitment to excellence, precision and client satisfaction.",
+    headingPt: "Porque Escolher a Ápice 360",
+    headingEn: "Why Choose Ápice 360",
+    bodyPt: "Venha conhecer o nosso showroom e toda a estrutura em LSF. Esperamos por si!",
+    bodyEn: "Come visit our showroom and see the whole LSF structure up close. We look forward to it!",
   });
 
   await upsertSection("HOME", "blog_preview", {
@@ -421,33 +428,43 @@ async function seedPageSections() {
     "SERVICOS",
     "management_model",
     {
-      headingPt: "O Nosso Modelo: Gestão Chave na Mão",
-      headingEn: "Our Model: Turnkey Management",
+      headingPt: "O Caminho da Construção Inteligente: Método de 4 Fases",
+      headingEn: "The Smart Construction Path: Our 4-Phase Method",
+      bodyPt: "Aqui não seguimos o modelo clássico terreno → licenciamento → execução. Criamos uma estrutura 100% original, mais simples e mais clara para o cliente final.",
+      bodyEn: "We don't follow the classic land → licensing → execution model. We built a 100% original structure — simpler and clearer for the client.",
     },
     [
       {
         order: 0,
         numberLabel: "01",
-        titlePt: "Planeamento 360°",
-        titleEn: "360° Planning",
-        bodyPt: "O rigor começa na visão estratégica do nosso fundador Arquiteto.",
-        bodyEn: "Rigor begins with the strategic vision of our founding Architect.",
+        titlePt: "Visão: onde começa uma obra inteligente",
+        titleEn: "Vision: where a smart build begins",
+        bodyPt: "Traduzimos as suas intenções em possibilidades reais: entendemos o projeto, avaliamos o terreno, analisamos a viabilidade e definimos o que é possível construir — alinhando expectativas desde o primeiro dia.",
+        bodyEn: "We turn your intentions into real possibilities: we understand the project, assess the site, analyse feasibility and define what can be built — aligning expectations from day one.",
       },
       {
         order: 1,
         numberLabel: "02",
-        titlePt: "Execução com Equipa Própria",
-        titleEn: "Execution with In-house Team",
-        bodyPt: "A base da nossa velocidade e qualidade. Toda a obra é executada por especialistas internos.",
-        bodyEn: "The foundation of our speed and quality. The entire project is executed by internal specialists.",
+        titlePt: "Base: o projeto que dá vida à obra",
+        titleEn: "Foundation: the project that brings the build to life",
+        bodyPt: "Construímos o projeto técnico completo — arquitetura, engenharia, especialidades, preparação documental e licenciamento — a base sólida que sustenta toda a construção.",
+        bodyEn: "We build the complete technical project — architecture, engineering, specialties, documentation and licensing — the solid foundation that supports the entire build.",
       },
       {
         order: 2,
         numberLabel: "03",
-        titlePt: "Entrega Garantida e a Tempo",
-        titleEn: "Guaranteed, On-time Delivery",
-        bodyPt: "Recebe o seu imóvel pronto a viver ou rentabilizar, sem surpresas e sem atrasos.",
-        bodyEn: "Receive your property ready to live in or generate income, with no surprises and no delays.",
+        titlePt: "Execução: onde a moradia ganha forma",
+        titleEn: "Execution: where the home takes shape",
+        bodyPt: "Da produção da estrutura em fábrica à montagem no local, fechamentos, isolamentos e acabamentos — tudo com equipa própria, supervisão técnica constante e controlo rigoroso de cada etapa.",
+        bodyEn: "From the structure's factory production to on-site assembly, cladding, insulation and finishes — all with our in-house team, constant technical supervision and rigorous control of every stage.",
+      },
+      {
+        order: 3,
+        numberLabel: "04",
+        titlePt: "Finalização: da última verificação à entrega das chaves",
+        titleEn: "Completion: from final inspection to handover",
+        bodyPt: "Validamos qualidade, testamos todos os sistemas e entregamos a moradia pronta, documentada e com garantia. A entrega não é um fim, é um início.",
+        bodyEn: "We validate quality, test every system and hand over the home ready, documented and under warranty. Handover isn't an end — it's a beginning.",
       },
     ],
   );
