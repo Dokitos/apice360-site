@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { AnimatePresence, motion, type Transition } from "motion/react";
+import { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 
 const RANDOM_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -13,64 +12,71 @@ function randomChar() {
 type RandomLetterSwapProps = {
   label: string;
   className?: string;
+  /** Delay (seconds) added per letter index before it starts scrambling. */
   staggerDuration?: number;
-  transition?: Transition;
 };
 
 /**
  * Hover effect that scrambles each letter through a few random characters
- * before settling back on the real label, staggered left-to-right with a
- * spring slide+fade per letter (via AnimatePresence key changes).
+ * before settling back on the real label, staggered left-to-right.
+ *
+ * Deliberately plain text swaps (no transform/slide) — animating position on
+ * every tick made the whole word visibly wobble as glyphs of different
+ * widths swapped in, and a global tick counter meant the settle time for
+ * letters past index ~8 went non-positive, so longer labels only ever
+ * scrambled their first few characters.
  */
-export function RandomLetterSwap({
-  label,
-  className,
-  staggerDuration = 0.025,
-  transition = { duration: 0.5, type: "spring" },
-}: RandomLetterSwapProps) {
+export function RandomLetterSwap({ label, className, staggerDuration = 0.025 }: RandomLetterSwapProps) {
   const [chars, setChars] = useState(() => label.split(""));
-  const [isAnimating, setIsAnimating] = useState(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  const clearTimers = useCallback(() => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  }, []);
 
   const shuffle = useCallback(() => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+    clearTimers();
     const original = label.split("");
-    const maxTicks = 4;
-    let tick = 0;
+    const flashes = 3;
+    const tickMs = 45;
 
-    const interval = setInterval(() => {
-      tick += 1;
-      setChars(
-        original.map((char, i) => {
-          if (char === " ") return " ";
-          const settleAt = maxTicks - Math.floor(i / 2);
-          return tick >= settleAt ? char : randomChar();
-        }),
-      );
-      if (tick >= maxTicks + original.length) {
-        clearInterval(interval);
-        setChars(original);
-        setIsAnimating(false);
+    original.forEach((char, i) => {
+      if (char === " ") return;
+      const startDelay = i * staggerDuration * 1000;
+
+      for (let f = 0; f < flashes; f++) {
+        timers.current.push(
+          setTimeout(() => {
+            setChars((prev) => {
+              const next = [...prev];
+              next[i] = randomChar();
+              return next;
+            });
+          }, startDelay + f * tickMs),
+        );
       }
-    }, 45);
-  }, [label, isAnimating]);
+
+      timers.current.push(
+        setTimeout(
+          () => {
+            setChars((prev) => {
+              const next = [...prev];
+              next[i] = char;
+              return next;
+            });
+          },
+          startDelay + flashes * tickMs,
+        ),
+      );
+    });
+  }, [label, staggerDuration, clearTimers]);
 
   return (
-    <span className={cn("inline-flex", className)} onMouseEnter={shuffle}>
+    <span className={cn("inline-flex", className)} onMouseEnter={shuffle} onMouseLeave={clearTimers}>
       {chars.map((char, i) => (
-        <span key={i} className="relative inline-block overflow-hidden">
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.span
-              key={`${char}-${i}`}
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -10, opacity: 0 }}
-              transition={{ ...transition, delay: i * staggerDuration }}
-              className="inline-block"
-            >
-              {char === " " ? " " : char}
-            </motion.span>
-          </AnimatePresence>
+        <span key={i} className="inline-block">
+          {char === " " ? " " : char}
         </span>
       ))}
     </span>

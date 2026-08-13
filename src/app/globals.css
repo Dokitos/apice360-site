@@ -2,27 +2,31 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  /* Colors — ported 1:1 from the Ápice 360 LP design system */
-  --color-primary: #ff5f00;
+  /* Colors — ported 1:1 from the Ápice 360 LP design system (light theme) */
+  --color-primary: #ff6a13;
   --color-on-primary: #ffffff;
+  --color-primary-deep: #d9540c;
 
-  --color-background: #181818;
-  --color-background-alt: #131313;
-  --color-on-background: #e5e2e1;
+  /* Near-black, used deliberately for the hero photo scrim and the footer
+     "bookend" band — independent of the light theme everywhere else. */
+  --color-ink: #0f0f0f;
 
-  --color-surface: #1c1c1c;
-  --color-on-surface: #e5e2e1;
-  --color-surface-variant: #454544;
-  --color-on-surface-variant: #e4bfb1;
+  --color-background: #ffffff;
+  --color-on-background: #0f0f0f;
 
-  --color-surface-container-lowest: #171717;
-  --color-surface-container-low: #252423;
-  --color-surface-container: #2a2928;
-  --color-surface-container-high: #353534;
-  --color-surface-container-highest: #413f3e;
+  --color-surface: #ffffff;
+  --color-on-surface: #0f0f0f;
+  --color-surface-variant: #f2f2f2;
+  --color-on-surface-variant: #5c5c5c;
 
-  --color-outline: #ab8a7d;
-  --color-outline-variant: #5b4137;
+  --color-surface-container-lowest: #fdfdfd;
+  --color-surface-container-low: #f8f8f8;
+  --color-surface-container: #f1f1f1;
+  --color-surface-container-high: #e6e6e6;
+  --color-surface-container-highest: #d4d4d4;
+
+  --color-outline: #dedede;
+  --color-outline-variant: #ececec;
 
   /* Fonts — Montserrat (headings), Inter (body), JetBrains Mono (labels) */
   --font-heading: var(--font-montserrat), sans-serif;
@@ -56,7 +60,7 @@
   --text-label-mono--font-weight: 500;
 
   /* Keyframe-driven utilities */
-  --animate-pulse-glow: pulse-glow 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-pulse-glow: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-bounce-slow: bounce-slow 2s ease-in-out infinite;
   --animate-fade-up: fade-up 0.8s ease-out forwards;
 }
@@ -64,10 +68,10 @@
 @keyframes pulse-glow {
   0%,
   100% {
-    box-shadow: 0 0 15px rgba(255, 95, 0, 0.4);
+    box-shadow: 0 0 12px rgba(255, 106, 19, 0.35);
   }
   50% {
-    box-shadow: 0 0 35px rgba(255, 95, 0, 0.8);
+    box-shadow: 0 0 28px rgba(255, 106, 19, 0.65);
   }
 }
 
@@ -94,33 +98,59 @@
 
 body {
   background-color: var(--color-background);
-  background-image: radial-gradient(#333333 1px, transparent 1px);
-  background-size: 32px 32px;
-  color: var(--color-on-surface);
+  color: var(--color-on-background);
   overflow-x: hidden;
 }
 
+/* Thin scrollbar matching the palette */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-outline) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-outline);
+  border-radius: 9999px;
+  border: 2px solid var(--color-background);
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-primary);
+}
+
 @layer components {
-  /* Orange glow border used on feature cards */
+  /* Soft orange-tinted card border that lifts on hover — light-theme version */
   .neon-border {
-    border: 1px solid rgba(255, 95, 0, 0.3);
-    box-shadow: 0 0 10px rgba(255, 95, 0, 0.1);
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 106, 19, 0.16);
+    box-shadow: 0 1px 3px rgba(23, 24, 26, 0.06);
+    transition:
+      box-shadow 0.25s ease,
+      border-color 0.25s ease,
+      transform 0.25s ease;
   }
   .neon-border:hover {
     border-color: var(--color-primary);
-    box-shadow: 0 0 20px rgba(255, 95, 0, 0.4);
+    box-shadow:
+      0 10px 24px rgba(255, 106, 19, 0.14),
+      0 2px 6px rgba(23, 24, 26, 0.08);
+    transform: translateY(-2px);
   }
 
   /* Frosted glass panel */
   .glass-effect {
     backdrop-filter: blur(20px);
-    background: rgba(19, 19, 19, 0.7);
+    background: rgba(255, 255, 255, 0.7);
   }
 
-  /* Orange-to-beige gradient headline text */
+  /* Orange gradient headline text */
   .gradient-text {
-    background: linear-gradient(90deg, #ff5f00 0%, #ffc099 100%);
+    background: linear-gradient(90deg, #ff6a13 0%, #ffb37a 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

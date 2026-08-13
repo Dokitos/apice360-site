@@ -28,11 +28,13 @@ export function ScrollToTopButton() {
         }
       }}
       className={cn(
-        "fixed bottom-6 left-6 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-outline-variant bg-surface-container text-on-surface shadow-lg transition-all duration-300 hover:border-primary hover:bg-primary hover:text-on-primary",
-        visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0",
+        // Stacked above the WhatsApp floating button (bottom-6), same dark
+        // "ink" accent used for the hero scrim and footer.
+        "fixed bottom-24 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-ink text-white shadow-lg transition-all duration-300 hover:bg-primary",
+        visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0",
       )}
     >
-      <Icon name="arrow_upward" />
+      <Icon name="keyboard_arrow_up" />
     </button>
   );
 }

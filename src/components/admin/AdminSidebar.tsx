@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { Icon } from "@/components/ui/Icon";
+import { Logo } from "@/components/ui/Logo";
 
 type NavItem = {
   href: string;
@@ -61,9 +62,7 @@ export function AdminSidebar({ role }: { role: "ADMIN" | "EDITOR" }) {
   return (
     <nav className="flex h-full w-64 shrink-0 flex-col gap-8 overflow-y-auto border-r border-outline-variant/20 bg-surface-container-lowest p-6">
       <Link href="/admin" className="mb-2 flex items-center gap-2">
-        <span className="font-heading text-headline-md text-primary tracking-tighter">
-          ÁPICE 360
-        </span>
+        <Logo wordmarkClassName="text-headline-md" />
       </Link>
 
       {navGroups.map((group) => {

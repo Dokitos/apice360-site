@@ -23,7 +23,7 @@ export function RichTextEditor({ id, name, label, defaultValue = "" }: RichTextE
     onUpdate: ({ editor }) => setHtml(editor.getHTML()),
     editorProps: {
       attributes: {
-        class: "prose prose-invert max-w-none min-h-[240px] px-4 py-3 focus:outline-none",
+        class: "prose max-w-none min-h-[240px] px-4 py-3 focus:outline-none",
       },
     },
   });

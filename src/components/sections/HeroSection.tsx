@@ -1,48 +1,64 @@
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 
+type TrustBadge = { id: string; value: string; label: string; iconName: string | null };
+
 type HeroSectionProps = {
   eyebrow?: string | null;
   heading: string;
   subheading?: string | null;
   imageUrl?: string | null;
   cta?: { label: string; url: string; iconName?: string | null } | null;
+  trustBadges?: TrustBadge[];
 };
 
-export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta }: HeroSectionProps) {
+export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trustBadges = [] }: HeroSectionProps) {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden" id="hero">
       <div
         className="absolute inset-0 z-0 h-full w-full bg-cover bg-center bg-fixed"
         style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
       >
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-background/10" />
+        {/* Kept dark for legibility over the photo, independent of the site's light theme. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/40 to-ink/10" />
       </div>
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-5 py-32 text-center md:px-20 lg:text-left">
         <div className="max-w-4xl lg:mx-0 mx-auto">
           {eyebrow ? (
-            <span className="mb-8 inline-block border border-primary bg-primary/5 px-4 py-1.5 font-mono text-label-mono uppercase tracking-[0.3em] text-primary">
+            <span className="mb-8 inline-block border border-primary bg-primary/10 px-4 py-1.5 font-mono text-label-mono uppercase tracking-[0.3em] text-primary">
               {eyebrow}
             </span>
           ) : null}
-          <h1 className="mb-8 font-heading text-[2.75rem] leading-[1.1] md:text-headline-xl">
+          <h1 className="mb-8 font-heading text-[2.75rem] leading-[1.1] text-white drop-shadow-lg md:text-headline-xl">
             {heading}
           </h1>
           {subheading ? (
-            <p className="mx-auto mb-12 max-w-2xl text-body-lg leading-relaxed text-on-surface-variant lg:mx-0">
+            <p className="mx-auto mb-12 max-w-2xl text-body-lg leading-relaxed text-white/90 lg:mx-0">
               {subheading}
             </p>
           ) : null}
           {cta ? (
-            <Button href={cta.url} variant="cta" size="lg" pulse icon={cta.iconName ?? "bolt"}>
-              {cta.label}
-            </Button>
+            <div className="flex flex-col items-center gap-6 lg:items-start">
+              <Button href={cta.url} variant="cta" size="lg" pulse icon={cta.iconName ?? "bolt"}>
+                👉 {cta.label}
+              </Button>
+              {trustBadges.length > 0 ? (
+                <div className="flex flex-wrap items-center justify-center gap-6 border-t border-white/10 pt-4 lg:justify-start">
+                  {trustBadges.map((badge) => (
+                    <div key={badge.id} className="flex items-center gap-2 font-mono text-xs text-white/80">
+                      <Icon name={badge.iconName ?? "verified"} className="text-sm text-primary" />
+                      {badge.value} {badge.label.toUpperCase()}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
           ) : null}
         </div>
       </div>
       <div className="absolute bottom-12 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2">
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary/60">
-          Ver Mais
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70">
+          Descubra o LSF
         </span>
         <Icon name="keyboard_double_arrow_down" className="animate-bounce-slow text-3xl text-primary" />
       </div>

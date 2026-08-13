@@ -25,7 +25,7 @@ export function PartnersSection({ heading, subheading, partners }: PartnersSecti
           {partners.map((partner) => (
             <div
               key={partner.id}
-              className="group relative overflow-hidden rounded-2xl border border-outline-variant/20 bg-surface-container-low transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_20px_60px_-15px_rgba(255,95,0,0.35)]"
+              className="group relative overflow-hidden rounded-2xl border border-outline-variant/20 bg-surface-container-low transition-all duration-500 hover:-translate-y-1 hover:border-primary/50 hover:shadow-[0_20px_60px_-15px_rgba(255,106,19,0.35)]"
             >
               <Lightbox src={partner.logoUrl} alt={partner.name} className="block w-full cursor-zoom-in">
                 {/* eslint-disable-next-line @next/next/no-img-element */}

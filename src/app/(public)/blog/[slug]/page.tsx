@@ -62,7 +62,7 @@ export default async function BlogPostPage({
 
         {/* bodyHtml is sanitized with DOMPurify before being persisted from the admin rich-text editor. */}
         <div
-          className="prose prose-invert max-w-none leading-relaxed prose-headings:font-heading prose-a:text-primary"
+          className="prose max-w-none leading-relaxed prose-headings:font-heading prose-a:text-primary"
           dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
         />
 

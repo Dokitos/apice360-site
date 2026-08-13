@@ -26,7 +26,7 @@ export function MobileNav({ ctaLabel, ctaUrl }: MobileNavProps) {
       </button>
 
       {open ? (
-        <div className="fixed inset-x-0 top-[76px] z-40 max-h-[calc(100vh-76px)] overflow-y-auto border-t border-white/5 bg-background/95 backdrop-blur-xl px-5 py-8">
+        <div className="fixed inset-x-0 top-[76px] z-40 max-h-[calc(100vh-76px)] overflow-y-auto border-t border-black/5 bg-white/95 backdrop-blur-xl px-5 py-8 shadow-lg">
           <nav className="flex flex-col gap-6">
             {NAV_LINKS.map((link) => (
               <Link

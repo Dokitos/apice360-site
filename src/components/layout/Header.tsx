@@ -10,7 +10,7 @@ export async function Header() {
   const budgetCta = await getCta("header_budget");
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/5 bg-background/40 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-xl">
       <div className="mx-auto flex h-[76px] max-w-[1600px] items-center justify-between gap-6 px-5 md:px-10">
         <Link href="/" className="shrink-0">
           <Logo />

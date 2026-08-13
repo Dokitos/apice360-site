@@ -27,7 +27,7 @@ export function TimelineSection({ eyebrow, heading, items, cta, className }: Tim
             <div className="absolute bottom-4 left-7 top-4 hidden w-0.5 bg-primary/20 sm:block" />
             {items.map((item, index) => (
               <div key={item.id} className="relative flex items-start gap-8 pl-0 sm:pl-20">
-                <div className="z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-on-primary shadow-[0_0_20px_rgba(255,95,0,0.4)]">
+                <div className="z-10 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-primary font-bold text-on-primary shadow-[0_0_20px_rgba(255,106,19,0.4)]">
                   {item.numberLabel ? (
                     <span>{item.numberLabel}</span>
                   ) : (

@@ -9,7 +9,7 @@ const buttonStyles = cva(
   {
     variants: {
       variant: {
-        cta: "bg-primary text-on-primary hover:scale-105 hover:shadow-[0_0_30px_rgba(255,95,0,0.5)]",
+        cta: "bg-primary text-on-primary hover:scale-105 hover:shadow-[0_0_30px_rgba(255,106,19,0.5)]",
         "cta-outline":
           "border border-primary text-primary bg-primary/5 hover:bg-primary hover:text-on-primary",
         ghost:
