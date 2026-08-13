@@ -62,19 +62,31 @@ enum LeadType {
 enum LeadStatus {
   NEW
   CONTACTED
-  CLOSED
+  QUALIFIED
+  WON
+  LOST
+}
+
+enum LeadActivityType {
+  STATUS_CHANGE
+  NOTE
+  CALL_LOGGED
+  EMAIL_LOGGED
+  ASSIGNMENT
 }
 
 model User {
-  id           String     @id @default(cuid())
-  name         String
-  email        String     @unique
-  passwordHash String
-  role         Role       @default(EDITOR)
-  isActive     Boolean    @default(true)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  blogPosts    BlogPost[] @relation("PostAuthor")
+  id             String           @id @default(cuid())
+  name           String
+  email          String           @unique
+  passwordHash   String
+  role           Role             @default(EDITOR)
+  isActive       Boolean          @default(true)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  blogPosts      BlogPost[]       @relation("PostAuthor")
+  assignedLeads  LeadSubmission[] @relation("LeadAssignee")
+  leadActivities LeadActivity[]
 }
 
 model SiteSettings {
@@ -401,14 +413,37 @@ model BlogComment {
 }
 
 model LeadSubmission {
-  id         String     @id @default(cuid())
-  type       LeadType
-  name       String
-  email      String
-  phone      String?
-  message    String?
-  sourcePage String?
-  locale     Locale
-  status     LeadStatus @default(NEW)
-  createdAt  DateTime   @default(now())
+  id           String         @id @default(cuid())
+  type         LeadType
+  name         String
+  email        String
+  phone        String?
+  message      String?
+  sourcePage   String?
+  locale       Locale
+  status       LeadStatus     @default(NEW)
+  notes        String?
+  assignedToId String?
+  assignedTo   User?          @relation("LeadAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  activities   LeadActivity[]
+
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@index([assignedToId])
+}
+
+model LeadActivity {
+  id        String           @id @default(cuid())
+  leadId    String
+  lead      LeadSubmission   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  type      LeadActivityType
+  note      String?
+  userId    String?
+  user      User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime         @default(now())
+
+  @@index([leadId])
 }
