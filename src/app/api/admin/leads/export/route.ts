@@ -33,8 +33,12 @@ function buildWhere(searchParams: URLSearchParams) {
     ...(from || to
       ? {
           createdAt: {
-            ...(from ? { gte: new Date(`${from}T00:00:00`) } : {}),
-            ...(to ? { lte: new Date(`${to}T23:59:59.999`) } : {}),
+            ...(from && !Number.isNaN(Date.parse(`${from}T00:00:00`))
+              ? { gte: new Date(`${from}T00:00:00`) }
+              : {}),
+            ...(to && !Number.isNaN(Date.parse(`${to}T23:59:59.999`))
+              ? { lte: new Date(`${to}T23:59:59.999`) }
+              : {}),
           },
         }
       : {}),
@@ -51,11 +55,21 @@ function buildWhere(searchParams: URLSearchParams) {
   };
 }
 
+// Leads originate from public, unauthenticated submissions — a value like
+// `=HYPERLINK("http://evil","x")` would be evaluated as a formula by
+// Excel/LibreOffice/Sheets when staff open the export. Prefix any value
+// that could be interpreted as a formula with an apostrophe to force it to
+// be read as plain text (CWE-1236).
+function neutralizeFormula(value: string) {
+  return /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+}
+
 function csvEscape(value: string) {
-  if (/[",\n;]/.test(value)) {
-    return `"${value.replace(/"/g, '""')}"`;
+  const safe = neutralizeFormula(value);
+  if (/[",\n;]/.test(safe)) {
+    return `"${safe.replace(/"/g, '""')}"`;
   }
-  return value;
+  return safe;
 }
 
 export async function GET(request: NextRequest) {
@@ -141,17 +155,17 @@ export async function GET(request: NextRequest) {
 
     for (const l of leads) {
       sheet.addRow({
-        name: l.name,
-        email: l.email,
-        phone: l.phone ?? "",
+        name: neutralizeFormula(l.name),
+        email: neutralizeFormula(l.email),
+        phone: neutralizeFormula(l.phone ?? ""),
         type: TYPE_LABEL[l.type] ?? l.type,
         status: STATUS_LABEL[l.status] ?? l.status,
         assignedTo: l.assignedTo?.name ?? "",
-        sourcePage: l.sourcePage ?? "",
+        sourcePage: neutralizeFormula(l.sourcePage ?? ""),
         locale: l.locale,
         createdAt: l.createdAt.toLocaleString("pt-PT"),
-        message: l.message ?? "",
-        notes: l.notes ?? "",
+        message: neutralizeFormula(l.message ?? ""),
+        notes: neutralizeFormula(l.notes ?? ""),
       });
     }
 

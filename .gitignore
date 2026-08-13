@@ -23,6 +23,12 @@
 # misc
 .DS_Store
 *.pem
+*.key
+
+# never commit db dumps/backups
+*.sql
+*.dump
+*.backup
 
 # debug
 npm-debug.log*

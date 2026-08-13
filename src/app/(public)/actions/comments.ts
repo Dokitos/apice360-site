@@ -1,8 +1,10 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { commentSchema } from "@/lib/validations/public";
+import { clientIpFromHeaders, rateLimit } from "@/lib/rate-limit";
 
 export type CommentFormState = { ok: boolean; message: string } | undefined;
 
@@ -21,6 +23,12 @@ export async function submitComment(
 
   if (!parsed.success) {
     return { ok: false, message: parsed.error.issues[0]?.message ?? "Dados inválidos." };
+  }
+
+  const ip = clientIpFromHeaders(await headers());
+  const { ok: withinLimit } = rateLimit(`comment-form:${ip}`, 5, 60_000);
+  if (!withinLimit) {
+    return { ok: false, message: "Demasiados pedidos. Tenta novamente dentro de instantes." };
   }
 
   if (parsed.data.company) {

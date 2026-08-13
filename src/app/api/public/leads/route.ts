@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
+import { clientIpFromHeaders, rateLimit } from "@/lib/rate-limit";
 
 // Public, unauthenticated endpoint that lets other Ápice 360 front-ends
 // (currently the static landing page at apice360-lp.vercel.app) persist a
@@ -19,6 +20,8 @@ const publicLeadSchema = z.object({
   phone: z.string().trim().max(40).optional().or(z.literal("")),
   message: z.string().trim().max(4000).optional().or(z.literal("")),
   sourcePage: z.string().trim().max(200).optional(),
+  // Honeypot: real visitors never fill this hidden field, bots usually do.
+  company: z.string().max(0, "Falha na validação.").optional().or(z.literal("")),
 });
 
 function corsHeaders(origin: string | null) {
@@ -58,6 +61,20 @@ export async function POST(request: NextRequest) {
       { ok: false, error: parsed.error.issues[0]?.message ?? "Dados inválidos." },
       { status: 400, headers },
     );
+  }
+
+  const ip = clientIpFromHeaders(request.headers);
+  const { ok: withinLimit, retryAfterSeconds } = rateLimit(`public-leads:${ip}`, 5, 60_000);
+  if (!withinLimit) {
+    return NextResponse.json(
+      { ok: false, error: "Demasiados pedidos. Tenta novamente dentro de instantes." },
+      { status: 429, headers: { ...Object.fromEntries(headers), "Retry-After": String(retryAfterSeconds) } },
+    );
+  }
+
+  // Honeypot triggered — silently pretend success so bots don't learn to adapt.
+  if (parsed.data.company) {
+    return NextResponse.json({ ok: true }, { headers });
   }
 
   await prisma.leadSubmission.create({

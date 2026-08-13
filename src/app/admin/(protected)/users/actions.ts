@@ -41,12 +41,27 @@ export async function createUser(_prevState: string | undefined, formData: FormD
 }
 
 export async function updateUser(id: string, _prevState: string | undefined, formData: FormData) {
-  await requireAdmin();
+  const currentUser = await requireAdmin();
   const parsed = updateUserSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
   const existing = await prisma.user.findUnique({ where: { email: parsed.data.email } });
   if (existing && existing.id !== id) return "Já existe outro utilizador com este email.";
+
+  if (currentUser.id === id && (parsed.data.role !== "ADMIN" || !parsed.data.isActive)) {
+    return "Não podes remover o teu próprio acesso de administrador.";
+  }
+
+  const demotesOrDeactivatesAdmin = parsed.data.role !== "ADMIN" || !parsed.data.isActive;
+  if (demotesOrDeactivatesAdmin) {
+    const target = await prisma.user.findUnique({ where: { id }, select: { role: true } });
+    if (target?.role === "ADMIN") {
+      const activeAdmins = await prisma.user.count({ where: { role: "ADMIN", isActive: true } });
+      if (activeAdmins <= 1) {
+        return "Não é possível remover o único administrador ativo.";
+      }
+    }
+  }
 
   await prisma.user.update({
     where: { id },
@@ -67,6 +82,13 @@ export async function deleteUser(id: string) {
   const currentUser = await requireAdmin();
   if (currentUser.id === id) {
     throw new Error("Não podes eliminar a tua própria conta.");
+  }
+  const target = await prisma.user.findUnique({ where: { id }, select: { role: true } });
+  if (target?.role === "ADMIN") {
+    const activeAdmins = await prisma.user.count({ where: { role: "ADMIN", isActive: true } });
+    if (activeAdmins <= 1) {
+      throw new Error("Não é possível eliminar o único administrador ativo.");
+    }
   }
   await prisma.user.delete({ where: { id } });
   revalidatePath("/admin/users");

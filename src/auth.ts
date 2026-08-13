@@ -3,6 +3,12 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
 
+if (!process.env.AUTH_SECRET) {
+  // Fail loudly at startup rather than depending on next-auth's own
+  // (beta, potentially-changing) fallback behavior for a missing secret.
+  throw new Error("AUTH_SECRET não está definida. Configura-a nas variáveis de ambiente.");
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: "jwt" },
   pages: {
@@ -37,11 +43,25 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id as string;
         token.role = user.role as "ADMIN" | "EDITOR";
+        return token;
       }
+
+      // Revalidate against the database on every request (not just at
+      // sign-in) so a deactivated/deleted account or a changed role takes
+      // effect immediately instead of only once the JWT expires.
+      if (!token.id) return token;
+      const dbUser = await prisma.user.findUnique({
+        where: { id: token.id as string },
+        select: { role: true, isActive: true },
+      });
+      if (!dbUser || !dbUser.isActive) {
+        return null;
+      }
+      token.role = dbUser.role;
       return token;
     },
     session({ session, token }) {

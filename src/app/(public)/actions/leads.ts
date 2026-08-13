@@ -1,7 +1,9 @@
 "use server";
 
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { leadSchema } from "@/lib/validations/public";
+import { clientIpFromHeaders, rateLimit } from "@/lib/rate-limit";
 
 export type LeadFormState = { ok: boolean; message: string } | undefined;
 
@@ -21,6 +23,12 @@ export async function createLead(
 
   if (!parsed.success) {
     return { ok: false, message: parsed.error.issues[0]?.message ?? "Dados inválidos." };
+  }
+
+  const ip = clientIpFromHeaders(await headers());
+  const { ok: withinLimit } = rateLimit(`lead-form:${ip}`, 5, 60_000);
+  if (!withinLimit) {
+    return { ok: false, message: "Demasiados pedidos. Tenta novamente dentro de instantes." };
   }
 
   // Honeypot triggered — silently pretend success so bots don't learn to adapt.
