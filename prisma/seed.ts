@@ -109,7 +109,7 @@ async function seedCtas() {
   ];
 
   for (const cta of ctas) {
-    await prisma.cta.upsert({
+    const record = await prisma.cta.upsert({
       where: { key: cta.key },
       update: { url: cta.url, iconName: cta.iconName },
       create: {
@@ -124,6 +124,17 @@ async function seedCtas() {
         },
       },
     });
+
+    for (const [locale, label] of [
+      ["PT", cta.labelPt],
+      ["EN", cta.labelEn],
+    ] as const) {
+      await prisma.ctaTranslation.upsert({
+        where: { ctaId_locale: { ctaId: record.id, locale } },
+        update: { label },
+        create: { ctaId: record.id, locale, label },
+      });
+    }
   }
   console.log(`CTAs ok (${ctas.length})`);
 }

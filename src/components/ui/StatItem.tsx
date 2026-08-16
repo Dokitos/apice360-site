@@ -8,10 +8,10 @@ type StatItemProps = {
 
 export function StatItem({ value, label, icon }: StatItemProps) {
   return (
-    <div className="flex flex-col items-center gap-2 text-center">
-      {icon ? <Icon name={icon} className="mb-2 text-3xl text-primary" /> : null}
-      <span className="font-heading text-headline-lg text-primary">{value}</span>
-      <span className="font-mono text-label-mono uppercase tracking-widest text-on-surface-variant">
+    <div className="flex flex-col items-center text-center">
+      {icon ? <Icon name={icon} className="mb-3 text-3xl text-primary" /> : null}
+      <span className="font-heading text-headline-md font-bold text-primary">{value}</span>
+      <span className="mt-1 font-mono text-label-mono uppercase tracking-widest text-on-surface-variant">
         {label}
       </span>
     </div>
