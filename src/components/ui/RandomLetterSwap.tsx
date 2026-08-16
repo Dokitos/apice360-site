@@ -35,6 +35,15 @@ export function RandomLetterSwap({ label, className, staggerDuration = 0.025 }: 
     timers.current = [];
   }, []);
 
+  // Cancelling pending timers alone can leave a letter stuck mid-scramble —
+  // if the mouse leaves before that letter's "revert to real char" timer
+  // fires, clearing timers cancels that revert too. Always snap back to the
+  // real label on top of clearing, so a fast hover-in/out never gets stuck.
+  const reset = useCallback(() => {
+    clearTimers();
+    setChars(label.split(""));
+  }, [clearTimers, label]);
+
   const shuffle = useCallback(() => {
     clearTimers();
     const original = label.split("");
@@ -73,7 +82,7 @@ export function RandomLetterSwap({ label, className, staggerDuration = 0.025 }: 
   }, [label, staggerDuration, clearTimers]);
 
   return (
-    <span className={cn("inline-flex", className)} onMouseEnter={shuffle} onMouseLeave={clearTimers}>
+    <span className={cn("inline-flex", className)} onMouseEnter={shuffle} onMouseLeave={reset}>
       {chars.map((char, i) => (
         <span key={i} className="inline-block">
           {char === " " ? " " : char}

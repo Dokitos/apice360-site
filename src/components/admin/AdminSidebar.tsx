@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
@@ -58,44 +59,77 @@ const navGroups: NavGroup[] = [
 
 export function AdminSidebar({ role }: { role: "ADMIN" | "EDITOR" }) {
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+
+  // Auto-close the mobile drawer whenever navigation happens.
+  useEffect(() => {
+    function closeDrawer() {
+      setOpen(false);
+    }
+    closeDrawer();
+  }, [pathname]);
 
   return (
-    <nav className="flex h-full w-64 shrink-0 flex-col gap-8 overflow-y-auto border-r border-outline-variant/20 bg-surface-container-lowest p-6">
-      <Link href="/admin" className="mb-2 flex items-center gap-2">
-        <Logo wordmarkClassName="text-headline-md" />
-      </Link>
+    <>
+      <button
+        type="button"
+        aria-label={open ? "Fechar menu" : "Abrir menu"}
+        onClick={() => setOpen((v) => !v)}
+        className="fixed left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg border border-outline-variant/40 bg-surface-container-lowest text-on-surface shadow-lg lg:hidden"
+      >
+        <Icon name={open ? "close" : "menu"} className="text-2xl" />
+      </button>
 
-      {navGroups.map((group) => {
-        const visibleItems = group.items.filter((item) => !item.adminOnly || role === "ADMIN");
-        if (visibleItems.length === 0) return null;
+      {open ? (
+        <div
+          onClick={() => setOpen(false)}
+          className="fixed inset-0 z-40 bg-ink/50 lg:hidden"
+          aria-hidden="true"
+        />
+      ) : null}
 
-        return (
-          <div key={group.title} className="flex flex-col gap-1">
-            <span className="mb-2 px-3 font-mono text-label-mono uppercase tracking-widest text-on-surface-variant/70">
-              {group.title}
-            </span>
-            {visibleItems.map((item) => {
-              const isActive =
-                item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
-                  )}
-                >
-                  <Icon name={item.icon} className="text-xl" />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-        );
-      })}
-    </nav>
+      <nav
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 flex h-full w-72 shrink-0 flex-col gap-8 overflow-y-auto border-r border-outline-variant/20 bg-surface-container-lowest p-6 transition-transform duration-300 lg:sticky lg:top-0 lg:z-auto lg:w-64 lg:translate-x-0",
+          open ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
+        <Link href="/admin" className="mb-2 flex items-center gap-2 pl-12 lg:pl-0">
+          <Logo wordmarkClassName="text-headline-md" />
+        </Link>
+
+        {navGroups.map((group) => {
+          const visibleItems = group.items.filter((item) => !item.adminOnly || role === "ADMIN");
+          if (visibleItems.length === 0) return null;
+
+          return (
+            <div key={group.title} className="flex flex-col gap-1">
+              <span className="mb-2 px-3 font-mono text-label-mono uppercase tracking-widest text-on-surface-variant/70">
+                {group.title}
+              </span>
+              {visibleItems.map((item) => {
+                const isActive =
+                  item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                      isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
+                    )}
+                  >
+                    <Icon name={item.icon} className="text-xl" />
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          );
+        })}
+      </nav>
+    </>
   );
 }

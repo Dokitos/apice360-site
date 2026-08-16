@@ -271,6 +271,7 @@ model Service {
   type         ServiceType          @unique
   imageUrl     String?
   ctaKey       String?
+  isActive     Boolean              @default(true)
   translations ServiceTranslation[]
   features     ServiceFeature[]
 }
@@ -414,6 +415,7 @@ model BlogComment {
 
 model LeadSubmission {
   id           String         @id @default(cuid())
+  refNumber    Int            @unique @default(autoincrement())
   type         LeadType
   name         String
   email        String

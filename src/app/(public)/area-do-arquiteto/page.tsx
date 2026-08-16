@@ -21,7 +21,7 @@ export default async function AreaDoArquitetoPage() {
         heading={intro?.heading ?? "Uma Parceria Construída em Confiança e Especialização Técnica."}
         body={
           intro?.body ??
-          "Trabalhamos lado a lado com gabinetes de arquitetura que partilham o nosso compromisso com a qualidade e a inovação construtiva. Se procura um parceiro de execução rigoroso para os seus projetos em LSF ou remodelação, fale connosco."
+          "Trabalhamos lado a lado com gabinetes de arquitetura que partilham o nosso compromisso com a qualidade e a inovação construtiva. Se procura um parceiro de execução rigoroso para os seus projetos em LSF, fale connosco."
         }
         imageUrl={intro?.imageUrl}
       />

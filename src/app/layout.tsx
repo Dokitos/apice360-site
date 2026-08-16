@@ -26,7 +26,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Ápice 360 | Construção em Light Steel Frame de Alta Performance",
   description:
-    "Construímos o futuro com leveza, velocidade e confiança. Estruturas em LSF - Light Steel Frame e Remodelações completas para transformar o seu espaço com tecnologia, rapidez e excelência.",
+    "Construímos o futuro com leveza, velocidade e confiança. Estruturas em LSF - Light Steel Frame para transformar o seu espaço com tecnologia, rapidez e excelência.",
 };
 
 export default function RootLayout({

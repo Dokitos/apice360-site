@@ -16,6 +16,7 @@ import {
 
 type Lead = {
   id: string;
+  refNumber: number;
   type: "CONTACT" | "BUDGET" | "ARCHITECT_PARTNERSHIP";
   name: string;
   email: string;
@@ -100,6 +101,9 @@ export function LeadDetailPanel({ lead, activities, users }: { lead: Lead; activ
         <div>
           <div className="mb-2 flex items-center gap-3">
             <h1 className="font-heading text-headline-lg">{lead.name}</h1>
+            <span className="rounded-full bg-outline-variant/20 px-3 py-1 font-mono text-xs font-bold text-on-surface-variant">
+              #{lead.refNumber}
+            </span>
             <span className={cn("rounded-full px-3 py-1 text-xs font-bold uppercase tracking-widest", STATUS_CLASS[lead.status])}>
               {STATUS_LABEL[lead.status]}
             </span>
@@ -250,27 +254,35 @@ export function LeadDetailPanel({ lead, activities, users }: { lead: Lead; activ
               Histórico
             </p>
             <ol className="flex flex-col gap-4">
-              <li className="flex gap-3 text-xs">
-                <Icon name="mark_email_unread" className="mt-0.5 shrink-0 text-base text-primary" />
-                <div>
-                  <p className="text-on-surface">Lead recebida do site</p>
-                  <p className="text-on-surface-variant">
-                    {new Date(lead.createdAt).toLocaleString("pt-PT", { dateStyle: "short", timeStyle: "short" })}
-                  </p>
-                </div>
-              </li>
-              {activities.map((a) => (
-                <li key={a.id} className="flex gap-3 text-xs">
-                  <Icon name={ACTIVITY_ICON[a.type]} className="mt-0.5 shrink-0 text-base text-on-surface-variant" />
-                  <div>
-                    <p className="text-on-surface">{a.note}</p>
-                    <p className="text-on-surface-variant">
-                      {new Date(a.createdAt).toLocaleString("pt-PT", { dateStyle: "short", timeStyle: "short" })}
-                      {a.userName ? ` · ${a.userName}` : ""}
-                    </p>
-                  </div>
-                </li>
-              ))}
+              {[
+                {
+                  id: "created",
+                  icon: "mark_email_unread",
+                  label: "Lead recebida do site",
+                  createdAt: lead.createdAt,
+                  userName: null as string | null,
+                },
+                ...activities.map((a) => ({
+                  id: a.id,
+                  icon: ACTIVITY_ICON[a.type],
+                  label: a.note ?? "",
+                  createdAt: a.createdAt,
+                  userName: a.userName,
+                })),
+              ]
+                .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                .map((entry) => (
+                  <li key={entry.id} className="flex gap-3 text-xs">
+                    <Icon name={entry.icon} className="mt-0.5 shrink-0 text-base text-on-surface-variant" />
+                    <div>
+                      <p className="text-on-surface">{entry.label}</p>
+                      <p className="text-on-surface-variant">
+                        {new Date(entry.createdAt).toLocaleString("pt-PT", { dateStyle: "short", timeStyle: "short" })}
+                        {entry.userName ? ` · ${entry.userName}` : ""}
+                      </p>
+                    </div>
+                  </li>
+                ))}
             </ol>
           </Card>
         </div>

@@ -2,13 +2,14 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, TextAreaField } from "@/components/admin/form-fields";
+import { TextField, TextAreaField, CheckboxField } from "@/components/admin/form-fields";
 import { ImageField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 
 type Service = {
   imageUrl: string | null;
   ctaKey: string | null;
+  isActive: boolean;
   translations: { locale: "PT" | "EN"; cardLabel: string; title: string; intro: string }[];
 };
 
@@ -32,6 +33,12 @@ export function ServiceForm({ service, action }: ServiceFormProps) {
         defaultValue={service?.ctaKey ?? ""}
         placeholder="ex: services_lsf_advantages"
         hint="Ligação a um CTA criado no módulo CTAs."
+      />
+      <CheckboxField
+        id="isActive"
+        name="isActive"
+        label="Ativo (visível no site)"
+        defaultChecked={service?.isActive ?? true}
       />
       <LocaleTabs
         pt={

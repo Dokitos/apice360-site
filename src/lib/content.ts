@@ -147,6 +147,7 @@ export const getService = cache(
       type: service.type,
       imageUrl: service.imageUrl,
       ctaKey: service.ctaKey,
+      isActive: service.isActive,
       cardLabel: t?.cardLabel ?? "",
       title: t?.title ?? "",
       intro: t?.intro ?? "",
@@ -163,7 +164,9 @@ export const getServices = cache(async (locale: Locale = DEFAULT_LOCALE) => {
     getService("LSF", locale),
     getService("REMODELACAO", locale),
   ]);
-  return [lsf, remodelacao].filter((s): s is NonNullable<typeof s> => Boolean(s));
+  return [lsf, remodelacao].filter(
+    (s): s is NonNullable<typeof s> => s !== null && s.isActive,
+  );
 });
 
 function mapProject<

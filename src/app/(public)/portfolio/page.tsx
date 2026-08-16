@@ -12,10 +12,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PortfolioPage() {
-  const [featured, lsfProjects, remodelacaoProjects, cta] = await Promise.all([
+  const [featured, lsfProjects, cta] = await Promise.all([
     getFeaturedProjects(),
     getProjectsByCategory("LSF"),
-    getProjectsByCategory("REMODELACAO"),
     getCta("portfolio_final_budget"),
   ]);
 
@@ -29,7 +28,6 @@ export default async function PortfolioPage() {
 
       <PortfolioGrid heading="Projetos de Alto Desempenho" projects={featured} variant="featured" />
       <PortfolioGrid heading="LSF - Light Steel Frame" projects={lsfProjects} variant="numbered" />
-      <PortfolioGrid heading="Remodelação Total" projects={remodelacaoProjects} variant="numbered" />
 
       {cta ? (
         <Reveal as="section" className="bg-surface-container-lowest py-24 text-center">

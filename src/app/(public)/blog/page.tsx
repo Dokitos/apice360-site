@@ -32,7 +32,7 @@ export default async function BlogPage({
       <PageIntroSection
         eyebrow="Blog da Construção"
         heading="Blog Ápice 360: Conhecimento de Construção em Alto Desempenho."
-        body="O seu recurso especializado sobre LSF, Remodelações de Alto Valor e gestão de projetos. Educamos o mercado para que possa investir com segurança e total confiança."
+        body="O seu recurso especializado sobre LSF e gestão de projetos. Educamos o mercado para que possa investir com segurança e total confiança."
       />
 
       <Reveal as="section" className="bg-surface py-24">

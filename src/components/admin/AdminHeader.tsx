@@ -8,7 +8,7 @@ type AdminHeaderProps = {
 
 export function AdminHeader({ name, role }: AdminHeaderProps) {
   return (
-    <header className="flex items-center justify-between border-b border-outline-variant/20 bg-surface-container-lowest px-8 py-4">
+    <header className="flex items-center justify-between border-b border-outline-variant/20 bg-surface-container-lowest py-4 pl-20 pr-4 lg:px-8">
       <div>
         <p className="text-sm font-bold text-on-surface">{name}</p>
         <p className="font-mono text-label-mono uppercase tracking-widest text-on-surface-variant">

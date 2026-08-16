@@ -7,7 +7,6 @@ import { PrivacyLink } from "@/components/layout/PrivacyLink";
 
 const SERVICE_LINKS = [
   { href: "/servicos#lsf", label: "LSF" },
-  { href: "/servicos#remodelacao", label: "Remodelação" },
   { href: "/contacto", label: "Trabalhe Connosco" },
   { href: "/area-do-arquiteto", label: "Área dos Arquitetos" },
   { href: "/contacto", label: "Orçamento" },

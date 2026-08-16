@@ -12,6 +12,7 @@ function readServiceForm(formData: FormData) {
   return {
     imageUrl: formData.get("imageUrl") || undefined,
     ctaKey: formData.get("ctaKey") || undefined,
+    isActive: formData.get("isActive") === "on",
     cardLabelPt: formData.get("cardLabelPt"),
     cardLabelEn: formData.get("cardLabelEn"),
     titlePt: formData.get("titlePt"),

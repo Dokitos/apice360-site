@@ -9,6 +9,7 @@ import { bulkDeleteLeads, bulkSetStatus, deleteLead, setLeadStatus } from "@/app
 
 type LeadRow = {
   id: string;
+  refNumber: number;
   type: "CONTACT" | "BUDGET" | "ARCHITECT_PARTNERSHIP";
   name: string;
   email: string;
@@ -199,9 +200,14 @@ export function LeadsTable({ leads, sort, sortHref }: LeadsTableProps) {
                   />
                 </td>
                 <td className="px-4 py-3 align-middle">
-                  <Link href={`/admin/leads/${lead.id}`} className="font-bold hover:text-primary">
-                    {lead.name}
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-full bg-outline-variant/20 px-2 py-0.5 font-mono text-[11px] font-bold text-on-surface-variant">
+                      #{lead.refNumber}
+                    </span>
+                    <Link href={`/admin/leads/${lead.refNumber}`} className="font-bold hover:text-primary">
+                      {lead.name}
+                    </Link>
+                  </div>
                 </td>
                 <td className="px-4 py-3 align-middle">
                   <div className="flex flex-col gap-1 text-xs">
@@ -264,7 +270,7 @@ export function LeadsTable({ leads, sort, sortHref }: LeadsTableProps) {
                 <td className="px-4 py-3 text-right align-middle">
                   <div className="flex items-center justify-end gap-1">
                     <Link
-                      href={`/admin/leads/${lead.id}`}
+                      href={`/admin/leads/${lead.refNumber}`}
                       title="Ver detalhe"
                       className="flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary"
                     >

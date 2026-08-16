@@ -102,6 +102,18 @@ body {
   overflow-x: hidden;
 }
 
+/* Native <button> defaults to cursor: default (not pointer) in every
+   browser, so anything rendered as a real <button> — not an <a> — needs
+   this explicitly, across the public site and the admin panel. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+label,
+input[type="checkbox"],
+input[type="radio"],
+select {
+  cursor: pointer;
+}
+
 /* Thin scrollbar matching the palette */
 html {
   scrollbar-width: thin;

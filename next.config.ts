@@ -21,14 +21,20 @@ const nextConfig: NextConfig = {
             // inline hydration scripts; img-src allows any https source
             // since admins paste arbitrary image URLs (partners, blog, etc);
             // fonts.googleapis.com/gstatic.com serve the Material Symbols
-            // icon font used sitewide (see src/app/layout.tsx).
+            // icon font used sitewide (see src/app/layout.tsx);
+            // *.tile.openstreetmap.org serves the map tiles used by the
+            // contact page map (see src/components/ui/map.tsx) — Carto's
+            // hosted vector tiles don't send CORS headers, so OSM's raster
+            // tiles are used instead; worker-src blob: is required by
+            // maplibre-gl's tile worker.
             value: [
               "default-src 'self'",
-              "img-src 'self' https: data:",
+              "img-src 'self' https: data: blob:",
               "script-src 'self' 'unsafe-inline'",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' data: https://fonts.gstatic.com",
-              "connect-src 'self'",
+              "connect-src 'self' https://*.tile.openstreetmap.org",
+              "worker-src 'self' blob:",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",

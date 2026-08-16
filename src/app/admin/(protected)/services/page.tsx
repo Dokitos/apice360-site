@@ -24,7 +24,20 @@ export default async function ServicesPage() {
           const title = service?.translations.find((t) => t.locale === "PT")?.title;
           return (
             <Card key={type} className="flex flex-col gap-4 p-8">
-              <Icon name="engineering" className="text-3xl text-primary" />
+              <div className="flex items-center justify-between">
+                <Icon name="engineering" className="text-3xl text-primary" />
+                {service ? (
+                  <span
+                    className={
+                      service.isActive
+                        ? "text-sm font-bold text-primary"
+                        : "text-sm font-bold text-on-surface-variant"
+                    }
+                  >
+                    {service.isActive ? "Ativo" : "Inativo"}
+                  </span>
+                ) : null}
+              </div>
               <div>
                 <h3 className="font-heading text-headline-md">{label}</h3>
                 <p className="mt-1 text-sm text-on-surface-variant">

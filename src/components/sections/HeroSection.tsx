@@ -12,11 +12,32 @@ type HeroSectionProps = {
   trustBadges?: TrustBadge[];
 };
 
+// Gives the exact phrase "3x Mais Rápido" / "3x Faster" a distinct accent
+// color to call it out within the hero heading, whichever locale is active.
+// Falls back to plain text if the copy ever changes and no longer contains
+// either phrase.
+function renderHeadingWithEmphasis(heading: string) {
+  const targets = ["3x Mais Rápido", "3x Faster"];
+  const target = targets.find((t) => heading.includes(t));
+  if (!target) return heading;
+  const idx = heading.indexOf(target);
+  return (
+    <>
+      {heading.slice(0, idx)}
+      <span className="text-primary">{target}</span>
+      {heading.slice(idx + target.length)}
+    </>
+  );
+}
+
 export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trustBadges = [] }: HeroSectionProps) {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden" id="hero">
       <div
-        className="absolute inset-0 z-0 h-full w-full bg-cover bg-center bg-fixed"
+        // bg-fixed (parallax) is desktop-only: mobile Safari/Chrome render
+        // fixed-attachment backgrounds incorrectly (clipped/blurry), so it
+        // falls back to a normal scrolling background below md.
+        className="absolute inset-0 z-0 h-full w-full bg-cover bg-center bg-scroll md:bg-fixed"
         style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
       >
         {/* Kept dark for legibility over the photo, independent of the site's light theme. */}
@@ -25,12 +46,12 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
       <div className="relative z-10 mx-auto w-full max-w-[1280px] px-5 py-32 text-center md:px-20 lg:text-left">
         <div className="max-w-4xl lg:mx-0 mx-auto">
           {eyebrow ? (
-            <span className="mb-8 inline-block border border-primary bg-primary/10 px-4 py-1.5 font-mono text-label-mono uppercase tracking-[0.3em] text-primary">
+            <span className="mb-8 inline-block bg-gradient-to-r from-primary to-primary-deep px-4 py-1.5 font-mono text-label-mono uppercase tracking-[0.3em] text-white shadow-[0_4px_20px_rgba(255,106,19,0.35)]">
               {eyebrow}
             </span>
           ) : null}
           <h1 className="mb-8 font-heading text-[2.75rem] leading-[1.1] text-white drop-shadow-lg md:text-headline-xl">
-            {heading}
+            {renderHeadingWithEmphasis(heading)}
           </h1>
           {subheading ? (
             <p className="mx-auto mb-12 max-w-2xl text-body-lg leading-relaxed text-white/90 lg:mx-0">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getPageSection, getCta, getSiteSettings, getPageSeo } from "@/lib/content";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { ContactMap } from "@/components/sections/ContactMap";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -64,18 +65,7 @@ export default async function ContactoPage() {
           </div>
 
           <div>
-            {settings?.mapEmbedUrl ? (
-              <iframe
-                src={settings.mapEmbedUrl}
-                className="mb-8 h-64 w-full rounded-lg border border-outline-variant/20"
-                loading="lazy"
-                title="Localização Ápice 360"
-              />
-            ) : (
-              <div className="mb-8 flex h-64 w-full items-center justify-center rounded-lg border border-outline-variant/20 bg-surface-container text-on-surface-variant">
-                Mapa
-              </div>
-            )}
+            <ContactMap className="mb-8 h-64 w-full overflow-hidden rounded-lg border border-outline-variant/20" />
             <h3 className="mb-2 font-heading text-headline-md">Conheça o Nosso Showroom</h3>
             <p className="mb-8 text-on-surface-variant">
               {settings?.t?.showroomText ?? "Agende uma visita e conheça o nosso escritório e galpão de exposição."}

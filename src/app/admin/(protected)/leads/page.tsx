@@ -197,6 +197,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
       <LeadsTable
         leads={leads.map((l) => ({
           id: l.id,
+          refNumber: l.refNumber,
           type: l.type,
           name: l.name,
           email: l.email,

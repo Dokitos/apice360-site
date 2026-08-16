@@ -6,12 +6,14 @@ import { LeadDetailPanel } from "@/components/admin/leads/LeadDetailPanel";
 
 export const dynamic = "force-dynamic";
 
-export default async function LeadDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default async function LeadDetailPage({ params }: { params: Promise<{ refNumber: string }> }) {
+  const { refNumber: refNumberParam } = await params;
+  const refNumber = Number(refNumberParam);
+  if (Number.isNaN(refNumber)) notFound();
 
   const [lead, users] = await Promise.all([
     prisma.leadSubmission.findUnique({
-      where: { id },
+      where: { refNumber },
       include: {
         assignedTo: { select: { id: true, name: true } },
         activities: {
@@ -38,6 +40,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
       <LeadDetailPanel
         lead={{
           id: lead.id,
+          refNumber: lead.refNumber,
           type: lead.type,
           name: lead.name,
           email: lead.email,

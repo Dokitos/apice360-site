@@ -55,7 +55,7 @@ async function seedAdminAndSettings() {
       showroomText: "Venha conhecer o nosso showroom no Seixal e toda a estrutura em LSF de perto. Esperamos por si!",
       defaultSeoTitle: "Ápice 360 | Construção em Light Steel Frame de Alta Performance",
       defaultSeoDescription:
-        "Estruturas em LSF - Light Steel Frame e Remodelações completas para transformar o seu espaço com tecnologia, rapidez e excelência.",
+        "Estruturas em LSF - Light Steel Frame para transformar o seu espaço com tecnologia, rapidez e excelência.",
     },
     EN: {
       footerDescription:
@@ -63,7 +63,7 @@ async function seedAdminAndSettings() {
       showroomText: "Come visit our showroom in Seixal and see the LSF structure up close. We look forward to it!",
       defaultSeoTitle: "Ápice 360 | High-Performance Light Steel Frame Construction",
       defaultSeoDescription:
-        "LSF - Light Steel Frame structures and full renovations to transform your space with technology, speed and excellence.",
+        "LSF - Light Steel Frame structures to transform your space with technology, speed and excellence.",
     },
   } as const;
 
@@ -256,7 +256,7 @@ async function upsertSection(
 
 async function seedPageSections() {
   await upsertSection("HOME", "hero", {
-    imageUrl: "/images/hero-lsf-house.png",
+    imageUrl: "/images/hero-bg.jpg",
     eyebrowPt: "O Modelo de Construção Mais Utilizado em Portugal",
     eyebrowEn: "Portugal's Most Widely Used Construction Model",
     headingPt: "A Sua Moradia Pronta Até 3x Mais Rápido, Com a Segurança do Aço Leve.",
@@ -302,8 +302,8 @@ async function seedPageSections() {
   await upsertSection("HOME", "blog_preview", {
     headingPt: "Aprenda com quem constrói no mais alto nível.",
     headingEn: "Learn from those who build at the highest level.",
-    subheadingPt: "No Blog da Ápice 360 partilhamos tudo o que precisa de saber sobre LSF, remodelações e construção inteligente.",
-    subheadingEn: "On the Ápice 360 Blog we share everything you need to know about LSF, renovations and smart construction.",
+    subheadingPt: "No Blog da Ápice 360 partilhamos tudo o que precisa de saber sobre LSF e construção inteligente.",
+    subheadingEn: "On the Ápice 360 Blog we share everything you need to know about LSF and smart construction.",
   });
 
   await upsertSection("QUEM_SOMOS", "intro", {
@@ -331,24 +331,24 @@ async function seedPageSections() {
         iconName: "engineering",
         titlePt: "Fundador e Autoridade",
         titleEn: "Founder and Authority",
-        bodyPt: "Jefferson, Arquiteto com mais de 30 anos de experiência na área da construção, identificou a ineficiência do mercado português e viu a oportunidade de atuar em remodelações chave na mão e no sistema LSF.",
-        bodyEn: "Jefferson, an Architect with more than 30 years of experience in construction, identified the inefficiency of the Portuguese market and saw the opportunity to act in turnkey renovations and the LSF system.",
+        bodyPt: "Jefferson, Arquiteto com mais de 30 anos de experiência na área da construção, identificou a ineficiência do mercado português e viu a oportunidade de atuar no sistema LSF em modelo chave na mão.",
+        bodyEn: "Jefferson, an Architect with more than 30 years of experience in construction, identified the inefficiency of the Portuguese market and saw the opportunity to act in the LSF system under a turnkey model.",
       },
       {
         order: 1,
         iconName: "flag",
         titlePt: "A Nossa Missão",
         titleEn: "Our Mission",
-        bodyPt: "Transformar o processo de construção e remodelação em Portugal e na Europa, entregando projetos de excelência com segurança, rapidez e total responsabilidade.",
-        bodyEn: "Transform the construction and renovation process in Portugal and Europe, delivering projects of excellence with safety, speed and full accountability.",
+        bodyPt: "Transformar o processo de construção em Portugal e na Europa, entregando projetos de excelência com segurança, rapidez e total responsabilidade.",
+        bodyEn: "Transform the construction process in Portugal and Europe, delivering projects of excellence with safety, speed and full accountability.",
       },
       {
         order: 2,
         iconName: "visibility",
         titlePt: "A Nossa Visão",
         titleEn: "Our Vision",
-        bodyPt: "Ser a maior e mais respeitada referência em construção LSF e Remodelações de elevado valor em Portugal, e expandir essa autoridade para o mercado europeu.",
-        bodyEn: "Be the largest and most respected reference in LSF construction and high-value renovations in Portugal, expanding that authority into the European market.",
+        bodyPt: "Ser a maior e mais respeitada referência em construção LSF de elevado valor em Portugal, e expandir essa autoridade para o mercado europeu.",
+        bodyEn: "Be the largest and most respected reference in high-value LSF construction in Portugal, expanding that authority into the European market.",
       },
     ],
   );
@@ -429,8 +429,8 @@ async function seedPageSections() {
   );
 
   await upsertSection("SERVICOS", "intro", {
-    headingPt: "Soluções de Alto Desempenho: Construção em LSF e Remodelação Total, ambos no modelo Chave na Mão.",
-    headingEn: "High-Performance Solutions: LSF Construction and Full Renovation, both Turnkey.",
+    headingPt: "Soluções de Alto Desempenho: Construção em LSF, no modelo Chave na Mão.",
+    headingEn: "High-Performance Solutions: LSF Construction, Turnkey.",
     bodyPt: "Na Ápice 360, a nossa equipa própria e a gestão rigorosa garantem que o seu projeto de elevado valor é entregue com a máxima segurança e rapidez, do início ao fim.",
     bodyEn: "At Ápice 360, our in-house team and rigorous management ensure your high-value project is delivered with maximum safety and speed, start to finish.",
   });
@@ -491,8 +491,8 @@ async function seedPageSections() {
     imageUrl: img("architect-partnership", 1400, 900),
     headingPt: "Uma Parceria Construída em Confiança e Especialização Técnica.",
     headingEn: "A Partnership Built on Trust and Technical Expertise.",
-    bodyPt: "Trabalhamos lado a lado com gabinetes de arquitetura que partilham o nosso compromisso com a qualidade e a inovação construtiva. Se procura um parceiro de execução rigoroso para os seus projetos em LSF ou remodelação, fale connosco.",
-    bodyEn: "We work side by side with architecture firms that share our commitment to quality and construction innovation. If you're looking for a rigorous execution partner for your LSF or renovation projects, talk to us.",
+    bodyPt: "Trabalhamos lado a lado com gabinetes de arquitetura que partilham o nosso compromisso com a qualidade e a inovação construtiva. Se procura um parceiro de execução rigoroso para os seus projetos em LSF, fale connosco.",
+    bodyEn: "We work side by side with architecture firms that share our commitment to quality and construction innovation. If you're looking for a rigorous execution partner for your LSF projects, talk to us.",
   });
 
   console.log("Page sections ok");
@@ -685,13 +685,14 @@ async function seedServices() {
   if (remodelacaoExisting) {
     await prisma.service.update({
       where: { type: "REMODELACAO" },
-      data: { imageUrl: "/images/hero-lsf-house.png" },
+      data: { imageUrl: "/images/hero-lsf-house.png", isActive: false },
     });
   } else {
     await prisma.service.create({
       data: {
         type: "REMODELACAO",
         imageUrl: "/images/hero-lsf-house.png",
+        isActive: false,
         ctaKey: "services_remodelacao_cta",
         translations: {
           create: [
@@ -867,7 +868,9 @@ async function seedPortfolio() {
         clientLocation: p.clientLocation,
         coverImageUrl: img(p.slug, 1200, 800),
         order: i,
-        isPublished: true,
+        // Remodelação is deactivated (client wants LSF-only focus) — keep the
+        // historical rows but unpublished if the DB is ever wiped and reseeded.
+        isPublished: p.category !== "REMODELACAO",
         publishedAt: new Date(),
         translations: {
           create: [
@@ -1015,7 +1018,9 @@ async function seedBlog() {
         categoryId: categories[p.categorySlug] ?? null,
         authorId: admin?.id,
         featuredImageUrl: img(p.slug, 1200, 700),
-        status: "PUBLISHED",
+        // Remodelação is deactivated (client wants LSF-only focus) — keep the
+        // historical posts but draft if the DB is ever wiped and reseeded.
+        status: p.categorySlug === "remodelacao" ? "DRAFT" : "PUBLISHED",
         publishedAt: new Date(Date.now() - (posts.length - i) * 1000 * 60 * 60 * 24 * 7),
         translations: {
           create: [
@@ -1079,8 +1084,8 @@ async function seedPageSeo() {
       page: "HOME",
       titlePt: "Ápice 360 | Construção em Light Steel Frame de Alta Performance",
       titleEn: "Ápice 360 | High-Performance Light Steel Frame Construction",
-      descriptionPt: "Construímos o futuro com leveza, velocidade e confiança. Estruturas em LSF e Remodelações completas.",
-      descriptionEn: "We build the future with lightness, speed and trust. LSF structures and full renovations.",
+      descriptionPt: "Construímos o futuro com leveza, velocidade e confiança. Estruturas em LSF de alta performance.",
+      descriptionEn: "We build the future with lightness, speed and trust. High-performance LSF structures.",
     },
     {
       page: "QUEM_SOMOS",
@@ -1093,8 +1098,8 @@ async function seedPageSeo() {
       page: "SERVICOS",
       titlePt: "Serviços | Ápice 360",
       titleEn: "Services | Ápice 360",
-      descriptionPt: "Construção em LSF e Remodelação Total, ambos no modelo Chave na Mão.",
-      descriptionEn: "LSF construction and full renovation, both delivered turnkey.",
+      descriptionPt: "Construção em LSF, no modelo Chave na Mão.",
+      descriptionEn: "LSF construction, delivered turnkey.",
     },
     {
       page: "PORTFOLIO",
@@ -1107,8 +1112,8 @@ async function seedPageSeo() {
       page: "BLOG",
       titlePt: "Blog da Construção | Ápice 360",
       titleEn: "Construction Blog | Ápice 360",
-      descriptionPt: "O seu recurso especializado sobre LSF, Remodelações de Alto Valor e gestão de projetos.",
-      descriptionEn: "Your specialized resource on LSF, high-value renovations and project management.",
+      descriptionPt: "O seu recurso especializado sobre LSF e gestão de projetos.",
+      descriptionEn: "Your specialized resource on LSF and project management.",
     },
     {
       page: "CONTACTO",
@@ -1128,7 +1133,31 @@ async function seedPageSeo() {
 
   for (const entry of entries) {
     const existing = await prisma.pageSeo.findUnique({ where: { page: entry.page } });
-    if (existing) continue;
+    if (existing) {
+      // Reachable on every reseed once the row exists — unlike the
+      // Portfolio/Blog per-item skip-guards, page-level SEO copy must stay
+      // editable from here so text fixes (e.g. dropping Remodelação) apply.
+      await prisma.pageSeo.update({
+        where: { page: entry.page },
+        data: {
+          translations: {
+            upsert: [
+              {
+                where: { pageSeoId_locale: { pageSeoId: existing.id, locale: "PT" } },
+                update: { title: entry.titlePt, description: entry.descriptionPt },
+                create: { locale: "PT", title: entry.titlePt, description: entry.descriptionPt },
+              },
+              {
+                where: { pageSeoId_locale: { pageSeoId: existing.id, locale: "EN" } },
+                update: { title: entry.titleEn, description: entry.descriptionEn },
+                create: { locale: "EN", title: entry.titleEn, description: entry.descriptionEn },
+              },
+            ],
+          },
+        },
+      });
+      continue;
+    }
     await prisma.pageSeo.create({
       data: {
         page: entry.page,
