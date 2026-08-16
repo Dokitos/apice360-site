@@ -7,26 +7,16 @@ type LogoProps = {
   showWordmark?: boolean;
 };
 
-/** Stylized mountain-peak mark, matching the Ápice 360 brand icon used across print material. */
+/** Ápice 360 brand mark (mountain-peak icon on the brand orange), matching print material. */
 export function Logo({ className, iconClassName, wordmarkClassName, showWordmark = true }: LogoProps) {
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <svg
-        viewBox="0 0 48 48"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className={cn("h-8 w-8 text-primary", iconClassName)}
-        aria-hidden="true"
-      >
-        <path d="M24 7 L13 39" />
-        <path d="M24 7 L35 39" />
-        <path d="M19.5 25 L28.5 25" />
-        <path d="M7 39 L17 23" />
-        <path d="M41 39 L31 23" />
-      </svg>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/images/logo.png"
+        alt="Ápice 360"
+        className={cn("h-8 w-8 shrink-0 rounded-md object-cover", iconClassName)}
+      />
       {showWordmark ? (
         <span className={cn("font-heading text-headline-md font-bold tracking-tighter text-on-surface", wordmarkClassName)}>
           ÁPICE<span className="text-primary"> 360</span>
