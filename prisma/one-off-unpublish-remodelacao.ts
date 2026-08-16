@@ -28,19 +28,30 @@ async function main() {
   });
   console.log(`Portfolio: ${projects.count} projeto(s) Remodelação despublicado(s).`);
 
+  // Prefer matching by category, but some environments seeded these posts
+  // before the "remodelacao" category existed, leaving categoryId null —
+  // fall back to matching the known post slugs directly so the fix is
+  // robust either way.
   const remodelacaoCategory = await prisma.blogCategory.findFirst({
     where: { translations: { some: { slug: "remodelacao" } } },
   });
+  const knownSlugs = ["remodelar-uma-ruina-o-caminho", "remodelacao-ou-construcao-convencional"];
 
-  if (!remodelacaoCategory) {
-    console.log("Blog: categoria 'remodelacao' não encontrada — nada a fazer.");
-  } else {
-    const posts = await prisma.blogPost.updateMany({
-      where: { categoryId: remodelacaoCategory.id },
-      data: { status: "DRAFT" },
-    });
-    console.log(`Blog: ${posts.count} artigo(s) da categoria Remodelação movido(s) para Rascunho.`);
-  }
+  const targetPosts = await prisma.blogPost.findMany({
+    where: {
+      OR: [
+        ...(remodelacaoCategory ? [{ categoryId: remodelacaoCategory.id }] : []),
+        { translations: { some: { slug: { in: knownSlugs } } } },
+      ],
+    },
+    select: { id: true },
+  });
+
+  const posts = await prisma.blogPost.updateMany({
+    where: { id: { in: targetPosts.map((p) => p.id) } },
+    data: { status: "DRAFT" },
+  });
+  console.log(`Blog: ${posts.count} artigo(s) de Remodelação movido(s) para Rascunho.`);
 
   const service = await prisma.service.updateMany({
     where: { type: "REMODELACAO" },
