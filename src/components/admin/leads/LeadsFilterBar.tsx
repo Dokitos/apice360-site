@@ -26,7 +26,7 @@ export function LeadsFilterBar({ currentType, currentStatus, q, from, to, status
     <form ref={formRef} method="GET" className="mb-6 flex flex-wrap items-end gap-3">
       <input type="hidden" name="type" value={currentType} />
 
-      <label className="flex flex-col gap-1.5">
+      <label className="flex w-full flex-col gap-1.5 sm:w-64">
         <span className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">Pesquisar</span>
         <div className="relative">
           <Icon
@@ -38,7 +38,7 @@ export function LeadsFilterBar({ currentType, currentStatus, q, from, to, status
             name="q"
             defaultValue={q}
             placeholder="Nome, email, telefone ou mensagem..."
-            className={`${fieldClasses} w-64 pl-8`}
+            className={`${fieldClasses} w-full pl-8`}
           />
         </div>
       </label>

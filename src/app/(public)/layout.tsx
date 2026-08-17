@@ -5,8 +5,11 @@ import { ScrollToTopButton } from "@/components/layout/ScrollToTopButton";
 import { WhatsAppFloatingButton } from "@/components/layout/WhatsAppFloatingButton";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 import { Analytics } from "@/components/layout/Analytics";
+import { getLocale } from "@/lib/locale";
 
-export default function PublicLayout({ children }: { children: React.ReactNode }) {
+export default async function PublicLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
+
   return (
     <>
       <SmoothScroll />
@@ -15,7 +18,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <Footer />
       <ScrollToTopButton />
       <WhatsAppFloatingButton />
-      <CookieConsent />
+      <CookieConsent locale={locale} />
       <Analytics />
     </>
   );

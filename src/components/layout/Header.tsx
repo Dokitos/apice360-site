@@ -29,7 +29,7 @@ export async function Header() {
               href={link.href}
               className="whitespace-nowrap text-[13px] font-medium tracking-wide text-on-surface-variant transition-colors hover:text-primary"
             >
-              <RandomLetterSwap label={link.label} />
+              <RandomLetterSwap key={link.label} label={link.label} />
             </Link>
           ))}
         </nav>

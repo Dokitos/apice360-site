@@ -117,6 +117,51 @@ const dictionary = {
         "Trabalhamos lado a lado com gabinetes de arquitetura que partilham o nosso compromisso com a qualidade e a inovação construtiva. Se procura um parceiro de execução rigoroso para os seus projetos em LSF, fale connosco.",
       ctaHeading: "Vamos Construir Juntos o Próximo Projeto",
     },
+    privacy: {
+      bannerPrefix:
+        "🍪 Usamos cookies e armazenamento local essenciais para o funcionamento do site, bem como ferramentas de analítica para compreender a utilização do site. Ao continuar a navegar, está a concordar com a nossa ",
+      bannerLinkLabel: "Política de Privacidade",
+      bannerSuffix: ".",
+      reject: "Recusar",
+      acceptAll: "Aceitar todos",
+      pageEyebrow: "Privacidade",
+      pageTitle: "Política de Privacidade e Cookies",
+      rgpdNote: "Conforme o RGPD (Regulamento UE 2016/679)",
+      sections: [
+        {
+          title: "Dados que recolhemos.",
+          body: "Nome, e-mail, telefone/WhatsApp e informações sobre o seu projeto, fornecidos voluntariamente por si através do formulário de contacto, do simulador ou de conversas iniciadas pelo WhatsApp.",
+        },
+        {
+          title: "Finalidade.",
+          body: "Usamos estes dados exclusivamente para responder ao seu pedido, elaborar estudos de viabilidade e orçamentos, e apresentar os serviços da Ápice 360.",
+        },
+        {
+          title: "Partilha.",
+          body: "Não vendemos nem partilhamos os seus dados com terceiros para fins de marketing. Os dados só são partilhados quando exigido por lei ou necessário para prestar o serviço solicitado.",
+        },
+        {
+          title: "Cookies e armazenamento local.",
+          body: "Este site utiliza armazenamento local essencial para lembrar a sua escolha neste aviso de cookies.",
+        },
+        {
+          title: "Dados de Analítica.",
+          body: "Este site também recolhe dados analíticos sobre a utilização (como páginas visitadas, tempo de permanência e origem do acesso), através de ferramentas de analítica, com o objetivo de compreender e melhorar a experiência dos visitantes.",
+        },
+        {
+          title: "Os seus direitos.",
+          body: "A qualquer momento pode solicitar acesso, correção, portabilidade ou eliminação dos seus dados pessoais, contactando-nos pelo WhatsApp ou pelo e-mail geral@apice360.com.",
+        },
+      ],
+      manageHeading: "Gerir Definições de Privacidade e Cookies",
+      manageBody: "Pode alterar a sua escolha sobre cookies e armazenamento local a qualquer momento.",
+      manageButton: "Gerir Preferências",
+      manageConfirmation: "As suas preferências foram repostas. Escolha novamente no aviso no fundo da página.",
+      deletionHeading: "Eliminação dos Seus Dados",
+      deletionBody:
+        "Para solicitar o acesso, a correção, a portabilidade ou a eliminação dos seus dados pessoais, contacte-nos através do email:",
+      deletionEmail: "geral@apice360.com",
+    },
   },
   EN: {
     nav: {
@@ -230,6 +275,51 @@ const dictionary = {
       bodyDefault:
         "We work side by side with architecture firms that share our commitment to quality and construction innovation. If you're looking for a rigorous execution partner for your LSF projects, talk to us.",
       ctaHeading: "Let's Build the Next Project Together",
+    },
+    privacy: {
+      bannerPrefix:
+        "🍪 We use essential cookies and local storage for the site to work, as well as analytics tools to understand how the site is used. By continuing to browse, you agree to our ",
+      bannerLinkLabel: "Privacy Policy",
+      bannerSuffix: ".",
+      reject: "Reject",
+      acceptAll: "Accept all",
+      pageEyebrow: "Privacy",
+      pageTitle: "Privacy & Cookie Policy",
+      rgpdNote: "In compliance with GDPR (EU Regulation 2016/679)",
+      sections: [
+        {
+          title: "Data we collect.",
+          body: "Name, email, phone/WhatsApp number, and information about your project, voluntarily provided by you through the contact form, the simulator, or conversations started via WhatsApp.",
+        },
+        {
+          title: "Purpose.",
+          body: "We use this data exclusively to respond to your request, prepare feasibility studies and quotes, and present Ápice 360's services.",
+        },
+        {
+          title: "Sharing.",
+          body: "We do not sell or share your data with third parties for marketing purposes. Data is only shared when required by law or necessary to provide the requested service.",
+        },
+        {
+          title: "Cookies and local storage.",
+          body: "This site uses essential local storage to remember your choice in this cookie notice.",
+        },
+        {
+          title: "Analytics data.",
+          body: "This site also collects analytics data about usage (such as pages visited, time spent, and traffic source) through analytics tools, in order to understand and improve the visitor experience.",
+        },
+        {
+          title: "Your rights.",
+          body: "At any time you may request access, correction, portability, or deletion of your personal data by contacting us via WhatsApp or by email at geral@apice360.com.",
+        },
+      ],
+      manageHeading: "Manage Privacy and Cookie Settings",
+      manageBody: "You can change your choice about cookies and local storage at any time.",
+      manageButton: "Manage Preferences",
+      manageConfirmation: "Your preferences have been reset. Choose again in the notice at the bottom of the page.",
+      deletionHeading: "Deleting Your Data",
+      deletionBody:
+        "To request access to, correction of, portability of, or deletion of your personal data, contact us at:",
+      deletionEmail: "geral@apice360.com",
     },
   },
 } as const;

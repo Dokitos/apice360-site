@@ -5,7 +5,6 @@ import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
-import { PrivacyLink } from "@/components/layout/PrivacyLink";
 
 export async function Footer() {
   const locale = await getLocale();
@@ -115,7 +114,9 @@ export async function Footer() {
               </h5>
               <ul className="space-y-4">
                 <li>
-                  <PrivacyLink label={dict.footer.privacidade} />
+                  <Link href="/privacidade" className="transition-colors hover:text-primary">
+                    {dict.footer.privacidade}
+                  </Link>
                 </li>
               </ul>
             </div>

@@ -2,10 +2,24 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import DOMPurify from "isomorphic-dompurify";
+import sanitizeHtml from "sanitize-html";
 import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { blogPostSchema } from "@/lib/validations/blog-post";
+
+// TipTap's StarterKit (used by RichTextEditor) only ever emits this tag set.
+// Uses sanitize-html (pure JS) instead of isomorphic-dompurify: the latter
+// wraps jsdom, whose dynamic requires aren't reliably traced by Vercel's
+// serverless bundler and crash the whole route at import time in production.
+function sanitizeBody(html: string) {
+  return sanitizeHtml(html, {
+    allowedTags: [
+      "p", "br", "hr", "strong", "b", "em", "i", "s", "u", "code", "pre",
+      "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "blockquote", "a",
+    ],
+    allowedAttributes: { a: ["href", "target", "rel"] },
+  });
+}
 
 function readForm(formData: FormData) {
   return {
@@ -64,7 +78,7 @@ export async function createBlogPost(_prevState: string | undefined, formData: F
             slug: slugPt,
             title: titlePt,
             excerpt: excerptPt,
-            bodyHtml: DOMPurify.sanitize(bodyHtmlPt),
+            bodyHtml: sanitizeBody(bodyHtmlPt),
             seoTitle: seoTitlePt,
             seoDescription: seoDescriptionPt,
           },
@@ -73,7 +87,7 @@ export async function createBlogPost(_prevState: string | undefined, formData: F
             slug: slugEn,
             title: titleEn,
             excerpt: excerptEn,
-            bodyHtml: DOMPurify.sanitize(bodyHtmlEn),
+            bodyHtml: sanitizeBody(bodyHtmlEn),
             seoTitle: seoTitleEn,
             seoDescription: seoDescriptionEn,
           },
@@ -131,7 +145,7 @@ export async function updateBlogPost(
               slug: slugPt,
               title: titlePt,
               excerpt: excerptPt,
-              bodyHtml: DOMPurify.sanitize(bodyHtmlPt),
+              bodyHtml: sanitizeBody(bodyHtmlPt),
               seoTitle: seoTitlePt,
               seoDescription: seoDescriptionPt,
             },
@@ -140,7 +154,7 @@ export async function updateBlogPost(
               slug: slugPt,
               title: titlePt,
               excerpt: excerptPt,
-              bodyHtml: DOMPurify.sanitize(bodyHtmlPt),
+              bodyHtml: sanitizeBody(bodyHtmlPt),
               seoTitle: seoTitlePt,
               seoDescription: seoDescriptionPt,
             },
@@ -151,7 +165,7 @@ export async function updateBlogPost(
               slug: slugEn,
               title: titleEn,
               excerpt: excerptEn,
-              bodyHtml: DOMPurify.sanitize(bodyHtmlEn),
+              bodyHtml: sanitizeBody(bodyHtmlEn),
               seoTitle: seoTitleEn,
               seoDescription: seoDescriptionEn,
             },
@@ -160,7 +174,7 @@ export async function updateBlogPost(
               slug: slugEn,
               title: titleEn,
               excerpt: excerptEn,
-              bodyHtml: DOMPurify.sanitize(bodyHtmlEn),
+              bodyHtml: sanitizeBody(bodyHtmlEn),
               seoTitle: seoTitleEn,
               seoDescription: seoDescriptionEn,
             },
