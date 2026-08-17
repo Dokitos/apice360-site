@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { setLocale } from "@/app/(public)/actions/locale";
 import { cn } from "@/lib/cn";
@@ -56,22 +57,25 @@ export function LanguageSwitcher({ locale, className }: { locale: SiteLocale; cl
         </button>
       </div>
 
-      {isPending ? (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-surface/90 backdrop-blur-sm">
-          <div className="relative flex h-16 w-16 items-center justify-center">
-            <span className="absolute inset-0 animate-spin rounded-full border-4 border-outline-variant/30 border-t-primary" />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/images/logo.png"
-              alt=""
-              className="h-9 w-9 animate-pulse-glow rounded-md object-cover"
-            />
-          </div>
-          <span className="font-mono text-xs uppercase tracking-widest text-on-surface-variant">
-            {overlayDict.header.aTraduzir}
-          </span>
-        </div>
-      ) : null}
+      {isPending
+        ? createPortal(
+            <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-6 bg-surface/90 backdrop-blur-sm">
+              <div className="relative flex h-16 w-16 items-center justify-center">
+                <span className="absolute inset-0 animate-spin rounded-full border-4 border-outline-variant/30 border-t-primary" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/logo.png"
+                  alt=""
+                  className="h-9 w-9 animate-pulse-glow rounded-md object-cover"
+                />
+              </div>
+              <span className="font-mono text-xs uppercase tracking-widest text-on-surface-variant">
+                {overlayDict.header.aTraduzir}
+              </span>
+            </div>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
