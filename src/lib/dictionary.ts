@@ -16,6 +16,7 @@ const dictionary = {
     },
     header: {
       orcamentoDefault: "Faça seu Orçamento",
+      aTraduzir: "A traduzir a página...",
     },
     mobileNav: {
       abrirMenu: "Abrir menu",
@@ -175,6 +176,7 @@ const dictionary = {
     },
     header: {
       orcamentoDefault: "Get a Quote",
+      aTraduzir: "Translating the page...",
     },
     mobileNav: {
       abrirMenu: "Open menu",
