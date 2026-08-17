@@ -4,6 +4,8 @@ import { useActionState } from "react";
 import { submitComment, type CommentFormState } from "@/app/(public)/actions/comments";
 import { Button } from "@/components/ui/Button";
 import { FloatingLabelInput, FloatingLabelTextarea } from "@/components/ui/FloatingLabelInput";
+import { getDictionary } from "@/lib/dictionary";
+import type { SiteLocale } from "@/lib/locale";
 
 type Comment = { id: string; authorName: string; body: string; createdAt: Date };
 
@@ -11,9 +13,11 @@ type CommentsSectionProps = {
   postId: string;
   postSlug: string;
   comments: Comment[];
+  locale: SiteLocale;
 };
 
-export function CommentsSection({ postId, postSlug, comments }: CommentsSectionProps) {
+export function CommentsSection({ postId, postSlug, comments, locale }: CommentsSectionProps) {
+  const dict = getDictionary(locale);
   const [state, formAction, isPending] = useActionState<CommentFormState, FormData>(
     submitComment.bind(null, postId, postSlug),
     undefined,
@@ -21,7 +25,7 @@ export function CommentsSection({ postId, postSlug, comments }: CommentsSectionP
 
   return (
     <div className="mt-20 border-t border-outline-variant/20 pt-16">
-      <h3 className="mb-8 font-heading text-headline-md">Comentários ({comments.length})</h3>
+      <h3 className="mb-8 font-heading text-headline-md">{dict.commentsSection.comentarios(comments.length)}</h3>
 
       <div className="mb-12 space-y-6">
         {comments.map((comment) => (
@@ -40,13 +44,13 @@ export function CommentsSection({ postId, postSlug, comments }: CommentsSectionP
         <form action={formAction} className="space-y-6">
           <input type="text" name="company" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            <FloatingLabelInput id="authorName" name="authorName" label="Nome" type="text" required />
-            <FloatingLabelInput id="authorEmail" name="authorEmail" label="Email" type="email" required />
+            <FloatingLabelInput id="authorName" name="authorName" label={dict.commentsSection.nome} type="text" required />
+            <FloatingLabelInput id="authorEmail" name="authorEmail" label={dict.commentsSection.email} type="email" required />
           </div>
-          <FloatingLabelTextarea id="body" name="body" label="O teu comentário" required />
+          <FloatingLabelTextarea id="body" name="body" label={dict.commentsSection.corpo} required />
           {state && !state.ok ? <p className="text-sm text-primary">{state.message}</p> : null}
           <Button type="submit" variant="cta-outline" disabled={isPending}>
-            {isPending ? "A enviar..." : "Comentar"}
+            {isPending ? dict.commentsSection.aEnviar : dict.commentsSection.comentar}
           </Button>
         </form>
       )}

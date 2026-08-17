@@ -1,34 +1,39 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getPageSection, getCta, getServices, getPageSeo } from "@/lib/content";
+import { getLocale } from "@/lib/locale";
+import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ServiceDetailSection } from "@/components/sections/ServiceDetailSection";
 import { TimelineSection } from "@/components/sections/TimelineSection";
 import { Card } from "@/components/ui/Card";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await getPageSeo("SERVICOS");
+  const locale = await getLocale();
+  const seo = await getPageSeo("SERVICOS", locale);
   if (!seo) return {};
   return { title: seo.title, description: seo.description };
 }
 
 export default async function ServicosPage() {
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
   const [intro, services, managementModel, finalCta] = await Promise.all([
-    getPageSection("SERVICOS", "intro"),
-    getServices(),
-    getPageSection("SERVICOS", "management_model"),
-    getCta("services_final_cta"),
+    getPageSection("SERVICOS", "intro", locale),
+    getServices(locale),
+    getPageSection("SERVICOS", "management_model", locale),
+    getCta("services_final_cta", locale),
   ]);
 
   const ctas = await Promise.all(
-    services.map((service) => (service.ctaKey ? getCta(service.ctaKey) : Promise.resolve(null))),
+    services.map((service) => (service.ctaKey ? getCta(service.ctaKey, locale) : Promise.resolve(null))),
   );
 
   return (
     <>
       <PageIntroSection
-        eyebrow="Serviços"
-        heading={intro?.heading ?? "Construção em LSF, no modelo Chave na Mão."}
+        eyebrow={dict.servicos.eyebrow}
+        heading={intro?.heading ?? dict.servicos.headingDefault}
         body={intro?.body}
       />
 
@@ -62,8 +67,8 @@ export default async function ServicosPage() {
 
       {managementModel ? (
         <TimelineSection
-          eyebrow="O Nosso Modelo"
-          heading={managementModel.heading ?? "Gestão Chave na Mão"}
+          eyebrow={dict.servicos.modeloEyebrow}
+          heading={managementModel.heading ?? dict.servicos.modeloHeadingDefault}
           items={managementModel.items}
           cta={finalCta}
         />

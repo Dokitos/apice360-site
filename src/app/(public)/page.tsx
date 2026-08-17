@@ -8,6 +8,7 @@ import {
   getBlogPosts,
   getPageSeo,
 } from "@/lib/content";
+import { getLocale } from "@/lib/locale";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { PartnersSection } from "@/components/sections/PartnersSection";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
@@ -16,12 +17,14 @@ import { ResultsStatsSection } from "@/components/sections/ResultsStatsSection";
 import { BlogPreviewSection } from "@/components/sections/BlogPreviewSection";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await getPageSeo("HOME");
+  const locale = await getLocale();
+  const seo = await getPageSeo("HOME", locale);
   if (!seo) return {};
   return { title: seo.title, description: seo.description };
 }
 
 export default async function HomePage() {
+  const locale = await getLocale();
   const [
     hero,
     heroCta,
@@ -37,19 +40,19 @@ export default async function HomePage() {
     blogCta,
     posts,
   ] = await Promise.all([
-    getPageSection("HOME", "hero"),
-    getCta("home_hero"),
-    getPageSection("HOME", "partners"),
+    getPageSection("HOME", "hero", locale),
+    getCta("home_hero", locale),
+    getPageSection("HOME", "partners", locale),
     getPartners(),
-    getTestimonials({ onlyHome: true }),
-    getPageSection("HOME", "why_choose"),
-    getCta("why_choose_services"),
-    getPageSection("HOME", "results"),
-    getStats(),
-    getCta("results_portfolio"),
-    getPageSection("HOME", "blog_preview"),
-    getCta("blog_see_more"),
-    getBlogPosts({ limit: 3 }),
+    getTestimonials({ onlyHome: true }, locale),
+    getPageSection("HOME", "why_choose", locale),
+    getCta("why_choose_services", locale),
+    getPageSection("HOME", "results", locale),
+    getStats(locale),
+    getCta("results_portfolio", locale),
+    getPageSection("HOME", "blog_preview", locale),
+    getCta("blog_see_more", locale),
+    getBlogPosts({ limit: 3 }, locale),
   ]);
 
   return (
@@ -65,7 +68,7 @@ export default async function HomePage() {
 
       <PartnersSection heading={partnersSection?.heading} subheading={partnersSection?.subheading} partners={partners} />
 
-      <TestimonialsSection testimonials={testimonials} />
+      <TestimonialsSection testimonials={testimonials} locale={locale} />
 
       {whyChoose ? (
         <WhyChooseSection
@@ -92,6 +95,7 @@ export default async function HomePage() {
         subheading={blogPreview?.subheading}
         posts={posts}
         cta={blogCta}
+        locale={locale}
       />
     </>
   );

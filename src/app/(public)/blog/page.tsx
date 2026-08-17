@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getBlogPosts, countBlogPosts, getPageSeo } from "@/lib/content";
+import { getLocale } from "@/lib/locale";
+import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { Reveal } from "@/components/ui/Reveal";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const seo = await getPageSeo("BLOG");
+  const locale = await getLocale();
+  const seo = await getPageSeo("BLOG", locale);
   if (!seo) return {};
   return { title: seo.title, description: seo.description };
 }
@@ -19,26 +22,24 @@ export default async function BlogPage({
 }) {
   const { page } = await searchParams;
   const currentPage = Math.max(1, Number(page) || 1);
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
 
   const [posts, total] = await Promise.all([
-    getBlogPosts({ limit: PAGE_SIZE, skip: (currentPage - 1) * PAGE_SIZE }),
-    countBlogPosts(),
+    getBlogPosts({ limit: PAGE_SIZE, skip: (currentPage - 1) * PAGE_SIZE }, locale),
+    countBlogPosts({}, locale),
   ]);
 
   const hasNextPage = currentPage * PAGE_SIZE < total;
 
   return (
     <>
-      <PageIntroSection
-        eyebrow="Blog da Construção"
-        heading="Blog Ápice 360: Conhecimento de Construção em Alto Desempenho."
-        body="O seu recurso especializado sobre LSF e gestão de projetos. Educamos o mercado para que possa investir com segurança e total confiança."
-      />
+      <PageIntroSection eyebrow={dict.blog.eyebrow} heading={dict.blog.heading} body={dict.blog.body} />
 
       <Reveal as="section" className="bg-surface py-24">
         <div className="mx-auto max-w-[1280px] px-5 md:px-20">
           {posts.length === 0 ? (
-            <p className="text-center text-on-surface-variant">Ainda não há artigos publicados.</p>
+            <p className="text-center text-on-surface-variant">{dict.blog.semArtigos}</p>
           ) : (
             <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
               {posts.map((post) => (
@@ -65,7 +66,7 @@ export default async function BlogPage({
                       href={`/blog/${post.slug}`}
                       className="inline-flex items-center gap-2 text-sm font-bold uppercase text-primary hover:underline"
                     >
-                      Ler artigo →
+                      {dict.blog.lerArtigo}
                     </Link>
                   </div>
                 </article>
@@ -79,7 +80,7 @@ export default async function BlogPage({
                 href={`/blog?page=${currentPage + 1}`}
                 className="inline-flex items-center gap-2 rounded-lg bg-surface-container px-8 py-3 text-sm font-bold uppercase text-on-surface transition-colors hover:bg-surface-container-high"
               >
-                Ler mais
+                {dict.blog.lerMais}
               </Link>
             </div>
           ) : null}

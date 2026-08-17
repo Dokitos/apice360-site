@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getBlogPost, getRelatedPosts, getApprovedComments } from "@/lib/content";
+import { getLocale } from "@/lib/locale";
+import { getDictionary } from "@/lib/dictionary";
 import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
 import { CommentsSection } from "@/components/sections/CommentsSection";
@@ -12,7 +14,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = await getBlogPost(slug);
+  const locale = await getLocale();
+  const post = await getBlogPost(slug, locale);
   if (!post) return {};
   return { title: post.seoTitle ?? post.title, description: post.seoDescription ?? post.excerpt ?? undefined };
 }
@@ -23,11 +26,13 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getBlogPost(slug);
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+  const post = await getBlogPost(slug, locale);
   if (!post) notFound();
 
   const [related, comments] = await Promise.all([
-    getRelatedPosts(post.id, post.categoryId),
+    getRelatedPosts(post.id, post.categoryId, locale),
     getApprovedComments(post.id),
   ]);
 
@@ -38,7 +43,7 @@ export default async function BlogPostPage({
           href="/blog"
           className="mb-10 inline-flex items-center gap-2 rounded-lg bg-surface-container px-5 py-2.5 text-sm font-bold uppercase text-on-surface transition-colors hover:bg-surface-container-high"
         >
-          <Icon name="arrow_back" /> Voltar aos Artigos
+          <Icon name="arrow_back" /> {dict.blog.voltar}
         </Link>
 
         <h1 className="mb-6 font-heading text-headline-lg">{post.title}</h1>
@@ -47,7 +52,11 @@ export default async function BlogPostPage({
           <div className="font-mono text-label-mono uppercase tracking-widest text-on-surface-variant">
             {post.authorName ? `${post.authorName} · ` : ""}
             {post.publishedAt
-              ? new Date(post.publishedAt).toLocaleDateString("pt-PT", { day: "2-digit", month: "long", year: "numeric" })
+              ? new Date(post.publishedAt).toLocaleDateString(locale === "EN" ? "en-GB" : "pt-PT", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })
               : ""}
           </div>
           <div className="flex gap-3 text-on-surface-variant">
@@ -66,11 +75,11 @@ export default async function BlogPostPage({
           dangerouslySetInnerHTML={{ __html: post.bodyHtml }}
         />
 
-        <CommentsSection postId={post.id} postSlug={post.slug} comments={comments} />
+        <CommentsSection postId={post.id} postSlug={post.slug} comments={comments} locale={locale} />
 
         {related.length > 0 ? (
           <div className="mt-20 border-t border-outline-variant/20 pt-16">
-            <h3 className="mb-8 font-heading text-headline-md">Artigos Relacionados</h3>
+            <h3 className="mb-8 font-heading text-headline-md">{dict.blog.artigosRelacionados}</h3>
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
               {related.map((r) => (
                 <Link key={r.id} href={`/blog/${r.slug}`} className="group">

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
+import { getDictionary } from "@/lib/dictionary";
+import type { SiteLocale } from "@/lib/locale";
 
 type Post = {
   id: string;
@@ -17,16 +19,20 @@ type BlogPreviewSectionProps = {
   subheading?: string | null;
   posts: Post[];
   cta?: { label: string; url: string } | null;
+  locale?: SiteLocale;
 };
 
-export function BlogPreviewSection({ heading, subheading, posts, cta }: BlogPreviewSectionProps) {
+export function BlogPreviewSection({ heading, subheading, posts, cta, locale = "PT" }: BlogPreviewSectionProps) {
   if (posts.length === 0) return null;
+  const dict = getDictionary(locale);
 
   return (
     <Reveal as="section" className="bg-surface py-32">
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
         <SectionHeading
-          title={heading ?? "Aprenda com quem constrói no mais alto nível."}
+          title={
+            heading ?? (locale === "EN" ? "Learn from those who build at the highest level." : "Aprenda com quem constrói no mais alto nível.")
+          }
           subtitle={subheading ?? undefined}
         />
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
@@ -54,7 +60,7 @@ export function BlogPreviewSection({ heading, subheading, posts, cta }: BlogPrev
                   href={`/blog/${post.slug}`}
                   className="inline-flex items-center gap-2 text-sm font-bold uppercase text-primary hover:underline"
                 >
-                  Ler artigo →
+                  {dict.blog.lerArtigo}
                 </Link>
               </div>
             </article>

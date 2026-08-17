@@ -1,20 +1,25 @@
 import Link from "next/link";
 import { getSiteSettings } from "@/lib/content";
-import { NAV_LINKS } from "@/lib/nav";
+import { getNavLinks } from "@/lib/nav";
+import { getLocale } from "@/lib/locale";
+import { getDictionary } from "@/lib/dictionary";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
 import { PrivacyLink } from "@/components/layout/PrivacyLink";
 
-const SERVICE_LINKS = [
-  { href: "/servicos#lsf", label: "LSF" },
-  { href: "/contacto", label: "Trabalhe Connosco" },
-  { href: "/area-do-arquiteto", label: "Área dos Arquitetos" },
-  { href: "/contacto", label: "Orçamento" },
-];
-
 export async function Footer() {
-  const settings = await getSiteSettings();
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+  const settings = await getSiteSettings(locale);
   const year = new Date().getFullYear();
+  const navLinks = getNavLinks(dict);
+
+  const serviceLinks = [
+    { href: "/servicos#lsf", label: dict.footer.lsf },
+    { href: "/contacto", label: dict.footer.trabalheConnosco },
+    { href: "/area-do-arquiteto", label: dict.footer.areaDosArquitetos },
+    { href: "/contacto", label: dict.footer.orcamento },
+  ];
 
   const socials = [
     { href: settings?.socialInstagram, icon: "photo_camera", label: "Instagram" },
@@ -36,8 +41,7 @@ export async function Footer() {
               <Logo wordmarkClassName="text-white" />
             </Link>
             <p className="mb-8 leading-relaxed">
-              {settings?.t?.footerDescription ??
-                "Construções em Light Steel Frame em Portugal. Cuidamos do seu projeto do início ao fim."}
+              {settings?.t?.footerDescription ?? dict.footer.descricaoDefault}
             </p>
             <div className="mb-8 space-y-3 text-sm">
               {address ? (
@@ -79,10 +83,10 @@ export async function Footer() {
           <div className="grid grid-cols-2 gap-12 sm:grid-cols-3">
             <div>
               <h5 className="mb-8 font-mono text-label-mono uppercase tracking-widest text-primary">
-                Navegação
+                {dict.footer.navegacao}
               </h5>
               <ul className="space-y-4">
-                {NAV_LINKS.map((link) => (
+                {navLinks.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} className="transition-colors hover:text-primary">
                       {link.label}
@@ -93,10 +97,10 @@ export async function Footer() {
             </div>
             <div>
               <h5 className="mb-8 font-mono text-label-mono uppercase tracking-widest text-primary">
-                Serviços
+                {dict.footer.servicos}
               </h5>
               <ul className="space-y-4">
-                {SERVICE_LINKS.map((link, i) => (
+                {serviceLinks.map((link, i) => (
                   <li key={`${link.href}-${i}`}>
                     <Link href={link.href} className="transition-colors hover:text-primary">
                       {link.label}
@@ -107,11 +111,11 @@ export async function Footer() {
             </div>
             <div className="col-span-2 sm:col-span-1">
               <h5 className="mb-8 font-mono text-label-mono uppercase tracking-widest text-primary">
-                Legal
+                {dict.footer.legal}
               </h5>
               <ul className="space-y-4">
                 <li>
-                  <PrivacyLink />
+                  <PrivacyLink label={dict.footer.privacidade} />
                 </li>
               </ul>
             </div>
@@ -119,8 +123,8 @@ export async function Footer() {
         </div>
 
         <div className="mt-20 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-10 font-mono text-xs uppercase tracking-widest md:flex-row">
-          <span>© {year} Ápice 360 — Construções em LSF.</span>
-          <span>Velocidade · Durabilidade · Qualidade</span>
+          <span>{dict.footer.direitos(year)}</span>
+          <span>{dict.footer.tagline}</span>
         </div>
       </div>
     </footer>

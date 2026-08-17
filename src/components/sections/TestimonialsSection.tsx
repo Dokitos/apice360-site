@@ -3,6 +3,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Carousel } from "@/components/ui/Carousel";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
+import type { SiteLocale } from "@/lib/locale";
 
 type Testimonial = {
   id: string;
@@ -11,13 +12,19 @@ type Testimonial = {
   quote: string;
 };
 
-export function TestimonialsSection({ testimonials }: { testimonials: Testimonial[] }) {
+export function TestimonialsSection({
+  testimonials,
+  locale = "PT",
+}: {
+  testimonials: Testimonial[];
+  locale?: SiteLocale;
+}) {
   if (testimonials.length === 0) return null;
 
   return (
     <Reveal as="section" className="overflow-hidden bg-surface py-32">
       <div className="mx-auto max-w-[1280px] px-5 md:px-20">
-        <SectionHeading title="Confiança que Constrói" />
+        <SectionHeading title={locale === "EN" ? "Trust That Builds" : "Confiança que Constrói"} />
         <Carousel slideClassName="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%]">
           {testimonials.map((t) => (
             <Card key={t.id} variant="plain" className="flex h-full flex-col justify-between p-10">

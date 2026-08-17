@@ -1,9 +1,13 @@
-export const NAV_LINKS = [
-  { href: "/", label: "Início" },
-  { href: "/quem-somos", label: "Quem Somos" },
-  { href: "/servicos", label: "Serviços" },
-  { href: "/portfolio", label: "Portfólio" },
-  { href: "/blog", label: "Blog de Construção" },
-  { href: "/contacto", label: "Contactos" },
-  { href: "/area-do-arquiteto", label: "Área do Arquiteto" },
-] as const;
+import type { Dictionary } from "@/lib/dictionary";
+
+export function getNavLinks(dict: Dictionary) {
+  return [
+    { href: "/", label: dict.nav.inicio },
+    { href: "/quem-somos", label: dict.nav.quemSomos },
+    { href: "/servicos", label: dict.nav.servicos },
+    { href: "/portfolio", label: dict.nav.portfolio },
+    { href: "/blog", label: dict.nav.blog },
+    { href: "/contacto", label: dict.nav.contactos },
+    { href: "/area-do-arquiteto", label: dict.nav.areaArquiteto },
+  ] as const;
+}
