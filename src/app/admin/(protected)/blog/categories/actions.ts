@@ -35,7 +35,7 @@ export async function createBlogCategory(_prevState: string | undefined, formDat
   });
   revalidatePath("/admin/blog/categories");
   revalidatePath("/blog");
-  redirect("/admin/blog/categories");
+  redirect("/admin/blog/categories?saved=1");
 }
 
 export async function updateBlogCategory(
@@ -70,7 +70,7 @@ export async function updateBlogCategory(
   });
   revalidatePath("/admin/blog/categories");
   revalidatePath("/blog");
-  redirect("/admin/blog/categories");
+  redirect("/admin/blog/categories?saved=1");
 }
 
 export async function deleteBlogCategory(id: string) {

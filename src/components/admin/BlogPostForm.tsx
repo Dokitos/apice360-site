@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, TextAreaField, SelectField, ImageField } from "@/components/admin/form-fields";
+import { TextField, TextAreaField, SelectField, ImageField, SlugField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
@@ -57,7 +57,7 @@ export function BlogPostForm({ post, categories, action }: BlogPostFormProps) {
         pt={
           <>
             <TextField id="titlePt" name="titlePt" label="Título (PT)" defaultValue={pt?.title} required />
-            <TextField id="slugPt" name="slugPt" label="Slug (PT)" defaultValue={pt?.slug} required />
+            <SlugField id="slugPt" name="slugPt" label="Slug (PT)" defaultValue={pt?.slug} sourceId="titlePt" required />
             <TextAreaField id="excerptPt" name="excerptPt" label="Resumo (PT)" defaultValue={pt?.excerpt ?? ""} />
             <RichTextEditor id="bodyHtmlPt" name="bodyHtmlPt" label="Conteúdo (PT)" defaultValue={pt?.bodyHtml ?? ""} />
             <TextField id="seoTitlePt" name="seoTitlePt" label="Título SEO (PT)" defaultValue={pt?.seoTitle ?? ""} />
@@ -72,7 +72,7 @@ export function BlogPostForm({ post, categories, action }: BlogPostFormProps) {
         en={
           <>
             <TextField id="titleEn" name="titleEn" label="Title (EN)" defaultValue={en?.title} required />
-            <TextField id="slugEn" name="slugEn" label="Slug (EN)" defaultValue={en?.slug} required />
+            <SlugField id="slugEn" name="slugEn" label="Slug (EN)" defaultValue={en?.slug} sourceId="titleEn" required />
             <TextAreaField id="excerptEn" name="excerptEn" label="Excerpt (EN)" defaultValue={en?.excerpt ?? ""} />
             <RichTextEditor id="bodyHtmlEn" name="bodyHtmlEn" label="Body (EN)" defaultValue={en?.bodyHtml ?? ""} />
             <TextField id="seoTitleEn" name="seoTitleEn" label="SEO Title (EN)" defaultValue={en?.seoTitle ?? ""} />

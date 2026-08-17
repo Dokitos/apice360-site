@@ -41,7 +41,7 @@ export async function createCta(_prevState: string | undefined, formData: FormDa
   });
   revalidatePath("/admin/ctas");
   revalidatePath("/");
-  redirect("/admin/ctas");
+  redirect("/admin/ctas?saved=1");
 }
 
 export async function updateCta(id: string, _prevState: string | undefined, formData: FormData) {
@@ -72,7 +72,7 @@ export async function updateCta(id: string, _prevState: string | undefined, form
   });
   revalidatePath("/admin/ctas");
   revalidatePath("/");
-  redirect("/admin/ctas");
+  redirect("/admin/ctas?saved=1");
 }
 
 export async function deleteCta(id: string) {

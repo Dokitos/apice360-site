@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, TextAreaField, SelectField, CheckboxField, ImageField } from "@/components/admin/form-fields";
+import { TextField, TextAreaField, SelectField, CheckboxField, ImageField, SlugField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 
 type Project = {
@@ -39,12 +39,13 @@ export function PortfolioProjectForm({ project, action }: PortfolioProjectFormPr
   return (
     <form action={formAction} className="max-w-2xl space-y-6">
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <TextField
+        <SlugField
           id="slug"
           name="slug"
           label="Slug (URL)"
           defaultValue={project?.slug}
           placeholder="ex: moradia-lsf-lisboa"
+          sourceId="titlePt"
           required
         />
         <SelectField id="category" name="category" label="Categoria" defaultValue={project?.category ?? "LSF"}>

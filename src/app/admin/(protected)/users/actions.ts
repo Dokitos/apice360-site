@@ -37,7 +37,7 @@ export async function createUser(_prevState: string | undefined, formData: FormD
   });
 
   revalidatePath("/admin/users");
-  redirect("/admin/users");
+  redirect("/admin/users?saved=1");
 }
 
 export async function updateUser(id: string, _prevState: string | undefined, formData: FormData) {
@@ -75,7 +75,7 @@ export async function updateUser(id: string, _prevState: string | undefined, for
   });
 
   revalidatePath("/admin/users");
-  redirect("/admin/users");
+  redirect("/admin/users?saved=1");
 }
 
 export async function deleteUser(id: string) {

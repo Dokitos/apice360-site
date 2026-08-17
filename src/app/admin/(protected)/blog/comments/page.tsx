@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
-import { Icon } from "@/components/ui/Icon";
+import { QuickActionButton } from "@/components/admin/QuickActionButton";
 import { cn } from "@/lib/cn";
 import { approveComment, rejectComment, deleteComment } from "./actions";
 
@@ -66,28 +66,20 @@ export default async function BlogCommentsPage({
         renderActions={(c) => (
           <div className="flex items-center justify-end gap-2">
             {activeStatus !== "APPROVED" ? (
-              <form action={approveComment.bind(null, c.id)}>
-                <button
-                  type="submit"
-                  aria-label="Aprovar"
-                  title="Aprovar"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary"
-                >
-                  <Icon name="check_circle" className="text-lg" />
-                </button>
-              </form>
+              <QuickActionButton
+                action={approveComment.bind(null, c.id)}
+                icon="check_circle"
+                label="Aprovar"
+                successMessage="Comentário aprovado."
+              />
             ) : null}
             {activeStatus !== "REJECTED" ? (
-              <form action={rejectComment.bind(null, c.id)}>
-                <button
-                  type="submit"
-                  aria-label="Rejeitar"
-                  title="Rejeitar"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary"
-                >
-                  <Icon name="cancel" className="text-lg" />
-                </button>
-              </form>
+              <QuickActionButton
+                action={rejectComment.bind(null, c.id)}
+                icon="cancel"
+                label="Rejeitar"
+                successMessage="Comentário rejeitado."
+              />
             ) : null}
             <DeleteButton action={deleteComment.bind(null, c.id)} />
           </div>

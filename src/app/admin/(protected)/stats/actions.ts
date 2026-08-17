@@ -36,7 +36,7 @@ export async function createStat(_prevState: string | undefined, formData: FormD
   });
   revalidatePath("/admin/stats");
   revalidatePath("/");
-  redirect("/admin/stats");
+  redirect("/admin/stats?saved=1");
 }
 
 export async function updateStat(id: string, _prevState: string | undefined, formData: FormData) {
@@ -67,7 +67,7 @@ export async function updateStat(id: string, _prevState: string | undefined, for
   });
   revalidatePath("/admin/stats");
   revalidatePath("/");
-  redirect("/admin/stats");
+  redirect("/admin/stats?saved=1");
 }
 
 export async function deleteStat(id: string) {

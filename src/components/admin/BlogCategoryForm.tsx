@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField } from "@/components/admin/form-fields";
+import { TextField, SlugField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 
 type BlogCategory = {
@@ -26,13 +26,13 @@ export function BlogCategoryForm({ category, action }: BlogCategoryFormProps) {
         pt={
           <>
             <TextField id="namePt" name="namePt" label="Nome (PT)" defaultValue={pt?.name} required />
-            <TextField id="slugPt" name="slugPt" label="Slug (PT)" defaultValue={pt?.slug} required />
+            <SlugField id="slugPt" name="slugPt" label="Slug (PT)" defaultValue={pt?.slug} sourceId="namePt" required />
           </>
         }
         en={
           <>
             <TextField id="nameEn" name="nameEn" label="Name (EN)" defaultValue={en?.name} required />
-            <TextField id="slugEn" name="slugEn" label="Slug (EN)" defaultValue={en?.slug} required />
+            <SlugField id="slugEn" name="slugEn" label="Slug (EN)" defaultValue={en?.slug} sourceId="nameEn" required />
           </>
         }
       />

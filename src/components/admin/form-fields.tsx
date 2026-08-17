@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
+import { useEffect, useRef, useState, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
+import { slugify } from "@/lib/slugify";
 
 const baseFieldClasses =
   "w-full rounded-lg border border-outline-variant/40 bg-surface-container-low px-4 py-2.5 text-on-surface outline-none transition-colors focus:border-primary";
@@ -41,6 +42,59 @@ export function TextField({ label, id, hint, className, ...props }: TextFieldPro
   return (
     <FieldShell label={label} htmlFor={id} hint={hint}>
       <input id={id} className={cn(baseFieldClasses, className)} {...props} />
+    </FieldShell>
+  );
+}
+
+type SlugFieldProps = Omit<TextFieldProps, "onChange"> & {
+  /** id of a title/name input to auto-generate the slug from until the user edits it manually. */
+  sourceId?: string;
+};
+
+/**
+ * Text field for URL slugs. Auto-fills and live-transliterates from a
+ * sibling title field (accented/special characters, e.g. "Construção" →
+ * "construcao") so editors never have to hand-type a valid slug.
+ */
+export function SlugField({ label, id, hint, className, sourceId, defaultValue, ...props }: SlugFieldProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const touchedRef = useRef(Boolean(defaultValue));
+
+  useEffect(() => {
+    if (!sourceId) return;
+    const source = document.getElementById(sourceId);
+    if (!(source instanceof HTMLInputElement)) return;
+
+    function syncFromSource() {
+      if (touchedRef.current || !inputRef.current || !(source instanceof HTMLInputElement)) return;
+      inputRef.current.value = slugify(source.value);
+    }
+
+    source.addEventListener("input", syncFromSource);
+    return () => source.removeEventListener("input", syncFromSource);
+  }, [sourceId]);
+
+  return (
+    <FieldShell label={label} htmlFor={id} hint={hint ?? "Gerado automaticamente a partir do título. Podes editar."}>
+      <input
+        id={id}
+        ref={inputRef}
+        defaultValue={defaultValue}
+        className={cn(baseFieldClasses, className)}
+        onChange={(e) => {
+          touchedRef.current = true;
+          const el = e.target;
+          const cursor = el.selectionStart;
+          const before = el.value;
+          const after = slugify(before);
+          el.value = after;
+          if (cursor != null) {
+            const pos = Math.max(0, cursor + (after.length - before.length));
+            el.setSelectionRange(pos, pos);
+          }
+        }}
+        {...props}
+      />
     </FieldShell>
   );
 }

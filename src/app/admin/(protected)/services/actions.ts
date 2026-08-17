@@ -73,7 +73,7 @@ export async function upsertService(
 
   revalidatePath("/admin/services");
   revalidatePath("/");
-  redirect(`/admin/services/${type}/edit`);
+  redirect(`/admin/services/${type}/edit?saved=1`);
 }
 
 function readFeatureForm(formData: FormData) {
@@ -112,7 +112,7 @@ export async function createServiceFeature(
   });
   revalidatePath(`/admin/services/${type}/edit`);
   revalidatePath("/");
-  redirect(`/admin/services/${type}/edit`);
+  redirect(`/admin/services/${type}/edit?saved=1`);
 }
 
 export async function updateServiceFeature(
@@ -148,7 +148,7 @@ export async function updateServiceFeature(
   });
   revalidatePath(`/admin/services/${type}/edit`);
   revalidatePath("/");
-  redirect(`/admin/services/${type}/edit`);
+  redirect(`/admin/services/${type}/edit?saved=1`);
 }
 
 export async function deleteServiceFeature(type: ServiceTypeKey, featureId: string) {

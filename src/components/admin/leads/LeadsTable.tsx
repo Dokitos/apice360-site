@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { cn } from "@/lib/cn";
 import { Icon } from "@/components/ui/Icon";
 import { bulkDeleteLeads, bulkSetStatus, deleteLead, setLeadStatus } from "@/app/admin/(protected)/leads/actions";
@@ -90,25 +91,40 @@ export function LeadsTable({ leads, sort, sortHref }: LeadsTableProps) {
 
   function handleStatusChange(id: string, status: string) {
     startTransition(async () => {
-      await setLeadStatus(id, status);
-      router.refresh();
+      try {
+        await setLeadStatus(id, status);
+        router.refresh();
+        toast.success("Estado atualizado.");
+      } catch {
+        toast.error("A ação falhou. Tenta novamente.");
+      }
     });
   }
 
   function handleDelete(id: string) {
     if (!window.confirm("Tens a certeza que queres eliminar esta lead? Esta ação não pode ser desfeita.")) return;
     startTransition(async () => {
-      await deleteLead(id);
-      router.refresh();
+      try {
+        await deleteLead(id);
+        router.refresh();
+        toast.success("Lead eliminada com sucesso.");
+      } catch {
+        toast.error("Não foi possível eliminar. Tenta novamente.");
+      }
     });
   }
 
   function handleBulkStatus() {
     if (selected.size === 0) return;
     startTransition(async () => {
-      await bulkSetStatus(Array.from(selected), bulkStatus);
-      setSelected(new Set());
-      router.refresh();
+      try {
+        await bulkSetStatus(Array.from(selected), bulkStatus);
+        setSelected(new Set());
+        router.refresh();
+        toast.success("Estado atualizado em massa.");
+      } catch {
+        toast.error("A ação falhou. Tenta novamente.");
+      }
     });
   }
 
@@ -116,9 +132,14 @@ export function LeadsTable({ leads, sort, sortHref }: LeadsTableProps) {
     if (selected.size === 0) return;
     if (!window.confirm(`Eliminar ${selected.size} lead(s) selecionada(s)? Esta ação não pode ser desfeita.`)) return;
     startTransition(async () => {
-      await bulkDeleteLeads(Array.from(selected));
-      setSelected(new Set());
-      router.refresh();
+      try {
+        await bulkDeleteLeads(Array.from(selected));
+        setSelected(new Set());
+        router.refresh();
+        toast.success("Leads eliminadas com sucesso.");
+      } catch {
+        toast.error("Não foi possível eliminar. Tenta novamente.");
+      }
     });
   }
 

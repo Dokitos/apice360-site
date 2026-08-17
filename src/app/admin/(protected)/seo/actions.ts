@@ -76,5 +76,5 @@ export async function upsertPageSeo(
 
   revalidatePath("/admin/seo");
   revalidatePath("/");
-  redirect(`/admin/seo/${page}`);
+  redirect(`/admin/seo/${page}?saved=1`);
 }

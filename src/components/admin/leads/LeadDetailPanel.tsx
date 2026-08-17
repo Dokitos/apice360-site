@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
@@ -80,18 +81,28 @@ export function LeadDetailPanel({ lead, activities, users }: { lead: Lead; activ
   const [notes, setNotes] = useState(lead.notes ?? "");
   const notesDirty = notes.trim() !== (lead.notes ?? "").trim();
 
-  function run(action: () => Promise<void>) {
+  function run(action: () => Promise<void>, successMessage: string) {
     startTransition(async () => {
-      await action();
-      router.refresh();
+      try {
+        await action();
+        router.refresh();
+        toast.success(successMessage);
+      } catch {
+        toast.error("A ação falhou. Tenta novamente.");
+      }
     });
   }
 
   function handleDelete() {
     if (!window.confirm("Tens a certeza que queres eliminar esta lead? Esta ação não pode ser desfeita.")) return;
     startTransition(async () => {
-      await deleteLead(lead.id);
-      router.push("/admin/leads");
+      try {
+        await deleteLead(lead.id);
+        toast.success("Lead eliminada com sucesso.");
+        router.push("/admin/leads");
+      } catch {
+        toast.error("Não foi possível eliminar. Tenta novamente.");
+      }
     });
   }
 
@@ -168,7 +179,7 @@ export function LeadDetailPanel({ lead, activities, users }: { lead: Lead; activ
               <button
                 type="button"
                 disabled={isPending}
-                onClick={() => run(() => logCallAttempt(lead.id))}
+                onClick={() => run(() => logCallAttempt(lead.id), "Chamada registada.")}
                 className="flex items-center gap-2 rounded-lg bg-surface-container px-4 py-2 text-xs font-bold uppercase tracking-wide text-on-surface transition-colors hover:bg-primary/10 hover:text-primary"
               >
                 <Icon name="phone_in_talk" className="text-base" />
@@ -177,7 +188,7 @@ export function LeadDetailPanel({ lead, activities, users }: { lead: Lead; activ
               <button
                 type="button"
                 disabled={isPending}
-                onClick={() => run(() => logEmailSent(lead.id))}
+                onClick={() => run(() => logEmailSent(lead.id), "Email registado.")}
                 className="flex items-center gap-2 rounded-lg bg-surface-container px-4 py-2 text-xs font-bold uppercase tracking-wide text-on-surface transition-colors hover:bg-primary/10 hover:text-primary"
               >
                 <Icon name="forward_to_inbox" className="text-base" />
@@ -206,7 +217,7 @@ export function LeadDetailPanel({ lead, activities, users }: { lead: Lead; activ
               <button
                 type="button"
                 disabled={isPending || !notesDirty}
-                onClick={() => run(() => updateLeadNotes(lead.id, notes))}
+                onClick={() => run(() => updateLeadNotes(lead.id, notes), "Notas guardadas.")}
                 className="rounded-lg bg-primary px-5 py-2 text-sm font-bold uppercase text-on-primary transition-transform hover:scale-105 disabled:pointer-events-none disabled:opacity-40"
               >
                 Guardar Notas
@@ -221,7 +232,7 @@ export function LeadDetailPanel({ lead, activities, users }: { lead: Lead; activ
             <select
               value={lead.status}
               disabled={isPending}
-              onChange={(e) => run(() => setLeadStatus(lead.id, e.target.value))}
+              onChange={(e) => run(() => setLeadStatus(lead.id, e.target.value), "Estado atualizado.")}
               className="w-full rounded-lg border border-outline-variant/40 bg-surface-container-low px-4 py-2.5 text-sm outline-none focus:border-primary"
             >
               {Object.keys(STATUS_LABEL).map((s) => (
@@ -237,7 +248,7 @@ export function LeadDetailPanel({ lead, activities, users }: { lead: Lead; activ
             <select
               value={lead.assignedTo?.id ?? ""}
               disabled={isPending}
-              onChange={(e) => run(() => assignLead(lead.id, e.target.value))}
+              onChange={(e) => run(() => assignLead(lead.id, e.target.value), "Responsável atualizado.")}
               className="w-full rounded-lg border border-outline-variant/40 bg-surface-container-low px-4 py-2.5 text-sm outline-none focus:border-primary"
             >
               <option value="">Sem responsável</option>

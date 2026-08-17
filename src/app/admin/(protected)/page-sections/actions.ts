@@ -90,7 +90,7 @@ export async function createPageSection(
 
   revalidatePath(`/admin/page-sections/${page}`);
   revalidatePath("/");
-  redirect(`/admin/page-sections/${page}/${section.id}/edit`);
+  redirect(`/admin/page-sections/${page}/${section.id}/edit?saved=1`);
 }
 
 export async function updatePageSection(
@@ -143,7 +143,7 @@ export async function updatePageSection(
 
   revalidatePath(`/admin/page-sections/${page}`);
   revalidatePath("/");
-  redirect(`/admin/page-sections/${page}/${id}/edit`);
+  redirect(`/admin/page-sections/${page}/${id}/edit?saved=1`);
 }
 
 export async function deletePageSection(page: PageKeyValue, id: string) {
@@ -191,7 +191,7 @@ export async function createPageSectionItem(
   });
   revalidatePath(`/admin/page-sections/${page}/${sectionId}/edit`);
   revalidatePath("/");
-  redirect(`/admin/page-sections/${page}/${sectionId}/edit`);
+  redirect(`/admin/page-sections/${page}/${sectionId}/edit?saved=1`);
 }
 
 export async function updatePageSectionItem(
@@ -228,7 +228,7 @@ export async function updatePageSectionItem(
   });
   revalidatePath(`/admin/page-sections/${page}/${sectionId}/edit`);
   revalidatePath("/");
-  redirect(`/admin/page-sections/${page}/${sectionId}/edit`);
+  redirect(`/admin/page-sections/${page}/${sectionId}/edit?saved=1`);
 }
 
 export async function deletePageSectionItem(page: PageKeyValue, sectionId: string, itemId: string) {

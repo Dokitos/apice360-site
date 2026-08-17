@@ -27,7 +27,7 @@ export async function createPartner(_prevState: string | undefined, formData: Fo
   await prisma.partner.create({ data: parsed.data });
   revalidatePath("/admin/partners");
   revalidatePath("/");
-  redirect("/admin/partners");
+  redirect("/admin/partners?saved=1");
 }
 
 export async function updatePartner(
@@ -45,7 +45,7 @@ export async function updatePartner(
   await prisma.partner.update({ where: { id }, data: parsed.data });
   revalidatePath("/admin/partners");
   revalidatePath("/");
-  redirect("/admin/partners");
+  redirect("/admin/partners?saved=1");
 }
 
 export async function deletePartner(id: string) {

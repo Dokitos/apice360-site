@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
 import { TextField, TextAreaField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
@@ -37,6 +38,12 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
   );
   const pt = settings?.translations.find((t) => t.locale === "PT");
   const en = settings?.translations.find((t) => t.locale === "EN");
+
+  useEffect(() => {
+    if (!state) return;
+    if (state.ok) toast.success(state.message);
+    else toast.error(state.message);
+  }, [state]);
 
   return (
     <form action={formAction} className="max-w-3xl space-y-10">

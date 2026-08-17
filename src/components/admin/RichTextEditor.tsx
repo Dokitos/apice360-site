@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { useRef, useState } from "react";
+import { EditorContent, useEditor, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
 import { cn } from "@/lib/cn";
 import { Icon } from "@/components/ui/Icon";
 
@@ -17,7 +18,7 @@ export function RichTextEditor({ id, name, label, defaultValue = "" }: RichTextE
   const [html, setHtml] = useState(defaultValue);
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [StarterKit, Image],
     content: defaultValue,
     immediatelyRender: false,
     onUpdate: ({ editor }) => setHtml(editor.getHTML()),
@@ -35,7 +36,7 @@ export function RichTextEditor({ id, name, label, defaultValue = "" }: RichTextE
       </label>
       <div className="overflow-hidden rounded-lg border border-outline-variant/40 bg-surface-container-low">
         {editor ? (
-          <div className="flex flex-wrap gap-1 border-b border-outline-variant/40 p-2">
+          <div className="flex flex-wrap items-center gap-1 border-b border-outline-variant/40 p-2">
             <ToolbarButton
               active={editor.isActive("bold")}
               onClick={() => editor.chain().focus().toggleBold().run()}
@@ -71,6 +72,8 @@ export function RichTextEditor({ id, name, label, defaultValue = "" }: RichTextE
               onClick={() => editor.chain().focus().toggleBlockquote().run()}
               icon="format_quote"
             />
+            <span className="mx-1 h-5 w-px bg-outline-variant/40" />
+            <ImageToolbarButton editor={editor} />
           </div>
         ) : null}
         <EditorContent editor={editor} id={id} />
@@ -101,5 +104,101 @@ function ToolbarButton({
     >
       <Icon name={icon} className="text-lg" />
     </button>
+  );
+}
+
+function ImageToolbarButton({ editor }: { editor: Editor }) {
+  const [open, setOpen] = useState(false);
+  const [url, setUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function insert(src: string) {
+    if (!src.trim()) return;
+    editor.chain().focus().setImage({ src: src.trim() }).run();
+    setUrl("");
+    setOpen(false);
+  }
+
+  async function uploadFile(file: File) {
+    setUploading(true);
+    setError(null);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const response = await fetch("/api/admin/upload", { method: "POST", body });
+      const data: { url?: string; error?: string } | null = await response.json().catch(() => null);
+      if (!response.ok || !data?.url) {
+        setError(data?.error ?? "Falha ao carregar a imagem.");
+        return;
+      }
+      insert(data.url);
+    } catch {
+      setError("Falha ao carregar a imagem. Verifica a tua ligação e tenta novamente.");
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div className="relative">
+      <ToolbarButton active={open} onClick={() => setOpen((v) => !v)} icon="image" />
+      {open ? (
+        <div className="absolute left-0 top-full z-20 mt-2 w-72 rounded-lg border border-outline-variant/40 bg-surface p-3 shadow-xl">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
+            Inserir Imagem
+          </p>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  insert(url);
+                }
+              }}
+              placeholder="https://..."
+              className="w-full flex-1 rounded-lg border border-outline-variant/40 bg-surface-container-low px-3 py-1.5 text-sm outline-none focus:border-primary"
+            />
+            <button
+              type="button"
+              onClick={() => insert(url)}
+              className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold uppercase text-on-primary transition-transform hover:scale-105"
+            >
+              Ok
+            </button>
+          </div>
+          <div className="mt-2 flex items-center gap-2">
+            <div className="h-px flex-1 bg-outline-variant/30" />
+            <span className="text-[10px] uppercase text-on-surface-variant">ou</span>
+            <div className="h-px flex-1 bg-outline-variant/30" />
+          </div>
+          <button
+            type="button"
+            disabled={uploading}
+            onClick={() => fileInputRef.current?.click()}
+            className="mt-2 w-full rounded-lg border border-outline-variant/40 bg-surface-container-low px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:bg-surface-container-high disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {uploading ? "A enviar..." : "Carregar ficheiro"}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp,image/gif"
+            className="hidden"
+            disabled={uploading}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              e.target.value = "";
+              if (file) void uploadFile(file);
+            }}
+          />
+          {error ? <p className="mt-2 text-xs text-primary">{error}</p> : null}
+        </div>
+      ) : null}
+    </div>
   );
 }

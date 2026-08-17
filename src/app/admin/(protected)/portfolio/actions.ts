@@ -87,7 +87,7 @@ export async function createProject(_prevState: string | undefined, formData: Fo
 
   revalidatePath("/admin/portfolio");
   revalidatePath("/");
-  redirect(`/admin/portfolio/${project.id}/edit`);
+  redirect(`/admin/portfolio/${project.id}/edit?saved=1`);
 }
 
 export async function updateProject(
@@ -174,7 +174,7 @@ export async function updateProject(
 
   revalidatePath("/admin/portfolio");
   revalidatePath("/");
-  redirect(`/admin/portfolio/${id}/edit`);
+  redirect(`/admin/portfolio/${id}/edit?saved=1`);
 }
 
 export async function deleteProject(id: string) {
@@ -204,7 +204,7 @@ export async function createProjectImage(
   await prisma.projectImage.create({ data: { ...parsed.data, projectId } });
   revalidatePath(`/admin/portfolio/${projectId}/edit`);
   revalidatePath("/");
-  redirect(`/admin/portfolio/${projectId}/edit`);
+  redirect(`/admin/portfolio/${projectId}/edit?saved=1`);
 }
 
 export async function deleteProjectImage(projectId: string, imageId: string) {
