@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getBlogPosts, countBlogPosts, getPageSeo } from "@/lib/content";
+import { getBlogPosts, countBlogPosts, getPageSeo, getPageSections } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
+import { GenericPageSection } from "@/components/sections/GenericPageSection";
 import { Reveal } from "@/components/ui/Reveal";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,9 +26,10 @@ export default async function BlogPage({
   const locale = await getLocale();
   const dict = getDictionary(locale);
 
-  const [posts, total] = await Promise.all([
+  const [posts, total, extraSections] = await Promise.all([
     getBlogPosts({ limit: PAGE_SIZE, skip: (currentPage - 1) * PAGE_SIZE }, locale),
     countBlogPosts({}, locale),
+    getPageSections("BLOG", locale),
   ]);
 
   const hasNextPage = currentPage * PAGE_SIZE < total;
@@ -86,6 +88,10 @@ export default async function BlogPage({
           ) : null}
         </div>
       </Reveal>
+
+      {extraSections.map((section, i) => (
+        <GenericPageSection key={section.key} section={section} alt={i % 2 === 1} />
+      ))}
     </>
   );
 }

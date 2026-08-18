@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getPageSection, getCta, getServices, getPageSeo } from "@/lib/content";
+import { getPageSection, getPageSections, getCta, getServices, getPageSeo } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ServiceDetailSection } from "@/components/sections/ServiceDetailSection";
 import { TimelineSection } from "@/components/sections/TimelineSection";
+import { GenericPageSection } from "@/components/sections/GenericPageSection";
 import { Card } from "@/components/ui/Card";
+
+const KNOWN_SECTION_KEYS = ["intro", "management_model"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -18,12 +21,14 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ServicosPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const [intro, services, managementModel, finalCta] = await Promise.all([
+  const [intro, services, managementModel, finalCta, allSections] = await Promise.all([
     getPageSection("SERVICOS", "intro", locale),
     getServices(locale),
     getPageSection("SERVICOS", "management_model", locale),
     getCta("services_final_cta", locale),
+    getPageSections("SERVICOS", locale),
   ]);
+  const extraSections = allSections.filter((s) => !KNOWN_SECTION_KEYS.includes(s.key));
 
   const ctas = await Promise.all(
     services.map((service) => (service.ctaKey ? getCta(service.ctaKey, locale) : Promise.resolve(null))),
@@ -73,6 +78,10 @@ export default async function ServicosPage() {
           cta={finalCta}
         />
       ) : null}
+
+      {extraSections.map((section, i) => (
+        <GenericPageSection key={section.key} section={section} alt={i % 2 === 1} />
+      ))}
     </>
   );
 }

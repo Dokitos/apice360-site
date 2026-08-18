@@ -5,6 +5,9 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { portfolioProjectSchema, projectImageSchema } from "@/lib/validations/portfolio";
+import { sanitizeRichText } from "@/lib/sanitize-rich-text";
+
+const clean = (v?: string) => (v ? sanitizeRichText(v) : v);
 
 function readProjectForm(formData: FormData) {
   return {
@@ -66,18 +69,18 @@ export async function createProject(_prevState: string | undefined, formData: Fo
             locale: "PT",
             title: titlePt,
             shortDescription: shortDescriptionPt,
-            challenge: challengePt,
-            methodology: methodologyPt,
-            result: resultPt,
+            challenge: clean(challengePt),
+            methodology: clean(methodologyPt),
+            result: clean(resultPt),
             testimonialQuote: testimonialQuotePt,
           },
           {
             locale: "EN",
             title: titleEn,
             shortDescription: shortDescriptionEn,
-            challenge: challengeEn,
-            methodology: methodologyEn,
-            result: resultEn,
+            challenge: clean(challengeEn),
+            methodology: clean(methodologyEn),
+            result: clean(resultEn),
             testimonialQuote: testimonialQuoteEn,
           },
         ],
@@ -132,18 +135,18 @@ export async function updateProject(
             update: {
               title: titlePt,
               shortDescription: shortDescriptionPt,
-              challenge: challengePt,
-              methodology: methodologyPt,
-              result: resultPt,
+              challenge: clean(challengePt),
+              methodology: clean(methodologyPt),
+              result: clean(resultPt),
               testimonialQuote: testimonialQuotePt,
             },
             create: {
               locale: "PT",
               title: titlePt,
               shortDescription: shortDescriptionPt,
-              challenge: challengePt,
-              methodology: methodologyPt,
-              result: resultPt,
+              challenge: clean(challengePt),
+              methodology: clean(methodologyPt),
+              result: clean(resultPt),
               testimonialQuote: testimonialQuotePt,
             },
           },
@@ -152,18 +155,18 @@ export async function updateProject(
             update: {
               title: titleEn,
               shortDescription: shortDescriptionEn,
-              challenge: challengeEn,
-              methodology: methodologyEn,
-              result: resultEn,
+              challenge: clean(challengeEn),
+              methodology: clean(methodologyEn),
+              result: clean(resultEn),
               testimonialQuote: testimonialQuoteEn,
             },
             create: {
               locale: "EN",
               title: titleEn,
               shortDescription: shortDescriptionEn,
-              challenge: challengeEn,
-              methodology: methodologyEn,
-              result: resultEn,
+              challenge: clean(challengeEn),
+              methodology: clean(methodologyEn),
+              result: clean(resultEn),
               testimonialQuote: testimonialQuoteEn,
             },
           },

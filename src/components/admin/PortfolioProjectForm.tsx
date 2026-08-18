@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField, TextAreaField, SelectField, CheckboxField, ImageField, SlugField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 type Project = {
   slug: string;
@@ -77,14 +78,14 @@ export function PortfolioProjectForm({ project, action }: PortfolioProjectFormPr
               label="Descrição Curta (PT)"
               defaultValue={pt?.shortDescription ?? ""}
             />
-            <TextAreaField id="challengePt" name="challengePt" label="Desafio Resolvido (PT)" defaultValue={pt?.challenge ?? ""} />
-            <TextAreaField
+            <RichTextEditor id="challengePt" name="challengePt" label="Desafio Resolvido (PT)" defaultValue={pt?.challenge ?? ""} />
+            <RichTextEditor
               id="methodologyPt"
               name="methodologyPt"
               label="Metodologia Ápice (PT)"
               defaultValue={pt?.methodology ?? ""}
             />
-            <TextAreaField id="resultPt" name="resultPt" label="Resultado (PT)" defaultValue={pt?.result ?? ""} />
+            <RichTextEditor id="resultPt" name="resultPt" label="Resultado (PT)" defaultValue={pt?.result ?? ""} />
             <TextAreaField
               id="testimonialQuotePt"
               name="testimonialQuotePt"
@@ -102,14 +103,14 @@ export function PortfolioProjectForm({ project, action }: PortfolioProjectFormPr
               label="Short Description (EN)"
               defaultValue={en?.shortDescription ?? ""}
             />
-            <TextAreaField id="challengeEn" name="challengeEn" label="Challenge Solved (EN)" defaultValue={en?.challenge ?? ""} />
-            <TextAreaField
+            <RichTextEditor id="challengeEn" name="challengeEn" label="Challenge Solved (EN)" defaultValue={en?.challenge ?? ""} />
+            <RichTextEditor
               id="methodologyEn"
               name="methodologyEn"
               label="Ápice Methodology (EN)"
               defaultValue={en?.methodology ?? ""}
             />
-            <TextAreaField id="resultEn" name="resultEn" label="Result (EN)" defaultValue={en?.result ?? ""} />
+            <RichTextEditor id="resultEn" name="resultEn" label="Result (EN)" defaultValue={en?.result ?? ""} />
             <TextAreaField
               id="testimonialQuoteEn"
               name="testimonialQuoteEn"

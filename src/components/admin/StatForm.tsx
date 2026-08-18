@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, CheckboxField } from "@/components/admin/form-fields";
+import { TextField, CheckboxField, IconPickerField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 
 type Stat = {
@@ -27,13 +27,7 @@ export function StatForm({ stat, action }: StatFormProps) {
   return (
     <form action={formAction} className="max-w-xl space-y-6">
       <TextField id="value" name="value" label="Valor (ex: 120+, 97%)" defaultValue={stat?.value} required />
-      <TextField
-        id="iconName"
-        name="iconName"
-        label="Ícone (Material Symbols)"
-        defaultValue={stat?.iconName ?? ""}
-        placeholder="ex: home_work"
-      />
+      <IconPickerField id="iconName" name="iconName" label="Ícone" defaultValue={stat?.iconName} />
       <LocaleTabs
         pt={
           <TextField id="labelPt" name="labelPt" label="Rótulo (PT)" defaultValue={pt?.label} required />

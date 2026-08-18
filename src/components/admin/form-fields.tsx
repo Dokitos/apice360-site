@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/cn";
 import { slugify } from "@/lib/slugify";
+import { CURATED_ICONS } from "@/lib/material-icons";
+import { Icon } from "@/components/ui/Icon";
 
 const baseFieldClasses =
   "w-full rounded-lg border border-outline-variant/40 bg-surface-container-low px-4 py-2.5 text-on-surface outline-none transition-colors focus:border-primary";
@@ -145,6 +147,132 @@ export function CheckboxField({ label, id, className, ...props }: CheckboxFieldP
       />
       {label}
     </label>
+  );
+}
+
+type IconPickerFieldProps = {
+  label: string;
+  id: string;
+  name: string;
+  defaultValue?: string | null;
+  hint?: string;
+};
+
+/** Click-to-pick grid of Material Symbols icons, with a fallback for typing a custom name. */
+export function IconPickerField({
+  label,
+  id,
+  name,
+  defaultValue,
+  hint = "Clica para escolher um ícone (opcional).",
+}: IconPickerFieldProps) {
+  const [value, setValue] = useState(defaultValue ?? "");
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [customMode, setCustomMode] = useState(Boolean(defaultValue) && !CURATED_ICONS.includes(defaultValue ?? ""));
+
+  const filtered = query.trim()
+    ? CURATED_ICONS.filter((icon) => icon.includes(query.trim().toLowerCase()))
+    : CURATED_ICONS;
+
+  return (
+    <FieldShell label={label} htmlFor={id} hint={hint}>
+      <input type="hidden" id={id} name={name} value={value} readOnly />
+      {customMode ? (
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="ex: verified"
+            className={baseFieldClasses}
+          />
+          <button
+            type="button"
+            onClick={() => setCustomMode(false)}
+            className="shrink-0 rounded-lg border border-outline-variant/40 px-3 py-2.5 text-xs font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:bg-surface-container-high"
+          >
+            Escolher da lista
+          </button>
+        </div>
+      ) : (
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            className="flex w-full items-center gap-3 rounded-lg border border-outline-variant/40 bg-surface-container-low px-4 py-2.5 text-left text-on-surface transition-colors hover:border-primary"
+          >
+            {value ? (
+              <>
+                <Icon name={value} className="text-xl text-primary" />
+                <span>{value}</span>
+              </>
+            ) : (
+              <span className="text-on-surface-variant">Sem ícone escolhido</span>
+            )}
+          </button>
+          {open ? (
+            <div className="absolute left-0 top-full z-20 mt-2 w-full max-w-sm rounded-lg border border-outline-variant/40 bg-surface p-3 shadow-xl sm:w-96">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Pesquisar ícone..."
+                className={cn(baseFieldClasses, "mb-3 py-2")}
+                autoFocus
+              />
+              <div className="grid max-h-64 grid-cols-6 gap-1 overflow-y-auto">
+                {filtered.map((icon) => (
+                  <button
+                    key={icon}
+                    type="button"
+                    title={icon}
+                    onClick={() => {
+                      setValue(icon);
+                      setOpen(false);
+                      setQuery("");
+                    }}
+                    className={cn(
+                      "flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-primary/10 hover:text-primary",
+                      value === icon ? "bg-primary/20 text-primary" : "text-on-surface-variant",
+                    )}
+                  >
+                    <Icon name={icon} className="text-xl" />
+                  </button>
+                ))}
+                {filtered.length === 0 ? (
+                  <p className="col-span-6 py-4 text-center text-xs text-on-surface-variant">
+                    Nenhum ícone encontrado.
+                  </p>
+                ) : null}
+              </div>
+              <div className="mt-3 flex items-center justify-between border-t border-outline-variant/20 pt-3">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setValue("");
+                    setOpen(false);
+                  }}
+                  className="text-xs text-on-surface-variant hover:text-primary"
+                >
+                  Remover ícone
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCustomMode(true);
+                    setOpen(false);
+                  }}
+                  className="text-xs text-on-surface-variant hover:text-primary"
+                >
+                  Escrever nome manualmente
+                </button>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )}
+    </FieldShell>
   );
 }
 

@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { StatItem } from "@/components/ui/StatItem";
 import { Button } from "@/components/ui/Button";
+import { RichText } from "@/components/ui/RichText";
 import { cn } from "@/lib/cn";
 
 type Stat = { id: string; value: string; label: string; iconName: string | null };
@@ -33,7 +34,7 @@ export function ResultsStatsSection({ heading, body, stats, cta }: ResultsStatsS
         </div>
         {body || cta ? (
           <div className="mt-16">
-            {body ? <p className="mb-6 text-on-surface-variant">{body}</p> : null}
+            {body ? <RichText html={body} className="mb-6 mx-auto text-on-surface-variant" /> : null}
             {cta ? (
               <Button href={cta.url} variant="cta" icon="bolt">
                 {cta.label}

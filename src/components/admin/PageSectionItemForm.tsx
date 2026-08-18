@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, TextAreaField, ImageField } from "@/components/admin/form-fields";
+import { TextField, TextAreaField, ImageField, IconPickerField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 
 type PageSectionItem = {
@@ -26,7 +26,7 @@ export function PageSectionItemForm({ item, action }: PageSectionItemFormProps) 
   return (
     <form action={formAction} className="max-w-xl space-y-6">
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <TextField id="iconName" name="iconName" label="Ícone (opcional)" defaultValue={item?.iconName ?? ""} placeholder="ex: chat_bubble" />
+        <IconPickerField id="iconName" name="iconName" label="Ícone (opcional)" defaultValue={item?.iconName} />
         <TextField id="numberLabel" name="numberLabel" label="Número (opcional)" defaultValue={item?.numberLabel ?? ""} placeholder="ex: 01" />
       </div>
       <ImageField id="imageUrl" name="imageUrl" label="Imagem (opcional)" defaultValue={item?.imageUrl} />

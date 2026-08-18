@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import {
   getPageSection,
+  getPageSections,
   getCta,
   getPartners,
   getTestimonials,
@@ -15,6 +16,9 @@ import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { WhyChooseSection } from "@/components/sections/WhyChooseSection";
 import { ResultsStatsSection } from "@/components/sections/ResultsStatsSection";
 import { BlogPreviewSection } from "@/components/sections/BlogPreviewSection";
+import { GenericPageSection } from "@/components/sections/GenericPageSection";
+
+const KNOWN_SECTION_KEYS = ["hero", "partners", "why_choose", "results", "blog_preview"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -39,6 +43,7 @@ export default async function HomePage() {
     blogPreview,
     blogCta,
     posts,
+    allSections,
   ] = await Promise.all([
     getPageSection("HOME", "hero", locale),
     getCta("home_hero", locale),
@@ -53,7 +58,9 @@ export default async function HomePage() {
     getPageSection("HOME", "blog_preview", locale),
     getCta("blog_see_more", locale),
     getBlogPosts({ limit: 3 }, locale),
+    getPageSections("HOME", locale),
   ]);
+  const extraSections = allSections.filter((s) => !KNOWN_SECTION_KEYS.includes(s.key));
 
   return (
     <>
@@ -97,6 +104,10 @@ export default async function HomePage() {
         cta={blogCta}
         locale={locale}
       />
+
+      {extraSections.map((section, i) => (
+        <GenericPageSection key={section.key} section={section} alt={i % 2 === 1} />
+      ))}
     </>
   );
 }

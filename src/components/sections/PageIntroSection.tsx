@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/ui/Reveal";
+import { RichText } from "@/components/ui/RichText";
 
 type PageIntroSectionProps = {
   eyebrow?: string | null;
@@ -18,7 +19,7 @@ export function PageIntroSection({ eyebrow, heading, body, imageUrl }: PageIntro
         ) : null}
         <h1 className="mx-auto mb-6 max-w-3xl font-heading text-headline-lg">{heading}</h1>
         {body ? (
-          <p className="mx-auto max-w-2xl text-body-lg leading-relaxed text-on-surface-variant">{body}</p>
+          <RichText html={body} className="mx-auto max-w-2xl text-body-lg text-on-surface-variant" />
         ) : null}
         {imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element

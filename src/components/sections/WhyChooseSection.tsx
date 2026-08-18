@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { RichText } from "@/components/ui/RichText";
 
 type Item = { id: string; title: string; iconName: string | null };
 
@@ -29,7 +30,7 @@ export function WhyChooseSection({ eyebrow, heading, body, imageUrl, items, cta 
               </span>
             ) : null}
             <h2 className="mb-6 font-heading text-headline-lg">{heading}</h2>
-            {body ? <p className="mb-8 leading-relaxed text-on-surface-variant">{body}</p> : null}
+            {body ? <RichText html={body} className="mb-8 text-on-surface-variant" /> : null}
             <ul className="mb-10 space-y-4">
               {items.map((item) => (
                 <li key={item.id} className="flex items-center gap-3">

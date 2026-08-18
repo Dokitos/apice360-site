@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import { EditorContent, useEditor, type Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
+import { TextStyle } from "@tiptap/extension-text-style";
+import Color from "@tiptap/extension-color";
 import { cn } from "@/lib/cn";
 import { Icon } from "@/components/ui/Icon";
 
@@ -14,11 +16,21 @@ type RichTextEditorProps = {
   defaultValue?: string;
 };
 
+const COLOR_SWATCHES = [
+  "#FF6A13", // brand orange
+  "#111111", // ink
+  "#EF4444", // red
+  "#F59E0B", // amber
+  "#10B981", // emerald
+  "#3B82F6", // blue
+  "#8B5CF6", // violet
+];
+
 export function RichTextEditor({ id, name, label, defaultValue = "" }: RichTextEditorProps) {
   const [html, setHtml] = useState(defaultValue);
 
   const editor = useEditor({
-    extensions: [StarterKit, Image],
+    extensions: [StarterKit, Image, TextStyle, Color],
     content: defaultValue,
     immediatelyRender: false,
     onUpdate: ({ editor }) => setHtml(editor.getHTML()),
@@ -48,6 +60,17 @@ export function RichTextEditor({ id, name, label, defaultValue = "" }: RichTextE
               icon="format_italic"
             />
             <ToolbarButton
+              active={editor.isActive("underline")}
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+              icon="format_underlined"
+            />
+            <ToolbarButton
+              active={editor.isActive("strike")}
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              icon="format_strikethrough"
+            />
+            <span className="mx-1 h-5 w-px bg-outline-variant/40" />
+            <ToolbarButton
               active={editor.isActive("heading", { level: 2 })}
               onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
               icon="format_h2"
@@ -73,6 +96,18 @@ export function RichTextEditor({ id, name, label, defaultValue = "" }: RichTextE
               icon="format_quote"
             />
             <span className="mx-1 h-5 w-px bg-outline-variant/40" />
+            <ToolbarButton
+              active={editor.isActive("code")}
+              onClick={() => editor.chain().focus().toggleCode().run()}
+              icon="code"
+            />
+            <ToolbarButton
+              active={editor.isActive("codeBlock")}
+              onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+              icon="data_object"
+            />
+            <LinkToolbarButton editor={editor} />
+            <ColorToolbarButton editor={editor} />
             <ImageToolbarButton editor={editor} />
           </div>
         ) : null}
@@ -104,6 +139,112 @@ function ToolbarButton({
     >
       <Icon name={icon} className="text-lg" />
     </button>
+  );
+}
+
+function LinkToolbarButton({ editor }: { editor: Editor }) {
+  const [open, setOpen] = useState(false);
+  const [url, setUrl] = useState("");
+
+  function apply() {
+    if (!url.trim()) return;
+    editor.chain().focus().extendMarkRange("link").setLink({ href: url.trim() }).run();
+    setUrl("");
+    setOpen(false);
+  }
+
+  return (
+    <div className="relative">
+      <ToolbarButton
+        active={editor.isActive("link") || open}
+        onClick={() => setOpen((v) => !v)}
+        icon="link"
+      />
+      {open ? (
+        <div className="absolute left-0 top-full z-20 mt-2 w-72 rounded-lg border border-outline-variant/40 bg-surface p-3 shadow-xl">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
+            Inserir Link
+          </p>
+          <div className="flex gap-2">
+            <input
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  apply();
+                }
+              }}
+              placeholder="https://..."
+              className="w-full flex-1 rounded-lg border border-outline-variant/40 bg-surface-container-low px-3 py-1.5 text-sm outline-none focus:border-primary"
+              autoFocus
+            />
+            <button
+              type="button"
+              onClick={apply}
+              className="shrink-0 rounded-lg bg-primary px-3 py-1.5 text-xs font-bold uppercase text-on-primary transition-transform hover:scale-105"
+            >
+              Ok
+            </button>
+          </div>
+          {editor.isActive("link") ? (
+            <button
+              type="button"
+              onClick={() => {
+                editor.chain().focus().unsetLink().run();
+                setOpen(false);
+              }}
+              className="mt-2 text-xs text-on-surface-variant hover:text-primary"
+            >
+              Remover link
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function ColorToolbarButton({ editor }: { editor: Editor }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <ToolbarButton active={open} onClick={() => setOpen((v) => !v)} icon="palette" />
+      {open ? (
+        <div className="absolute left-0 top-full z-20 mt-2 w-56 rounded-lg border border-outline-variant/40 bg-surface p-3 shadow-xl">
+          <p className="mb-2 font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
+            Cor do Texto
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {COLOR_SWATCHES.map((color) => (
+              <button
+                key={color}
+                type="button"
+                title={color}
+                onClick={() => {
+                  editor.chain().focus().setColor(color).run();
+                  setOpen(false);
+                }}
+                className="h-7 w-7 rounded-full border border-outline-variant/30"
+                style={{ backgroundColor: color }}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              editor.chain().focus().unsetColor().run();
+              setOpen(false);
+            }}
+            className="mt-3 text-xs text-on-surface-variant hover:text-primary"
+          >
+            Remover cor
+          </button>
+        </div>
+      ) : null}
+    </div>
   );
 }
 

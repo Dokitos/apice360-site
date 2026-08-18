@@ -2,9 +2,10 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, TextAreaField, CheckboxField } from "@/components/admin/form-fields";
+import { TextField, CheckboxField } from "@/components/admin/form-fields";
 import { ImageField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
 
 type Service = {
   imageUrl: string | null;
@@ -45,14 +46,14 @@ export function ServiceForm({ service, action }: ServiceFormProps) {
           <>
             <TextField id="cardLabelPt" name="cardLabelPt" label="Rótulo do Cartão (PT)" defaultValue={pt?.cardLabel} required />
             <TextField id="titlePt" name="titlePt" label="Título (PT)" defaultValue={pt?.title} required />
-            <TextAreaField id="introPt" name="introPt" label="Introdução (PT)" defaultValue={pt?.intro} required />
+            <RichTextEditor id="introPt" name="introPt" label="Introdução (PT)" defaultValue={pt?.intro} />
           </>
         }
         en={
           <>
             <TextField id="cardLabelEn" name="cardLabelEn" label="Card Label (EN)" defaultValue={en?.cardLabel} required />
             <TextField id="titleEn" name="titleEn" label="Title (EN)" defaultValue={en?.title} required />
-            <TextAreaField id="introEn" name="introEn" label="Intro (EN)" defaultValue={en?.intro} required />
+            <RichTextEditor id="introEn" name="introEn" label="Intro (EN)" defaultValue={en?.intro} />
           </>
         }
       />

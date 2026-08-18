@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { serviceSchema, serviceFeatureSchema } from "@/lib/validations/service";
+import { sanitizeRichText } from "@/lib/sanitize-rich-text";
 
 type ServiceTypeKey = "LSF" | "REMODELACAO";
 
@@ -31,7 +32,9 @@ export async function upsertService(
   const parsed = serviceSchema.safeParse(readServiceForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
-  const { cardLabelPt, cardLabelEn, titlePt, titleEn, introPt, introEn, ...data } = parsed.data;
+  const { cardLabelPt, cardLabelEn, titlePt, titleEn, introPt: introPtRaw, introEn: introEnRaw, ...data } = parsed.data;
+  const introPt = sanitizeRichText(introPtRaw);
+  const introEn = sanitizeRichText(introEnRaw);
 
   const service = await prisma.service.findUnique({ where: { type } });
 

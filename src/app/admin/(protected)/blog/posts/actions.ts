@@ -2,25 +2,10 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
-import sanitizeHtml from "sanitize-html";
 import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { blogPostSchema } from "@/lib/validations/blog-post";
-
-// TipTap's StarterKit + Image extension (used by RichTextEditor) only ever
-// emit this tag set. Uses sanitize-html (pure JS) instead of
-// isomorphic-dompurify: the latter wraps jsdom, whose dynamic requires
-// aren't reliably traced by Vercel's serverless bundler and crash the whole
-// route at import time in production.
-function sanitizeBody(html: string) {
-  return sanitizeHtml(html, {
-    allowedTags: [
-      "p", "br", "hr", "strong", "b", "em", "i", "s", "u", "code", "pre",
-      "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "blockquote", "a", "img",
-    ],
-    allowedAttributes: { a: ["href", "target", "rel"], img: ["src", "alt"] },
-  });
-}
+import { sanitizeRichText as sanitizeBody } from "@/lib/sanitize-rich-text";
 
 function readForm(formData: FormData) {
   return {

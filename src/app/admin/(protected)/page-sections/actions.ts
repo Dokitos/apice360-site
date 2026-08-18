@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { pageSectionSchema, pageSectionItemSchema } from "@/lib/validations/page-section";
+import { sanitizeRichText } from "@/lib/sanitize-rich-text";
 
 type PageKeyValue =
   | "HOME"
@@ -72,7 +73,7 @@ export async function createPageSection(
             eyebrow: eyebrowPt,
             heading: headingPt,
             subheading: subheadingPt,
-            body: bodyPt,
+            body: bodyPt ? sanitizeRichText(bodyPt) : bodyPt,
             ctaLabel: ctaLabelPt,
           },
           {
@@ -80,7 +81,7 @@ export async function createPageSection(
             eyebrow: eyebrowEn,
             heading: headingEn,
             subheading: subheadingEn,
-            body: bodyEn,
+            body: bodyEn ? sanitizeRichText(bodyEn) : bodyEn,
             ctaLabel: ctaLabelEn,
           },
         ],
@@ -128,13 +129,39 @@ export async function updatePageSection(
         upsert: [
           {
             where: { sectionId_locale: { sectionId: id, locale: "PT" } },
-            update: { eyebrow: eyebrowPt, heading: headingPt, subheading: subheadingPt, body: bodyPt, ctaLabel: ctaLabelPt },
-            create: { locale: "PT", eyebrow: eyebrowPt, heading: headingPt, subheading: subheadingPt, body: bodyPt, ctaLabel: ctaLabelPt },
+            update: {
+              eyebrow: eyebrowPt,
+              heading: headingPt,
+              subheading: subheadingPt,
+              body: bodyPt ? sanitizeRichText(bodyPt) : bodyPt,
+              ctaLabel: ctaLabelPt,
+            },
+            create: {
+              locale: "PT",
+              eyebrow: eyebrowPt,
+              heading: headingPt,
+              subheading: subheadingPt,
+              body: bodyPt ? sanitizeRichText(bodyPt) : bodyPt,
+              ctaLabel: ctaLabelPt,
+            },
           },
           {
             where: { sectionId_locale: { sectionId: id, locale: "EN" } },
-            update: { eyebrow: eyebrowEn, heading: headingEn, subheading: subheadingEn, body: bodyEn, ctaLabel: ctaLabelEn },
-            create: { locale: "EN", eyebrow: eyebrowEn, heading: headingEn, subheading: subheadingEn, body: bodyEn, ctaLabel: ctaLabelEn },
+            update: {
+              eyebrow: eyebrowEn,
+              heading: headingEn,
+              subheading: subheadingEn,
+              body: bodyEn ? sanitizeRichText(bodyEn) : bodyEn,
+              ctaLabel: ctaLabelEn,
+            },
+            create: {
+              locale: "EN",
+              eyebrow: eyebrowEn,
+              heading: headingEn,
+              subheading: subheadingEn,
+              body: bodyEn ? sanitizeRichText(bodyEn) : bodyEn,
+              ctaLabel: ctaLabelEn,
+            },
           },
         ],
       },

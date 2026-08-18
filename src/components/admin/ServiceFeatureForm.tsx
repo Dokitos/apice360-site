@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, TextAreaField } from "@/components/admin/form-fields";
+import { TextField, TextAreaField, IconPickerField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 
 type ServiceFeature = {
@@ -23,13 +23,7 @@ export function ServiceFeatureForm({ feature, action }: ServiceFeatureFormProps)
 
   return (
     <form action={formAction} className="max-w-xl space-y-6">
-      <TextField
-        id="iconName"
-        name="iconName"
-        label="Ícone (Material Symbols)"
-        defaultValue={feature?.iconName ?? ""}
-        placeholder="ex: timer"
-      />
+      <IconPickerField id="iconName" name="iconName" label="Ícone" defaultValue={feature?.iconName} />
       <LocaleTabs
         pt={
           <>

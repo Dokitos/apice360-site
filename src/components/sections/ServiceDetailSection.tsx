@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { RichText } from "@/components/ui/RichText";
 
 type Feature = { id: string; title: string; body: string | null; iconName: string | null };
 
@@ -37,7 +38,7 @@ export function ServiceDetailSection({
           ) : null}
           <div className="lg:w-1/2">
             <h2 className="mb-6 font-heading text-headline-lg">{title}</h2>
-            <p className="mb-10 leading-relaxed text-on-surface-variant">{intro}</p>
+            <RichText html={intro} className="mb-10 text-on-surface-variant" />
             <div className="mb-10 space-y-8">
               {features.map((feature) => (
                 <div key={feature.id} className="flex items-start gap-4">

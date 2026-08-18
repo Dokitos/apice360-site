@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { getPageSection, getPageSeo } from "@/lib/content";
+import { getPageSection, getPageSections, getPageSeo } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ContactForm } from "@/components/sections/ContactForm";
+import { GenericPageSection } from "@/components/sections/GenericPageSection";
 import { Reveal } from "@/components/ui/Reveal";
 import { Card } from "@/components/ui/Card";
+
+const KNOWN_SECTION_KEYS = ["intro"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -17,7 +20,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AreaDoArquitetoPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const intro = await getPageSection("AREA_ARQUITETO", "intro", locale);
+  const [intro, allSections] = await Promise.all([
+    getPageSection("AREA_ARQUITETO", "intro", locale),
+    getPageSections("AREA_ARQUITETO", locale),
+  ]);
+  const extraSections = allSections.filter((s) => !KNOWN_SECTION_KEYS.includes(s.key));
 
   return (
     <>
@@ -36,6 +43,10 @@ export default async function AreaDoArquitetoPage() {
           </Card>
         </div>
       </Reveal>
+
+      {extraSections.map((section, i) => (
+        <GenericPageSection key={section.key} section={section} alt={i % 2 === 1} />
+      ))}
     </>
   );
 }

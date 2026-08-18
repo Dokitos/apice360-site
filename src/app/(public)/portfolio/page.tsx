@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { getPageSeo, getFeaturedProjects, getProjectsByCategory, getCta } from "@/lib/content";
+import { getPageSeo, getPageSections, getFeaturedProjects, getProjectsByCategory, getCta } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { PortfolioGrid } from "@/components/sections/PortfolioGrid";
+import { GenericPageSection } from "@/components/sections/GenericPageSection";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 
@@ -17,10 +18,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PortfolioPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const [featured, lsfProjects, cta] = await Promise.all([
+  const [featured, lsfProjects, cta, extraSections] = await Promise.all([
     getFeaturedProjects(locale),
     getProjectsByCategory("LSF", locale),
     getCta("portfolio_final_budget", locale),
+    getPageSections("PORTFOLIO", locale),
   ]);
 
   return (
@@ -37,6 +39,10 @@ export default async function PortfolioPage() {
           </Button>
         </Reveal>
       ) : null}
+
+      {extraSections.map((section, i) => (
+        <GenericPageSection key={section.key} section={section} alt={i % 2 === 1} />
+      ))}
     </>
   );
 }

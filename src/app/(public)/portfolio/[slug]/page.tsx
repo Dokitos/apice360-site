@@ -8,6 +8,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Carousel } from "@/components/ui/Carousel";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { RichText } from "@/components/ui/RichText";
 
 export async function generateMetadata({
   params,
@@ -78,19 +79,19 @@ export default async function PortfolioDetailPage({
           {project.challenge ? (
             <div>
               <dt className="mb-1 font-bold">{dict.portfolioDetail.desafioResolvido}</dt>
-              <dd className="text-on-surface-variant">{project.challenge}</dd>
+              <dd><RichText html={project.challenge} className="text-on-surface-variant" /></dd>
             </div>
           ) : null}
           {project.methodology ? (
             <div>
               <dt className="mb-1 font-bold">{dict.portfolioDetail.metodologiaApice}</dt>
-              <dd className="text-on-surface-variant">{project.methodology}</dd>
+              <dd><RichText html={project.methodology} className="text-on-surface-variant" /></dd>
             </div>
           ) : null}
           {project.result ? (
             <div>
               <dt className="mb-1 font-bold">{dict.portfolioDetail.resultado}</dt>
-              <dd className="text-on-surface-variant">{project.result}</dd>
+              <dd><RichText html={project.result} className="text-on-surface-variant" /></dd>
             </div>
           ) : null}
           {project.testimonialQuote ? (

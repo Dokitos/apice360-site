@@ -1,14 +1,17 @@
 import type { Metadata } from "next";
-import { getPageSection, getCta, getSiteSettings, getPageSeo } from "@/lib/content";
+import { getPageSection, getPageSections, getCta, getSiteSettings, getPageSeo } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { ContactMap } from "@/components/sections/ContactMap";
+import { GenericPageSection } from "@/components/sections/GenericPageSection";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
+
+const KNOWN_SECTION_KEYS = ["triagem"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -20,11 +23,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactoPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const [triagem, settings, whatsappCta] = await Promise.all([
+  const [triagem, settings, whatsappCta, allSections] = await Promise.all([
     getPageSection("CONTACTO", "triagem", locale),
     getSiteSettings(locale),
     getCta("contact_whatsapp_commercial", locale),
+    getPageSections("CONTACTO", locale),
   ]);
+  const extraSections = allSections.filter((s) => !KNOWN_SECTION_KEYS.includes(s.key));
 
   const highlights = [
     { icon: "shield", label: dict.contacto.seguranca },
@@ -91,6 +96,10 @@ export default async function ContactoPage() {
           </div>
         </div>
       </Reveal>
+
+      {extraSections.map((section, i) => (
+        <GenericPageSection key={section.key} section={section} alt={i % 2 === 0} />
+      ))}
     </>
   );
 }

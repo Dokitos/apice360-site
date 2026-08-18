@@ -15,6 +15,9 @@ export const ctaSchema = z.object({
     .string()
     .trim()
     .min(1, "Indica o destino do botão (URL ou link do WhatsApp).")
+    // Quality-of-life: a pasted link like "wa.me/351..." or "www.site.com"
+    // is missing its scheme — assume https:// rather than reject it.
+    .transform((v) => (SAFE_CTA_URL.test(v) ? v : `https://${v}`))
     .refine((v) => SAFE_CTA_URL.test(v), "Usa um link http(s), mailto:, tel: ou um caminho relativo (/pagina)."),
   style: z.string().trim().min(1).default("primary"),
   iconName: z.string().trim().optional().or(z.literal("")),
