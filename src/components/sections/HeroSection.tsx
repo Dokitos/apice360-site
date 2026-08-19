@@ -60,7 +60,7 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
           ) : null}
           {cta ? (
             <div className="flex flex-col items-center gap-6 lg:items-start">
-              <Button href={cta.url} variant="cta" size="lg" pulse icon={cta.iconName ?? "bolt"}>
+              <Button href={cta.url} variant="cta" size="lg" pulse icon={cta.iconName ?? undefined}>
                 👉 {cta.label}
               </Button>
               {trustBadges.length > 0 ? (

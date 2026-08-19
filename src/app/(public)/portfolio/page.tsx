@@ -34,7 +34,7 @@ export default async function PortfolioPage() {
 
       {cta ? (
         <Reveal as="section" className="bg-surface-container-lowest py-24 text-center">
-          <Button href={cta.url} variant="cta">
+          <Button href={cta.url} variant="cta" icon={cta.iconName ?? undefined}>
             {cta.label}
           </Button>
         </Reveal>

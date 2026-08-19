@@ -10,7 +10,7 @@ type ResultsStatsSectionProps = {
   heading: string;
   body?: string | null;
   stats: Stat[];
-  cta?: { label: string; url: string } | null;
+  cta?: { label: string; url: string; iconName?: string | null } | null;
 };
 
 export function ResultsStatsSection({ heading, body, stats, cta }: ResultsStatsSectionProps) {
@@ -36,7 +36,7 @@ export function ResultsStatsSection({ heading, body, stats, cta }: ResultsStatsS
           <div className="mt-16">
             {body ? <RichText html={body} className="mb-6 mx-auto text-on-surface-variant" /> : null}
             {cta ? (
-              <Button href={cta.url} variant="cta" icon="bolt">
+              <Button href={cta.url} variant="cta" icon={cta.iconName ?? undefined}>
                 {cta.label}
               </Button>
             ) : null}

@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
+import { Button } from "@/components/ui/Button";
 
 type Item = { id: string; title: string; body: string | null; iconName: string | null };
 
@@ -10,9 +11,10 @@ type CardGridSectionProps = {
   body?: string | null;
   items: Item[];
   columns?: 2 | 3 | 4;
+  cta?: { label: string; url: string; iconName?: string | null } | null;
 };
 
-export function CardGridSection({ eyebrow, heading, body, items, columns = 2 }: CardGridSectionProps) {
+export function CardGridSection({ eyebrow, heading, body, items, columns = 2, cta }: CardGridSectionProps) {
   const colsClass =
     columns === 4
       ? "md:grid-cols-2 lg:grid-cols-4"
@@ -41,6 +43,13 @@ export function CardGridSection({ eyebrow, heading, body, items, columns = 2 }: 
             </Card>
           ))}
         </div>
+        {cta ? (
+          <div className="mt-12 text-center">
+            <Button href={cta.url} variant="cta" icon={cta.iconName ?? undefined}>
+              {cta.label}
+            </Button>
+          </div>
+        ) : null}
       </div>
     </Reveal>
   );

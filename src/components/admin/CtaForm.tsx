@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField, SelectField, CheckboxField, IconPickerField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
-import { PAGE_LABELS } from "@/lib/known-page-sections";
+import { PAGE_LABELS, FIXED_CTA_KEY_BY_SECTION } from "@/lib/known-page-sections";
 import type { PageKeyValue } from "@/lib/content";
 
 // Every place on the public site that actually reads a CTA by key (see
@@ -26,7 +26,7 @@ const KNOWN_CTA_SLOTS: { key: string; description: string }[] = [
   { key: "services_final_cta", description: "Botão no fim da página de Serviços" },
 ];
 
-type SectionOption = { id: string; page: PageKeyValue; key: string; heading: string | null };
+type SectionOption = { id: string; page: PageKeyValue; key: string; heading: string | null; fixedKey: string | null };
 
 type Cta = {
   id: string;
@@ -50,7 +50,12 @@ export function CtaForm({ cta, existingKeys = [], sections = [], action }: CtaFo
   const pt = cta?.translations.find((t) => t.locale === "PT");
   const en = cta?.translations.find((t) => t.locale === "EN");
 
-  const availableSlots = KNOWN_CTA_SLOTS.filter((slot) => !existingKeys.includes(slot.key));
+  // Slots reachable via a section (below) are hidden here so the same
+  // destination isn't listed twice under two different labels.
+  const sectionMappedKeys = new Set(Object.values(FIXED_CTA_KEY_BY_SECTION));
+  const availableSlots = KNOWN_CTA_SLOTS.filter(
+    (slot) => !existingKeys.includes(slot.key) && !sectionMappedKeys.has(slot.key),
+  );
   const [customKey, setCustomKey] = useState(false);
   const [locationChoice, setLocationChoice] = useState("");
 
@@ -60,10 +65,14 @@ export function CtaForm({ cta, existingKeys = [], sections = [], action }: CtaFo
   );
 
   const computedKey = selectedSection
-    ? `${selectedSection.page.toLowerCase()}_${selectedSection.key}_cta`
+    ? (selectedSection.fixedKey ?? `${selectedSection.page.toLowerCase()}_${selectedSection.key}_cta`)
     : locationChoice && locationChoice !== "__custom__"
       ? locationChoice
       : "";
+  // Only sections without a fixed-key correspondence link via
+  // section.ctaKey — the others resolve straight to the known key, same as
+  // picking it from "Locais fixos do site".
+  const linkedSectionId = selectedSection && !selectedSection.fixedKey ? selectedSection.id : "";
 
   function handleLocationChange(e: FormEvent<HTMLSelectElement>) {
     const value = e.currentTarget.value;
@@ -141,7 +150,7 @@ export function CtaForm({ cta, existingKeys = [], sections = [], action }: CtaFo
             <option value="__custom__">Outro (chave personalizada, para usar num Serviço)</option>
           </SelectField>
           <input type="hidden" name="key" value={computedKey} />
-          <input type="hidden" name="linkedSectionId" value={selectedSection?.id ?? ""} />
+          <input type="hidden" name="linkedSectionId" value={linkedSectionId} />
         </>
       )}
       <TextField

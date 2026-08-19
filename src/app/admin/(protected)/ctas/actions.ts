@@ -33,6 +33,7 @@ export async function createCta(_prevState: string | undefined, formData: FormDa
   await prisma.cta.create({
     data: {
       ...data,
+      iconName: data.iconName || null,
       translations: {
         create: [
           { locale: "PT", label: labelPt },
@@ -62,6 +63,11 @@ export async function updateCta(id: string, _prevState: string | undefined, form
     where: { id },
     data: {
       ...data,
+      // `iconName` comes through as `undefined` when the admin clears the
+      // icon picker — Prisma treats an undefined field as "don't touch",
+      // which would silently keep the old icon. Coerce to null so clearing
+      // it actually persists.
+      iconName: data.iconName || null,
       translations: {
         upsert: [
           {

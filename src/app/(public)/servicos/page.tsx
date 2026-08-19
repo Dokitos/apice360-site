@@ -29,9 +29,10 @@ export default async function ServicosPage() {
   ]);
   const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.SERVICOS.includes(s.key));
 
-  const ctas = await Promise.all(
-    services.map((service) => (service.ctaKey ? getCta(service.ctaKey, locale) : Promise.resolve(null))),
-  );
+  const [ctas, introCta] = await Promise.all([
+    Promise.all(services.map((service) => (service.ctaKey ? getCta(service.ctaKey, locale) : Promise.resolve(null)))),
+    intro?.ctaKey ? getCta(intro.ctaKey, locale) : Promise.resolve(null),
+  ]);
 
   return (
     <>
@@ -39,6 +40,7 @@ export default async function ServicosPage() {
         eyebrow={dict.servicos.eyebrow}
         heading={intro?.heading ?? dict.servicos.headingDefault}
         body={intro?.body}
+        cta={introCta}
       />
 
       {services.length > 1 ? (

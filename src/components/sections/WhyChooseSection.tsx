@@ -11,7 +11,7 @@ type WhyChooseSectionProps = {
   body?: string | null;
   imageUrl?: string | null;
   items: Item[];
-  cta?: { label: string; url: string } | null;
+  cta?: { label: string; url: string; iconName?: string | null } | null;
 };
 
 export function WhyChooseSection({ eyebrow, heading, body, imageUrl, items, cta }: WhyChooseSectionProps) {
@@ -40,7 +40,7 @@ export function WhyChooseSection({ eyebrow, heading, body, imageUrl, items, cta 
               ))}
             </ul>
             {cta ? (
-              <Button href={cta.url} variant="cta">
+              <Button href={cta.url} variant="cta" icon={cta.iconName ?? undefined}>
                 {cta.label}
               </Button>
             ) : null}

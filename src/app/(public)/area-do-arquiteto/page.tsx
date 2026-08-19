@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getPageSection, getPageSections, getPageSeo, getSiteSettings } from "@/lib/content";
+import { getPageSection, getPageSections, getPageSeo, getSiteSettings, getCta } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
@@ -27,6 +27,7 @@ export default async function AreaDoArquitetoPage() {
   ]);
   if (settings?.architectAreaEnabled === false) notFound();
   const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.AREA_ARQUITETO.includes(s.key));
+  const introCta = intro?.ctaKey ? await getCta(intro.ctaKey, locale) : null;
 
   return (
     <>
@@ -35,6 +36,7 @@ export default async function AreaDoArquitetoPage() {
         heading={intro?.heading ?? dict.areaArquiteto.headingDefault}
         body={intro?.body ?? dict.areaArquiteto.bodyDefault}
         imageUrl={intro?.imageUrl}
+        cta={introCta}
       />
 
       <Reveal as="section" className="bg-surface py-24">

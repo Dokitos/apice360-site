@@ -15,13 +15,20 @@ export default async function NewPageSectionItemPage({
   if (!VALID_PAGES.includes(page as (typeof VALID_PAGES)[number])) notFound();
   const pageKey = page as (typeof VALID_PAGES)[number];
 
-  const section = await prisma.pageSection.findUnique({ where: { id: sectionId } });
+  const [section, ctasRaw] = await Promise.all([
+    prisma.pageSection.findUnique({ where: { id: sectionId } }),
+    prisma.cta.findMany({
+      orderBy: { key: "asc" },
+      select: { key: true, translations: { where: { locale: "PT" }, select: { label: true } } },
+    }),
+  ]);
   if (!section) notFound();
+  const ctas = ctasRaw.map((c) => ({ key: c.key, label: c.translations[0]?.label ?? c.key }));
 
   return (
     <div>
       <AdminPageHeader title="Novo Item" />
-      <PageSectionItemForm action={createPageSectionItem.bind(null, pageKey, sectionId)} />
+      <PageSectionItemForm action={createPageSectionItem.bind(null, pageKey, sectionId)} ctas={ctas} />
     </div>
   );
 }

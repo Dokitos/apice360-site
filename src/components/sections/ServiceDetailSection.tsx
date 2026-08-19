@@ -11,7 +11,7 @@ type ServiceDetailSectionProps = {
   intro: string;
   imageUrl?: string | null;
   features: Feature[];
-  cta?: { label: string; url: string } | null;
+  cta?: { label: string; url: string; iconName?: string | null } | null;
   reverse?: boolean;
   className?: string;
 };
@@ -53,7 +53,7 @@ export function ServiceDetailSection({
               ))}
             </div>
             {cta ? (
-              <Button href={cta.url} variant="ghost">
+              <Button href={cta.url} variant="ghost" icon={cta.iconName ?? undefined}>
                 {cta.label}
               </Button>
             ) : null}

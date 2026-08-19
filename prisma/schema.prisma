@@ -205,6 +205,7 @@ model PageSectionItem {
   iconName     String?
   imageUrl     String?
   numberLabel  String?
+  ctaKey       String?
   translations PageSectionItemTranslation[]
 }
 

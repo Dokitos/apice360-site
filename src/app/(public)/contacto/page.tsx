@@ -49,7 +49,7 @@ export default async function ContactoPage() {
             {triagem?.subheading ?? dict.contacto.triagemBodyDefault}
           </p>
           {whatsappCta ? (
-            <Button href={whatsappCta.url} variant="cta" size="lg" icon={whatsappCta.iconName ?? "chat"}>
+            <Button href={whatsappCta.url} variant="cta" size="lg" icon={whatsappCta.iconName ?? undefined}>
               {whatsappCta.label}
             </Button>
           ) : null}

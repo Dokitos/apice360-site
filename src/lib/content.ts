@@ -79,6 +79,7 @@ export const getPageSections = cache(
             iconName: item.iconName,
             imageUrl: item.imageUrl,
             numberLabel: item.numberLabel,
+            ctaKey: item.ctaKey,
             title: it?.title ?? "",
             body: it?.body ?? null,
           };

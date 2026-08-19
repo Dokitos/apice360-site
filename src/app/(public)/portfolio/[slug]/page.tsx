@@ -107,7 +107,7 @@ export default async function PortfolioDetailPage({
 
         {cta ? (
           <div className="mt-16 text-center">
-            <Button href={cta.url} variant="cta">
+            <Button href={cta.url} variant="cta" icon={cta.iconName ?? undefined}>
               {cta.label}
             </Button>
           </div>

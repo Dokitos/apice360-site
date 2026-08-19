@@ -9,6 +9,7 @@ type GenericSectionItem = {
   iconName: string | null;
   imageUrl: string | null;
   numberLabel: string | null;
+  ctaKey: string | null;
   title: string;
   body: string | null;
 };
@@ -80,21 +81,7 @@ export async function GenericPageSection({
         {section.items.length > 0 ? (
           <div className="mt-16 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {section.items.map((item) => (
-              <div key={item.id} className="rounded-lg border border-outline-variant/20 p-8 text-center">
-                {item.imageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={item.imageUrl} alt="" className="mx-auto mb-4 h-32 w-full rounded-lg object-cover" />
-                ) : item.iconName ? (
-                  <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                    <Icon name={item.iconName} className="text-primary" />
-                  </div>
-                ) : null}
-                {item.numberLabel ? (
-                  <span className="mb-2 block font-mono text-sm text-primary/60">{item.numberLabel}</span>
-                ) : null}
-                <h3 className="mb-2 font-heading text-lg font-bold">{item.title}</h3>
-                {item.body ? <p className="text-sm text-on-surface-variant">{item.body}</p> : null}
-              </div>
+              <ItemCard key={item.id} item={item} locale={locale} />
             ))}
           </div>
         ) : null}
@@ -108,5 +95,34 @@ export async function GenericPageSection({
         ) : null}
       </div>
     </Reveal>
+  );
+}
+
+async function ItemCard({ item, locale }: { item: GenericSectionItem; locale: "PT" | "EN" }) {
+  const cta = item.ctaKey ? await getCta(item.ctaKey, locale) : null;
+
+  return (
+    <div className="rounded-lg border border-outline-variant/20 p-8 text-center">
+      {item.imageUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={item.imageUrl} alt="" className="mx-auto mb-4 h-32 w-full rounded-lg object-cover" />
+      ) : item.iconName ? (
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+          <Icon name={item.iconName} className="text-primary" />
+        </div>
+      ) : null}
+      {item.numberLabel ? (
+        <span className="mb-2 block font-mono text-sm text-primary/60">{item.numberLabel}</span>
+      ) : null}
+      <h3 className="mb-2 font-heading text-lg font-bold">{item.title}</h3>
+      {item.body ? <p className="text-sm text-on-surface-variant">{item.body}</p> : null}
+      {cta ? (
+        <div className="mt-4">
+          <Button href={cta.url} variant="ghost" size="sm" icon={cta.iconName ?? undefined}>
+            {cta.label}
+          </Button>
+        </div>
+      ) : null}
+    </div>
   );
 }

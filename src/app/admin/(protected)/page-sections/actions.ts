@@ -125,6 +125,11 @@ export async function updatePageSection(
     where: { id },
     data: {
       ...data,
+      // Cleared via the picker → comes through as `undefined`, which
+      // Prisma treats as "don't touch this field" and would silently keep
+      // the old value. Coerce to null so clearing actually persists.
+      imageUrl: data.imageUrl || null,
+      iconName: data.iconName || null,
       translations: {
         upsert: [
           {
@@ -185,6 +190,7 @@ function readItemForm(formData: FormData) {
     iconName: formData.get("iconName") || undefined,
     imageUrl: formData.get("imageUrl") || undefined,
     numberLabel: formData.get("numberLabel") || undefined,
+    ctaKey: formData.get("ctaKey") || undefined,
     order: formData.get("order"),
     titlePt: formData.get("titlePt"),
     titleEn: formData.get("titleEn"),
@@ -207,6 +213,10 @@ export async function createPageSectionItem(
   await prisma.pageSectionItem.create({
     data: {
       ...data,
+      iconName: data.iconName || null,
+      imageUrl: data.imageUrl || null,
+      numberLabel: data.numberLabel || null,
+      ctaKey: data.ctaKey || null,
       sectionId,
       translations: {
         create: [
@@ -237,6 +247,10 @@ export async function updatePageSectionItem(
     where: { id: itemId },
     data: {
       ...data,
+      iconName: data.iconName || null,
+      imageUrl: data.imageUrl || null,
+      numberLabel: data.numberLabel || null,
+      ctaKey: data.ctaKey || null,
       translations: {
         upsert: [
           {

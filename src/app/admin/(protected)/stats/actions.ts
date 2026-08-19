@@ -49,6 +49,7 @@ export async function updateStat(id: string, _prevState: string | undefined, for
     where: { id },
     data: {
       ...data,
+      iconName: data.iconName || null,
       translations: {
         upsert: [
           {

@@ -8,7 +8,7 @@ type TimelineSectionProps = {
   eyebrow?: string | null;
   heading: string;
   items: Item[];
-  cta?: { label: string; url: string } | null;
+  cta?: { label: string; url: string; iconName?: string | null } | null;
   className?: string;
 };
 
@@ -44,7 +44,7 @@ export function TimelineSection({ eyebrow, heading, items, cta, className }: Tim
           </div>
           {cta ? (
             <div className="mt-16 text-center">
-              <Button href={cta.url} variant="cta">
+              <Button href={cta.url} variant="cta" icon={cta.iconName ?? undefined}>
                 {cta.label}
               </Button>
             </div>

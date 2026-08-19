@@ -30,6 +30,13 @@ export default async function QuemSomosPage() {
   ]);
   const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.QUEM_SOMOS.includes(s.key));
 
+  const [introCta, historyCta, methodCta, valuesCta] = await Promise.all([
+    intro?.ctaKey ? getCta(intro.ctaKey, locale) : Promise.resolve(null),
+    history?.ctaKey ? getCta(history.ctaKey, locale) : Promise.resolve(null),
+    method?.ctaKey ? getCta(method.ctaKey, locale) : Promise.resolve(null),
+    values?.ctaKey ? getCta(values.ctaKey, locale) : Promise.resolve(null),
+  ]);
+
   return (
     <>
       <PageIntroSection
@@ -37,6 +44,7 @@ export default async function QuemSomosPage() {
         heading={intro?.heading ?? dict.quemSomos.headingDefault}
         body={intro?.body ?? intro?.subheading}
         imageUrl={intro?.imageUrl}
+        cta={introCta}
       />
 
       {history ? (
@@ -46,6 +54,7 @@ export default async function QuemSomosPage() {
           body={history.body}
           items={history.items}
           columns={3}
+          cta={historyCta}
         />
       ) : null}
 
@@ -54,6 +63,7 @@ export default async function QuemSomosPage() {
           eyebrow={dict.quemSomos.metodoEyebrow}
           heading={method.heading ?? dict.quemSomos.metodoHeadingDefault}
           items={method.items}
+          cta={methodCta}
         />
       ) : null}
 
@@ -63,6 +73,7 @@ export default async function QuemSomosPage() {
           heading={values.heading ?? dict.quemSomos.valoresHeadingDefault}
           items={values.items}
           columns={4}
+          cta={valuesCta}
         />
       ) : null}
 

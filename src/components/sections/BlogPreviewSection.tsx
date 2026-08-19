@@ -18,7 +18,7 @@ type BlogPreviewSectionProps = {
   heading?: string | null;
   subheading?: string | null;
   posts: Post[];
-  cta?: { label: string; url: string } | null;
+  cta?: { label: string; url: string; iconName?: string | null } | null;
   locale?: SiteLocale;
 };
 
@@ -68,7 +68,7 @@ export function BlogPreviewSection({ heading, subheading, posts, cta, locale = "
         </div>
         {cta ? (
           <div className="mt-16 text-center">
-            <Button href={cta.url} variant="ghost">
+            <Button href={cta.url} variant="ghost" icon={cta.iconName ?? undefined}>
               {cta.label}
             </Button>
           </div>

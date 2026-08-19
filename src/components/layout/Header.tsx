@@ -38,7 +38,7 @@ export async function Header() {
         <div className="hidden shrink-0 items-center gap-4 xl:flex">
           <LanguageSwitcher locale={locale} />
           {budgetCta ? (
-            <Button href={budgetCta.url} variant="cta" size="sm">
+            <Button href={budgetCta.url} variant="cta" size="sm" icon={budgetCta.iconName ?? undefined}>
               {budgetCta.label}
             </Button>
           ) : (

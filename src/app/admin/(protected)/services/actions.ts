@@ -43,6 +43,8 @@ export async function upsertService(
       where: { type },
       data: {
         ...data,
+        imageUrl: data.imageUrl || null,
+        ctaKey: data.ctaKey || null,
         translations: {
           upsert: [
             {
@@ -133,6 +135,7 @@ export async function updateServiceFeature(
     where: { id: featureId },
     data: {
       ...data,
+      iconName: data.iconName || null,
       translations: {
         upsert: [
           {
