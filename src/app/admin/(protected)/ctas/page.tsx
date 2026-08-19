@@ -30,7 +30,14 @@ export default async function CtasPage() {
             header: "Texto (PT)",
             render: (c) => <span className="font-bold">{c.translations.find((t) => t.locale === "PT")?.label ?? "—"}</span>,
           },
-          { header: "Destino", render: (c) => <span className="truncate text-xs">{c.url}</span> },
+          {
+            header: "Destino",
+            render: (c) => (
+              <span className="block max-w-[220px] truncate text-xs text-on-surface-variant" title={c.url}>
+                {c.url}
+              </span>
+            ),
+          },
           {
             header: "Estado",
             render: (c) => (

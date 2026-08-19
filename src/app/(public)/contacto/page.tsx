@@ -6,12 +6,11 @@ import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { ContactMap } from "@/components/sections/ContactMap";
 import { GenericPageSection } from "@/components/sections/GenericPageSection";
+import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
-
-const KNOWN_SECTION_KEYS = ["triagem"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -29,7 +28,7 @@ export default async function ContactoPage() {
     getCta("contact_whatsapp_commercial", locale),
     getPageSections("CONTACTO", locale),
   ]);
-  const extraSections = allSections.filter((s) => !KNOWN_SECTION_KEYS.includes(s.key));
+  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.CONTACTO.includes(s.key));
 
   const highlights = [
     { icon: "shield", label: dict.contacto.seguranca },
@@ -98,7 +97,7 @@ export default async function ContactoPage() {
       </Reveal>
 
       {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} alt={i % 2 === 0} />
+        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 0} />
       ))}
     </>
   );

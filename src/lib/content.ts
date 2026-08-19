@@ -66,6 +66,7 @@ export const getPageSections = cache(
         key: section.key,
         imageUrl: section.imageUrl,
         iconName: section.iconName,
+        ctaKey: section.ctaKey,
         eyebrow: t?.eyebrow ?? null,
         heading: t?.heading ?? null,
         subheading: t?.subheading ?? null,

@@ -17,6 +17,8 @@ export const siteSettingsSchema = z.object({
   socialLinkedin: optionalUrl,
   socialYoutube: optionalUrl,
   defaultOgImageUrl: optionalUrl,
+  architectAreaEnabled: z.boolean(),
+  maintenanceMode: z.boolean(),
   footerDescriptionPt: z.string().trim().optional().or(z.literal("")),
   footerDescriptionEn: z.string().trim().optional().or(z.literal("")),
   showroomTextPt: z.string().trim().optional().or(z.literal("")),

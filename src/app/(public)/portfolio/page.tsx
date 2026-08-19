@@ -41,7 +41,7 @@ export default async function PortfolioPage() {
       ) : null}
 
       {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} alt={i % 2 === 1} />
+        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />
       ))}
     </>
   );

@@ -1,6 +1,8 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
 import { RichText } from "@/components/ui/RichText";
+import { Button } from "@/components/ui/Button";
+import { getCta } from "@/lib/content";
 
 type GenericSectionItem = {
   id: string;
@@ -15,6 +17,7 @@ export type GenericSectionData = {
   key: string;
   imageUrl: string | null;
   iconName: string | null;
+  ctaKey: string | null;
   eyebrow: string | null;
   heading: string | null;
   subheading: string | null;
@@ -28,11 +31,21 @@ export type GenericSectionData = {
  * section from the admin ("+ Nova Secção") and have it actually show up on
  * the site, instead of silently doing nothing.
  */
-export function GenericPageSection({ section, alt = false }: { section: GenericSectionData; alt?: boolean }) {
+export async function GenericPageSection({
+  section,
+  locale,
+  alt = false,
+}: {
+  section: GenericSectionData;
+  locale: "PT" | "EN";
+  alt?: boolean;
+}) {
   const hasContent = Boolean(
     section.heading || section.subheading || section.body || section.imageUrl || section.items.length > 0,
   );
   if (!hasContent) return null;
+
+  const cta = section.ctaKey ? await getCta(section.ctaKey, locale) : null;
 
   return (
     <Reveal as="section" className={alt ? "bg-surface-container-lowest py-24" : "bg-surface py-24"}>
@@ -83,6 +96,14 @@ export function GenericPageSection({ section, alt = false }: { section: GenericS
                 {item.body ? <p className="text-sm text-on-surface-variant">{item.body}</p> : null}
               </div>
             ))}
+          </div>
+        ) : null}
+
+        {cta ? (
+          <div className="mt-12 text-center">
+            <Button href={cta.url} variant="cta" icon={cta.iconName ?? undefined}>
+              {cta.label}
+            </Button>
           </div>
         ) : null}
       </div>

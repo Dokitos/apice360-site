@@ -13,12 +13,13 @@ type MobileNavProps = {
   locale: SiteLocale;
   ctaLabel?: string;
   ctaUrl?: string;
+  showArchitectArea?: boolean;
 };
 
-export function MobileNav({ locale, ctaLabel, ctaUrl }: MobileNavProps) {
+export function MobileNav({ locale, ctaLabel, ctaUrl, showArchitectArea = true }: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const dict = getDictionary(locale);
-  const navLinks = getNavLinks(dict);
+  const navLinks = getNavLinks(dict, { showArchitectArea });
 
   return (
     <div className="xl:hidden">

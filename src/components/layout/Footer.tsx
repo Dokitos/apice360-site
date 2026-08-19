@@ -11,12 +11,13 @@ export async function Footer() {
   const dict = getDictionary(locale);
   const settings = await getSiteSettings(locale);
   const year = new Date().getFullYear();
-  const navLinks = getNavLinks(dict);
+  const showArchitectArea = settings?.architectAreaEnabled ?? true;
+  const navLinks = getNavLinks(dict, { showArchitectArea });
 
   const serviceLinks = [
     { href: "/servicos#lsf", label: dict.footer.lsf },
     { href: "/contacto", label: dict.footer.trabalheConnosco },
-    { href: "/area-do-arquiteto", label: dict.footer.areaDosArquitetos },
+    ...(showArchitectArea ? [{ href: "/area-do-arquiteto", label: dict.footer.areaDosArquitetos }] : []),
     { href: "/contacto", label: dict.footer.orcamento },
   ];
 

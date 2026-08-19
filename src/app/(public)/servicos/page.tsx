@@ -7,9 +7,8 @@ import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ServiceDetailSection } from "@/components/sections/ServiceDetailSection";
 import { TimelineSection } from "@/components/sections/TimelineSection";
 import { GenericPageSection } from "@/components/sections/GenericPageSection";
+import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
 import { Card } from "@/components/ui/Card";
-
-const KNOWN_SECTION_KEYS = ["intro", "management_model"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -28,7 +27,7 @@ export default async function ServicosPage() {
     getCta("services_final_cta", locale),
     getPageSections("SERVICOS", locale),
   ]);
-  const extraSections = allSections.filter((s) => !KNOWN_SECTION_KEYS.includes(s.key));
+  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.SERVICOS.includes(s.key));
 
   const ctas = await Promise.all(
     services.map((service) => (service.ctaKey ? getCta(service.ctaKey, locale) : Promise.resolve(null))),
@@ -80,7 +79,7 @@ export default async function ServicosPage() {
       ) : null}
 
       {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} alt={i % 2 === 1} />
+        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />
       ))}
     </>
   );

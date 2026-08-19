@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCta } from "@/lib/content";
+import { getCta, getSiteSettings } from "@/lib/content";
 import { getNavLinks } from "@/lib/nav";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
@@ -12,8 +12,9 @@ import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 export async function Header() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const budgetCta = await getCta("header_budget", locale);
-  const navLinks = getNavLinks(dict);
+  const [budgetCta, settings] = await Promise.all([getCta("header_budget", locale), getSiteSettings(locale)]);
+  const showArchitectArea = settings?.architectAreaEnabled ?? true;
+  const navLinks = getNavLinks(dict, { showArchitectArea });
 
   return (
     <header className="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-xl">
@@ -51,6 +52,7 @@ export async function Header() {
           locale={locale}
           ctaLabel={budgetCta?.label ?? dict.header.orcamentoDefault}
           ctaUrl={budgetCta?.url ?? "/contacto"}
+          showArchitectArea={showArchitectArea}
         />
       </div>
     </header>

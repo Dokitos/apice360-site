@@ -25,8 +25,9 @@
 *.pem
 *.key
 
-# never commit db dumps/backups
+# never commit db dumps/backups (but Prisma migrations ARE .sql and must be tracked)
 *.sql
+!prisma/migrations/**/*.sql
 *.dump
 *.backup
 

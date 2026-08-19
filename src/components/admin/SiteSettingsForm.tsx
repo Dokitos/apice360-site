@@ -3,7 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
-import { TextField, TextAreaField } from "@/components/admin/form-fields";
+import { TextField, TextAreaField, CheckboxField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { updateSiteSettings, type SiteSettingsFormState } from "@/app/admin/(protected)/site-settings/actions";
 
@@ -22,6 +22,8 @@ type SiteSettings = {
   socialLinkedin: string | null;
   socialYoutube: string | null;
   defaultOgImageUrl: string | null;
+  architectAreaEnabled: boolean;
+  maintenanceMode: boolean;
   translations: {
     locale: "PT" | "EN";
     footerDescription: string | null;
@@ -47,6 +49,30 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
 
   return (
     <form action={formAction} className="max-w-3xl space-y-10">
+      <section className="space-y-6">
+        <h2 className="font-heading text-headline-md">Funcionalidades</h2>
+        <CheckboxField
+          id="architectAreaEnabled"
+          name="architectAreaEnabled"
+          label="Mostrar 'Área do Arquiteto' no site"
+          defaultChecked={settings?.architectAreaEnabled ?? true}
+        />
+        <p className="text-xs text-on-surface-variant">
+          Quando desativado, o link desaparece do menu e a página deixa de estar acessível.
+        </p>
+
+        <CheckboxField
+          id="maintenanceMode"
+          name="maintenanceMode"
+          label="Ativar modo de manutenção"
+          defaultChecked={settings?.maintenanceMode ?? false}
+        />
+        <p className="text-xs text-on-surface-variant">
+          Bloqueia o site para todos os visitantes, mostrando uma página de manutenção. Administradores e
+          editores com sessão iniciada continuam a ver o site normalmente.
+        </p>
+      </section>
+
       <section className="space-y-6">
         <h2 className="font-heading text-headline-md">Contacto</h2>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">

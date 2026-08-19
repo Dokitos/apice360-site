@@ -90,23 +90,25 @@ model User {
 }
 
 model SiteSettings {
-  id                 String                    @id @default("singleton")
-  phone              String?
-  whatsappCommercial String?
-  whatsappGeneral    String?
-  email              String?
-  addressLine        String?
-  addressCity        String?
-  addressPostalCode  String?
-  addressCountry     String?                   @default("Portugal")
-  mapEmbedUrl        String?
-  socialFacebook     String?
-  socialInstagram    String?
-  socialLinkedin     String?
-  socialYoutube      String?
-  defaultOgImageUrl  String?
-  updatedAt          DateTime                  @updatedAt
-  translations       SiteSettingsTranslation[]
+  id                   String                    @id @default("singleton")
+  phone                String?
+  whatsappCommercial   String?
+  whatsappGeneral      String?
+  email                String?
+  addressLine          String?
+  addressCity          String?
+  addressPostalCode    String?
+  addressCountry       String?                   @default("Portugal")
+  mapEmbedUrl          String?
+  socialFacebook       String?
+  socialInstagram      String?
+  socialLinkedin       String?
+  socialYoutube        String?
+  defaultOgImageUrl    String?
+  architectAreaEnabled Boolean                   @default(true)
+  maintenanceMode      Boolean                   @default(false)
+  updatedAt            DateTime                  @updatedAt
+  translations         SiteSettingsTranslation[]
 }
 
 model SiteSettingsTranslation {
@@ -171,6 +173,7 @@ model PageSection {
   order        Int                      @default(0)
   imageUrl     String?
   iconName     String?
+  ctaKey       String?
   isActive     Boolean                  @default(true)
   translations PageSectionTranslation[]
   items        PageSectionItem[]

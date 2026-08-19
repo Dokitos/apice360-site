@@ -28,6 +28,8 @@ export async function createCta(_prevState: string | undefined, formData: FormDa
   const existing = await prisma.cta.findUnique({ where: { key: data.key } });
   if (existing) return "Já existe um CTA com esta chave.";
 
+  const linkedSectionId = (formData.get("linkedSectionId") as string) || undefined;
+
   await prisma.cta.create({
     data: {
       ...data,
@@ -39,7 +41,13 @@ export async function createCta(_prevState: string | undefined, formData: FormDa
       },
     },
   });
+
+  if (linkedSectionId) {
+    await prisma.pageSection.update({ where: { id: linkedSectionId }, data: { ctaKey: data.key } });
+  }
+
   revalidatePath("/admin/ctas");
+  revalidatePath("/admin/page-sections");
   revalidatePath("/");
   redirect("/admin/ctas?saved=1");
 }

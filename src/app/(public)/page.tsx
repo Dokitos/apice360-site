@@ -17,8 +17,7 @@ import { WhyChooseSection } from "@/components/sections/WhyChooseSection";
 import { ResultsStatsSection } from "@/components/sections/ResultsStatsSection";
 import { BlogPreviewSection } from "@/components/sections/BlogPreviewSection";
 import { GenericPageSection } from "@/components/sections/GenericPageSection";
-
-const KNOWN_SECTION_KEYS = ["hero", "partners", "why_choose", "results", "blog_preview"];
+import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -60,7 +59,7 @@ export default async function HomePage() {
     getBlogPosts({ limit: 3 }, locale),
     getPageSections("HOME", locale),
   ]);
-  const extraSections = allSections.filter((s) => !KNOWN_SECTION_KEYS.includes(s.key));
+  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.HOME.includes(s.key));
 
   return (
     <>
@@ -106,7 +105,7 @@ export default async function HomePage() {
       />
 
       {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} alt={i % 2 === 1} />
+        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />
       ))}
     </>
   );

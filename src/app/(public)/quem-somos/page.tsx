@@ -6,10 +6,9 @@ import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { CardGridSection } from "@/components/sections/CardGridSection";
 import { TimelineSection } from "@/components/sections/TimelineSection";
 import { GenericPageSection } from "@/components/sections/GenericPageSection";
+import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
-
-const KNOWN_SECTION_KEYS = ["intro", "history", "method", "values"];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -29,7 +28,7 @@ export default async function QuemSomosPage() {
     getCta("about_talk_to_team", locale),
     getPageSections("QUEM_SOMOS", locale),
   ]);
-  const extraSections = allSections.filter((s) => !KNOWN_SECTION_KEYS.includes(s.key));
+  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.QUEM_SOMOS.includes(s.key));
 
   return (
     <>
@@ -83,7 +82,7 @@ export default async function QuemSomosPage() {
       ) : null}
 
       {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} alt={i % 2 === 1} />
+        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />
       ))}
     </>
   );

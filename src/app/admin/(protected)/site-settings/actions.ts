@@ -8,7 +8,11 @@ import { siteSettingsSchema } from "@/lib/validations/site-settings";
 export type SiteSettingsFormState = { ok: boolean; message: string } | undefined;
 
 function readForm(formData: FormData) {
-  return Object.fromEntries(formData.entries());
+  return {
+    ...Object.fromEntries(formData.entries()),
+    architectAreaEnabled: formData.get("architectAreaEnabled") === "on",
+    maintenanceMode: formData.get("maintenanceMode") === "on",
+  };
 }
 
 export async function updateSiteSettings(
@@ -99,6 +103,8 @@ export async function updateSiteSettings(
   });
 
   revalidatePath("/admin/site-settings");
-  revalidatePath("/");
+  // "layout" so the maintenance-mode / architect-area gate in the public
+  // (public)/layout.tsx re-evaluates on every page immediately, not just "/".
+  revalidatePath("/", "layout");
   return { ok: true, message: "Definições guardadas com sucesso." };
 }

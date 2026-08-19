@@ -163,6 +163,12 @@ const dictionary = {
         "Para solicitar o acesso, a correção, a portabilidade ou a eliminação dos seus dados pessoais, contacte-nos através do email:",
       deletionEmail: "geral@apice360.com",
     },
+    maintenance: {
+      eyebrow: "Em breve",
+      heading: "Estamos a melhorar o site.",
+      body: "Voltamos em breve com novidades. Obrigado pela paciência.",
+      contact: "Precisa de falar connosco entretanto?",
+    },
   },
   EN: {
     nav: {
@@ -322,6 +328,12 @@ const dictionary = {
       deletionBody:
         "To request access to, correction of, portability of, or deletion of your personal data, contact us at:",
       deletionEmail: "geral@apice360.com",
+    },
+    maintenance: {
+      eyebrow: "Coming soon",
+      heading: "We're making the site better.",
+      body: "We'll be back shortly with news. Thanks for your patience.",
+      contact: "Need to reach us in the meantime?",
     },
   },
 } as const;
