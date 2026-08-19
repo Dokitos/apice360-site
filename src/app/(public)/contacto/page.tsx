@@ -22,13 +22,20 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactoPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const [triagem, settings, whatsappCta, allSections] = await Promise.all([
+  const [intro, triagem, settings, whatsappCta, allSections] = await Promise.all([
+    getPageSection("CONTACTO", "intro", locale),
     getPageSection("CONTACTO", "triagem", locale),
     getSiteSettings(locale),
     getCta("contact_whatsapp_commercial", locale),
     getPageSections("CONTACTO", locale),
   ]);
   const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.CONTACTO.includes(s.key));
+
+  const triagemItems = triagem?.items ?? [];
+  const [triagemItemCtas, introCta] = await Promise.all([
+    Promise.all(triagemItems.map((item) => (item.ctaKey ? getCta(item.ctaKey, locale) : Promise.resolve(null)))),
+    intro?.ctaKey ? getCta(intro.ctaKey, locale) : Promise.resolve(null),
+  ]);
 
   const highlights = [
     { icon: "shield", label: dict.contacto.seguranca },
@@ -38,7 +45,13 @@ export default async function ContactoPage() {
 
   return (
     <>
-      <PageIntroSection eyebrow={dict.contacto.eyebrow} heading={dict.contacto.heading} body={dict.contacto.body} />
+      <PageIntroSection
+        eyebrow={intro?.eyebrow ?? dict.contacto.eyebrow}
+        heading={intro?.heading ?? dict.contacto.heading}
+        body={intro?.body ?? dict.contacto.body}
+        imageUrl={intro?.imageUrl}
+        cta={introCta}
+      />
 
       <Reveal as="section" className="bg-surface py-24">
         <div className="mx-auto max-w-[1280px] px-5 text-center md:px-20">
@@ -52,6 +65,19 @@ export default async function ContactoPage() {
             <Button href={whatsappCta.url} variant="cta" size="lg" icon={whatsappCta.iconName ?? undefined}>
               {whatsappCta.label}
             </Button>
+          ) : null}
+          {triagemItemCtas.some(Boolean) ? (
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
+              {triagemItems.map((item, i) => {
+                const itemCta = triagemItemCtas[i];
+                if (!itemCta) return null;
+                return (
+                  <Button key={item.id} href={itemCta.url} variant="ghost" icon={itemCta.iconName ?? undefined}>
+                    {itemCta.label}
+                  </Button>
+                );
+              })}
+            </div>
           ) : null}
         </div>
       </Reveal>

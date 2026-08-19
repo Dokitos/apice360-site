@@ -2,8 +2,9 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
+import { getCta } from "@/lib/content";
 
-type Item = { id: string; title: string; body: string | null; iconName: string | null };
+type Item = { id: string; title: string; body: string | null; iconName: string | null; ctaKey?: string | null };
 
 type CardGridSectionProps = {
   eyebrow?: string | null;
@@ -12,9 +13,10 @@ type CardGridSectionProps = {
   items: Item[];
   columns?: 2 | 3 | 4;
   cta?: { label: string; url: string; iconName?: string | null } | null;
+  locale?: "PT" | "EN";
 };
 
-export function CardGridSection({ eyebrow, heading, body, items, columns = 2, cta }: CardGridSectionProps) {
+export function CardGridSection({ eyebrow, heading, body, items, columns = 2, cta, locale = "PT" }: CardGridSectionProps) {
   const colsClass =
     columns === 4
       ? "md:grid-cols-2 lg:grid-cols-4"
@@ -36,11 +38,7 @@ export function CardGridSection({ eyebrow, heading, body, items, columns = 2, ct
         </div>
         <div className={`grid grid-cols-1 gap-6 ${colsClass}`}>
           {items.map((item) => (
-            <Card key={item.id} className="p-8">
-              {item.iconName ? <Icon name={item.iconName} className="mb-4 text-3xl text-primary" /> : null}
-              <h3 className="mb-3 font-heading text-headline-md">{item.title}</h3>
-              {item.body ? <p className="text-sm leading-relaxed text-on-surface-variant">{item.body}</p> : null}
-            </Card>
+            <ItemCard key={item.id} item={item} locale={locale} />
           ))}
         </div>
         {cta ? (
@@ -52,5 +50,24 @@ export function CardGridSection({ eyebrow, heading, body, items, columns = 2, ct
         ) : null}
       </div>
     </Reveal>
+  );
+}
+
+async function ItemCard({ item, locale }: { item: Item; locale: "PT" | "EN" }) {
+  const cta = item.ctaKey ? await getCta(item.ctaKey, locale) : null;
+
+  return (
+    <Card className="p-8">
+      {item.iconName ? <Icon name={item.iconName} className="mb-4 text-3xl text-primary" /> : null}
+      <h3 className="mb-3 font-heading text-headline-md">{item.title}</h3>
+      {item.body ? <p className="text-sm leading-relaxed text-on-surface-variant">{item.body}</p> : null}
+      {cta ? (
+        <div className="mt-4">
+          <Button href={cta.url} variant="ghost" size="sm" icon={cta.iconName ?? undefined}>
+            {cta.label}
+          </Button>
+        </div>
+      ) : null}
+    </Card>
   );
 }

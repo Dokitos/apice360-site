@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getBlogPosts, countBlogPosts, getPageSeo, getPageSections } from "@/lib/content";
+import { getBlogPosts, countBlogPosts, getPageSeo, getPageSection, getPageSections, getCta } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { GenericPageSection } from "@/components/sections/GenericPageSection";
+import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
 import { Reveal } from "@/components/ui/Reveal";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -26,17 +27,26 @@ export default async function BlogPage({
   const locale = await getLocale();
   const dict = getDictionary(locale);
 
-  const [posts, total, extraSections] = await Promise.all([
+  const [posts, total, allSections, intro] = await Promise.all([
     getBlogPosts({ limit: PAGE_SIZE, skip: (currentPage - 1) * PAGE_SIZE }, locale),
     countBlogPosts({}, locale),
     getPageSections("BLOG", locale),
+    getPageSection("BLOG", "intro", locale),
   ]);
+  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.BLOG.includes(s.key));
+  const introCta = intro?.ctaKey ? await getCta(intro.ctaKey, locale) : null;
 
   const hasNextPage = currentPage * PAGE_SIZE < total;
 
   return (
     <>
-      <PageIntroSection eyebrow={dict.blog.eyebrow} heading={dict.blog.heading} body={dict.blog.body} />
+      <PageIntroSection
+        eyebrow={intro?.eyebrow ?? dict.blog.eyebrow}
+        heading={intro?.heading ?? dict.blog.heading}
+        body={intro?.body ?? dict.blog.body}
+        imageUrl={intro?.imageUrl}
+        cta={introCta}
+      />
 
       <Reveal as="section" className="bg-surface py-24">
         <div className="mx-auto max-w-[1280px] px-5 md:px-20">

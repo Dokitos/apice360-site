@@ -55,6 +55,7 @@ export default async function QuemSomosPage() {
           items={history.items}
           columns={3}
           cta={historyCta}
+          locale={locale}
         />
       ) : null}
 
@@ -64,6 +65,7 @@ export default async function QuemSomosPage() {
           heading={method.heading ?? dict.quemSomos.metodoHeadingDefault}
           items={method.items}
           cta={methodCta}
+          locale={locale}
         />
       ) : null}
 
@@ -74,6 +76,7 @@ export default async function QuemSomosPage() {
           items={values.items}
           columns={4}
           cta={valuesCta}
+          locale={locale}
         />
       ) : null}
 

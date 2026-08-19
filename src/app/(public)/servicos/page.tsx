@@ -77,6 +77,7 @@ export default async function ServicosPage() {
           heading={managementModel.heading ?? dict.servicos.modeloHeadingDefault}
           items={managementModel.items}
           cta={finalCta}
+          locale={locale}
         />
       ) : null}
 

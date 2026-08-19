@@ -9,9 +9,9 @@ export const KNOWN_PAGE_SECTION_KEYS: Record<PageKeyValue, string[]> = {
   HOME: ["hero", "partners", "why_choose", "results", "blog_preview"],
   QUEM_SOMOS: ["intro", "history", "method", "values"],
   SERVICOS: ["intro", "management_model"],
-  PORTFOLIO: [],
-  BLOG: [],
-  CONTACTO: ["triagem"],
+  PORTFOLIO: ["intro"],
+  BLOG: ["intro"],
+  CONTACTO: ["intro", "triagem"],
   AREA_ARQUITETO: ["intro"],
 };
 

@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { getPageSeo, getPageSections, getFeaturedProjects, getProjectsByCategory, getCta } from "@/lib/content";
+import { getPageSeo, getPageSection, getPageSections, getFeaturedProjects, getProjectsByCategory, getCta } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { PortfolioGrid } from "@/components/sections/PortfolioGrid";
 import { GenericPageSection } from "@/components/sections/GenericPageSection";
+import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 
@@ -18,16 +19,25 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function PortfolioPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const [featured, lsfProjects, cta, extraSections] = await Promise.all([
+  const [featured, lsfProjects, cta, allSections, intro] = await Promise.all([
     getFeaturedProjects(locale),
     getProjectsByCategory("LSF", locale),
     getCta("portfolio_final_budget", locale),
     getPageSections("PORTFOLIO", locale),
+    getPageSection("PORTFOLIO", "intro", locale),
   ]);
+  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.PORTFOLIO.includes(s.key));
+  const introCta = intro?.ctaKey ? await getCta(intro.ctaKey, locale) : null;
 
   return (
     <>
-      <PageIntroSection eyebrow={dict.portfolio.eyebrow} heading={dict.portfolio.heading} body={dict.portfolio.body} />
+      <PageIntroSection
+        eyebrow={intro?.eyebrow ?? dict.portfolio.eyebrow}
+        heading={intro?.heading ?? dict.portfolio.heading}
+        body={intro?.body ?? dict.portfolio.body}
+        imageUrl={intro?.imageUrl}
+        cta={introCta}
+      />
 
       <PortfolioGrid heading={dict.portfolio.projetosDestaque} projects={featured} variant="featured" />
       <PortfolioGrid heading={dict.portfolio.lsfHeading} projects={lsfProjects} variant="numbered" />

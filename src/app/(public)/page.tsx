@@ -84,6 +84,7 @@ export default async function HomePage() {
           imageUrl={whyChoose.imageUrl}
           items={whyChoose.items}
           cta={whyChooseCta}
+          locale={locale}
         />
       ) : null}
 
