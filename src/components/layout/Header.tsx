@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCta, getSiteSettings } from "@/lib/content";
+import { getCta, getSiteSettings, getCustomPages } from "@/lib/content";
 import { getNavLinks } from "@/lib/nav";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
@@ -12,9 +12,14 @@ import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 export async function Header() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const [budgetCta, settings] = await Promise.all([getCta("header_budget", locale), getSiteSettings(locale)]);
+  const [budgetCta, settings, customPages] = await Promise.all([
+    getCta("header_budget", locale),
+    getSiteSettings(locale),
+    getCustomPages(locale),
+  ]);
   const showArchitectArea = settings?.architectAreaEnabled ?? true;
-  const navLinks = getNavLinks(dict, { showArchitectArea });
+  const menuCustomPages = customPages.filter((p) => p.showInMenu);
+  const navLinks = getNavLinks(dict, { showArchitectArea, customPages: menuCustomPages });
 
   return (
     <header className="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-xl">
@@ -53,6 +58,7 @@ export async function Header() {
           ctaLabel={budgetCta?.label ?? dict.header.orcamentoDefault}
           ctaUrl={budgetCta?.url ?? "/contacto"}
           showArchitectArea={showArchitectArea}
+          customPages={menuCustomPages}
         />
       </div>
     </header>

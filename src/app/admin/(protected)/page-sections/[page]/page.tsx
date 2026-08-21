@@ -7,7 +7,7 @@ import { DeleteButton } from "@/components/admin/DeleteButton";
 import { Icon } from "@/components/ui/Icon";
 import { deletePageSection } from "../actions";
 
-const VALID_PAGES = ["HOME", "QUEM_SOMOS", "SERVICOS", "CONTACTO", "AREA_ARQUITETO"] as const;
+const VALID_PAGES = ["HOME", "QUEM_SOMOS", "SERVICOS", "PORTFOLIO", "BLOG", "CONTACTO", "AREA_ARQUITETO"] as const;
 
 export default async function PageSectionsListPage({
   params,

@@ -3,7 +3,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { PageSectionForm } from "@/components/admin/PageSectionForm";
 import { createPageSection } from "../../actions";
 
-const VALID_PAGES = ["HOME", "QUEM_SOMOS", "SERVICOS", "CONTACTO", "AREA_ARQUITETO"] as const;
+const VALID_PAGES = ["HOME", "QUEM_SOMOS", "SERVICOS", "PORTFOLIO", "BLOG", "CONTACTO", "AREA_ARQUITETO"] as const;
 
 export default async function NewPageSectionPage({
   params,

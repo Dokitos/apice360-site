@@ -9,6 +9,8 @@ const PAGES = [
   { key: "HOME", label: "Home" },
   { key: "QUEM_SOMOS", label: "Quem Somos" },
   { key: "SERVICOS", label: "Serviços" },
+  { key: "PORTFOLIO", label: "Portfólio" },
+  { key: "BLOG", label: "Blog" },
   { key: "CONTACTO", label: "Contacto" },
   { key: "AREA_ARQUITETO", label: "Área do Arquiteto" },
 ] as const;
@@ -24,7 +26,7 @@ export default async function PageSectionsPage() {
     <div>
       <AdminPageHeader
         title="Secções de Página"
-        description="Blocos de conteúdo reutilizáveis: Home, Quem Somos, Serviços e Contacto."
+        description="Blocos de conteúdo reutilizáveis para cada página do site."
       />
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {PAGES.map((p) => {

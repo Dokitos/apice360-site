@@ -1,6 +1,11 @@
 import type { Dictionary } from "@/lib/dictionary";
 
-export function getNavLinks(dict: Dictionary, options: { showArchitectArea?: boolean } = {}) {
+type NavCustomPage = { slug: string; navLabel: string };
+
+export function getNavLinks(
+  dict: Dictionary,
+  options: { showArchitectArea?: boolean; customPages?: NavCustomPage[] } = {},
+) {
   const links = [
     { href: "/", label: dict.nav.inicio },
     { href: "/quem-somos", label: dict.nav.quemSomos },
@@ -11,5 +16,13 @@ export function getNavLinks(dict: Dictionary, options: { showArchitectArea?: boo
     { href: "/area-do-arquiteto", label: dict.nav.areaArquiteto },
   ];
 
-  return options.showArchitectArea === false ? links.filter((link) => link.href !== "/area-do-arquiteto") : links;
+  const fixedLinks =
+    options.showArchitectArea === false ? links.filter((link) => link.href !== "/area-do-arquiteto") : links;
+
+  const customLinks = (options.customPages ?? []).map((page) => ({
+    href: `/paginas/${page.slug}`,
+    label: page.navLabel,
+  }));
+
+  return [...fixedLinks, ...customLinks];
 }

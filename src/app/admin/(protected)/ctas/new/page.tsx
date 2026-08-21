@@ -21,6 +21,10 @@ export default async function NewCtaPage() {
   // everything else links via section.ctaKey. Either way, already-linked
   // sections are hidden so the same slot isn't assigned twice.
   const sections = sectionsRaw
+    // Custom-page sections (page === null) aren't part of this fixed-page
+    // picker — CTA linking for those happens directly on the section's own
+    // ctaKey field, same as item-level CTAs.
+    .filter((s): s is typeof s & { page: NonNullable<(typeof s)["page"]> } => s.page !== null)
     .filter((s) => !NO_CTA_SECTIONS.has(`${s.page}:${s.key}`))
     .map((s) => {
       const fixedKey = FIXED_CTA_KEY_BY_SECTION[`${s.page}:${s.key}`] ?? null;

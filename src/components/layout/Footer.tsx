@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getSiteSettings } from "@/lib/content";
+import { getSiteSettings, getCustomPages } from "@/lib/content";
 import { getNavLinks } from "@/lib/nav";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
@@ -9,10 +9,10 @@ import { Logo } from "@/components/ui/Logo";
 export async function Footer() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const settings = await getSiteSettings(locale);
+  const [settings, customPages] = await Promise.all([getSiteSettings(locale), getCustomPages(locale)]);
   const year = new Date().getFullYear();
   const showArchitectArea = settings?.architectAreaEnabled ?? true;
-  const navLinks = getNavLinks(dict, { showArchitectArea });
+  const navLinks = getNavLinks(dict, { showArchitectArea, customPages: customPages.filter((p) => p.showInMenu) });
 
   const serviceLinks = [
     { href: "/servicos#lsf", label: dict.footer.lsf },

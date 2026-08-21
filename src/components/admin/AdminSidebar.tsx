@@ -35,6 +35,7 @@ const navGroups: NavGroup[] = [
     title: "Conteúdo",
     items: [
       { href: "/admin/page-sections", label: "Secções de Página", icon: "dashboard_customize", resource: "page_sections" },
+      { href: "/admin/pages", label: "Páginas Personalizadas", icon: "note_add", resource: "custom_pages" },
       { href: "/admin/partners", label: "Parceiros", icon: "handshake", resource: "partners" },
       { href: "/admin/testimonials", label: "Testemunhos", icon: "format_quote", resource: "testimonials" },
       { href: "/admin/stats", label: "Estatísticas", icon: "monitoring", resource: "stats" },

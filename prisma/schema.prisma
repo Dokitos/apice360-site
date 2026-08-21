@@ -195,10 +195,17 @@ model PageSeoTranslation {
 
 /// Blocos de conteúdo genéricos e reutilizáveis: Home (parceiros/porquê-escolher/
 /// resultados/blog-preview), Quem Somos (história/método/valores), Serviços
-/// (modelo chave-na-mão), Contacto (triagem/showroom).
+/// (modelo chave-na-mão), Contacto (triagem/showroom). Pertence a uma página
+/// fixa (page) OU a uma página personalizada (customPageId) — nunca as duas.
+/// São duas restrições @@unique separadas (não uma composta) porque o
+/// Postgres nunca aplica unicidade numa linha com NULL numa das colunas —
+/// uma composta [page, customPageId, key] nunca seria realmente aplicada,
+/// já que uma das duas colunas está sempre a NULL.
 model PageSection {
   id           String                   @id @default(cuid())
-  page         PageKey
+  page         PageKey?
+  customPageId String?
+  customPage   CustomPage?              @relation(fields: [customPageId], references: [id], onDelete: Cascade)
   key          String
   order        Int                      @default(0)
   imageUrl     String?
@@ -209,6 +216,35 @@ model PageSection {
   items        PageSectionItem[]
 
   @@unique([page, key])
+  @@unique([customPageId, key])
+}
+
+/// Páginas criadas pelo admin (fora das páginas fixas), com o seu próprio
+/// conjunto de PageSection ligado por customPageId.
+model CustomPage {
+  id           String                  @id @default(cuid())
+  slug         String                  @unique
+  order        Int                     @default(0)
+  showInMenu   Boolean                 @default(true)
+  isPublished  Boolean                 @default(true)
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+  translations CustomPageTranslation[]
+  sections     PageSection[]
+}
+
+model CustomPageTranslation {
+  id               String     @id @default(cuid())
+  customPageId     String
+  customPage       CustomPage @relation(fields: [customPageId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean    @default(false)
+  navLabel         String
+  heading          String?
+  seoTitle         String?
+  seoDescription   String?
+
+  @@unique([customPageId, locale])
 }
 
 model PageSectionTranslation {

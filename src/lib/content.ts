@@ -98,6 +98,84 @@ export async function getPageSection(page: PageKeyValue, key: string, locale: Lo
   return sections.find((s) => s.key === key) ?? null;
 }
 
+/** Admin-created pages outside the fixed set, shown in the nav when published + showInMenu. */
+export const getCustomPages = cache(async (locale: Locale = DEFAULT_LOCALE) => {
+  const pages = await prisma.customPage.findMany({
+    where: { isPublished: true },
+    orderBy: { order: "asc" },
+    include: { translations: true },
+  });
+
+  return pages.map((page) => {
+    const t = pickTranslation(page.translations, locale);
+    return {
+      id: page.id,
+      slug: page.slug,
+      order: page.order,
+      showInMenu: page.showInMenu,
+      navLabel: t?.navLabel ?? page.slug,
+      heading: t?.heading ?? null,
+      seoTitle: t?.seoTitle ?? null,
+      seoDescription: t?.seoDescription ?? null,
+    };
+  });
+});
+
+export const getCustomPageBySlug = cache(async (slug: string, locale: Locale = DEFAULT_LOCALE) => {
+  const page = await prisma.customPage.findUnique({
+    where: { slug, isPublished: true },
+    include: { translations: true },
+  });
+  if (!page) return null;
+
+  const t = pickTranslation(page.translations, locale);
+  return {
+    id: page.id,
+    slug: page.slug,
+    heading: t?.heading ?? null,
+    seoTitle: t?.seoTitle ?? null,
+    seoDescription: t?.seoDescription ?? null,
+  };
+});
+
+export const getCustomPageSections = cache(async (customPageId: string, locale: Locale = DEFAULT_LOCALE) => {
+  const sections = await prisma.pageSection.findMany({
+    where: { customPageId, isActive: true },
+    orderBy: { order: "asc" },
+    include: {
+      translations: true,
+      items: { orderBy: { order: "asc" }, include: { translations: true } },
+    },
+  });
+
+  return sections.map((section) => {
+    const t = pickTranslation(section.translations, locale);
+    return {
+      key: section.key,
+      imageUrl: section.imageUrl,
+      iconName: section.iconName,
+      ctaKey: section.ctaKey,
+      eyebrow: t?.eyebrow ?? null,
+      heading: t?.heading ?? null,
+      subheading: t?.subheading ?? null,
+      body: t?.body ?? null,
+      ctaLabel: t?.ctaLabel ?? null,
+      items: section.items.map((item) => {
+        const it = pickTranslation(item.translations, locale);
+        return {
+          id: item.id,
+          iconName: item.iconName,
+          imageUrl: item.imageUrl,
+          numberLabel: item.numberLabel,
+          ctaKey: item.ctaKey,
+          title: it?.title ?? "",
+          body: it?.body ?? null,
+        };
+      }),
+    };
+  });
+});
+
 export const getStats = cache(async (locale: Locale = DEFAULT_LOCALE) => {
   const stats = await prisma.stat.findMany({
     where: { isActive: true },

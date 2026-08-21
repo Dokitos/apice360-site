@@ -6,18 +6,14 @@ import { PageSectionForm } from "@/components/admin/PageSectionForm";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { Icon } from "@/components/ui/Icon";
-import { updatePageSection, deletePageSectionItem } from "../../../actions";
+import { updateCustomPageSection, deleteCustomPageSectionItem } from "../../../../../page-sections/actions";
 
-const VALID_PAGES = ["HOME", "QUEM_SOMOS", "SERVICOS", "PORTFOLIO", "BLOG", "CONTACTO", "AREA_ARQUITETO"] as const;
-
-export default async function EditPageSectionPage({
+export default async function EditCustomPageSectionPage({
   params,
 }: {
-  params: Promise<{ page: string; sectionId: string }>;
+  params: Promise<{ id: string; sectionId: string }>;
 }) {
-  const { page, sectionId } = await params;
-  if (!VALID_PAGES.includes(page as (typeof VALID_PAGES)[number])) notFound();
-  const pageKey = page as (typeof VALID_PAGES)[number];
+  const { id, sectionId } = await params;
 
   const section = await prisma.pageSection.findUnique({
     where: { id: sectionId },
@@ -26,18 +22,18 @@ export default async function EditPageSectionPage({
       items: { orderBy: { order: "asc" }, include: { translations: true } },
     },
   });
-  if (!section) notFound();
+  if (!section || section.customPageId !== id) notFound();
 
   return (
     <div>
       <AdminPageHeader title={`Secção: ${section.key}`} />
-      <PageSectionForm section={section} action={updatePageSection.bind(null, pageKey, sectionId)} />
+      <PageSectionForm section={section} action={updateCustomPageSection.bind(null, id, sectionId)} />
 
       <div className="mt-16 max-w-2xl">
         <AdminPageHeader
           title="Itens"
           description="Elementos repetíveis desta secção (bullets, pilares, valores, etc.)."
-          newHref={`/admin/page-sections/${pageKey}/${sectionId}/items/new`}
+          newHref={`/admin/pages/${id}/sections/${sectionId}/items/new`}
           newLabel="Novo Item"
         />
         <DataTable
@@ -54,12 +50,12 @@ export default async function EditPageSectionPage({
           renderActions={(i) => (
             <div className="flex items-center justify-end gap-2">
               <Link
-                href={`/admin/page-sections/${pageKey}/${sectionId}/items/${i.id}/edit`}
+                href={`/admin/pages/${id}/sections/${sectionId}/items/${i.id}/edit`}
                 className="flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary"
               >
                 <Icon name="edit" className="text-lg" />
               </Link>
-              <DeleteButton action={deletePageSectionItem.bind(null, pageKey, sectionId, i.id)} />
+              <DeleteButton action={deleteCustomPageSectionItem.bind(null, id, sectionId, i.id)} />
             </div>
           )}
         />

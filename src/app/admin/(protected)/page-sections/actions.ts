@@ -329,3 +329,186 @@ export async function deletePageSectionItem(page: PageKeyValue, sectionId: strin
   revalidatePath(`/admin/page-sections/${page}/${sectionId}/edit`);
   revalidatePath("/");
 }
+
+// Custom pages (src/app/admin/(protected)/pages) reuse the exact same
+// section/item building blocks above — only the "owner" reference
+// (customPageId instead of a fixed PageKeyValue) and the resulting
+// admin/public paths differ.
+
+export async function createCustomPageSection(
+  customPageId: string,
+  _prevState: string | undefined,
+  formData: FormData,
+) {
+  await requirePermission("custom_pages", "create");
+  const parsed = pageSectionSchema.safeParse(readSectionForm(formData));
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
+
+  const {
+    eyebrowPt, eyebrowEn, eyebrowEs, eyebrowFr,
+    headingPt, headingEn, headingEs, headingFr,
+    subheadingPt, subheadingEn, subheadingEs, subheadingFr,
+    bodyPt, bodyEn, bodyEs, bodyFr,
+    ctaLabelPt, ctaLabelEn, ctaLabelEs, ctaLabelFr,
+    ...data
+  } = parsed.data;
+
+  const existing = await prisma.pageSection.findUnique({ where: { customPageId_key: { customPageId, key: data.key } } });
+  if (existing) return "Já existe uma secção com esta chave nesta página.";
+
+  const translations = await buildSectionTranslations(
+    { eyebrowPt, eyebrowEn, eyebrowEs, eyebrowFr, headingPt, headingEn, headingEs, headingFr, subheadingPt, subheadingEn, subheadingEs, subheadingFr, bodyPt, bodyEn, bodyEs, bodyFr, ctaLabelPt, ctaLabelEn, ctaLabelEs, ctaLabelFr },
+    [],
+  );
+
+  const section = await prisma.pageSection.create({
+    data: {
+      customPageId,
+      ...data,
+      translations: { create: translations },
+    },
+  });
+
+  revalidatePath(`/admin/pages/${customPageId}/edit`);
+  revalidatePath("/", "layout");
+  redirect(`/admin/pages/${customPageId}/sections/${section.id}/edit?saved=1`);
+}
+
+export async function updateCustomPageSection(
+  customPageId: string,
+  id: string,
+  _prevState: string | undefined,
+  formData: FormData,
+) {
+  await requirePermission("custom_pages", "edit");
+  const parsed = pageSectionSchema.safeParse(readSectionForm(formData));
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
+
+  const {
+    eyebrowPt, eyebrowEn, eyebrowEs, eyebrowFr,
+    headingPt, headingEn, headingEs, headingFr,
+    subheadingPt, subheadingEn, subheadingEs, subheadingFr,
+    bodyPt, bodyEn, bodyEs, bodyFr,
+    ctaLabelPt, ctaLabelEn, ctaLabelEs, ctaLabelFr,
+    ...data
+  } = parsed.data;
+
+  const existing = await prisma.pageSection.findUnique({ where: { customPageId_key: { customPageId, key: data.key } } });
+  if (existing && existing.id !== id) return "Já existe outra secção com esta chave nesta página.";
+
+  const current = await prisma.pageSection.findUnique({ where: { id }, select: { translations: true } });
+  const translations = await buildSectionTranslations(
+    { eyebrowPt, eyebrowEn, eyebrowEs, eyebrowFr, headingPt, headingEn, headingEs, headingFr, subheadingPt, subheadingEn, subheadingEs, subheadingFr, bodyPt, bodyEn, bodyEs, bodyFr, ctaLabelPt, ctaLabelEn, ctaLabelEs, ctaLabelFr },
+    current?.translations ?? [],
+  );
+
+  await prisma.pageSection.update({
+    where: { id },
+    data: {
+      ...data,
+      imageUrl: data.imageUrl || null,
+      iconName: data.iconName || null,
+      translations: {
+        upsert: translations.map((t) => {
+          const { locale, ...fields } = t;
+          return {
+            where: { sectionId_locale: { sectionId: id, locale } },
+            update: fields,
+            create: t,
+          };
+        }),
+      },
+    },
+  });
+
+  revalidatePath(`/admin/pages/${customPageId}/edit`);
+  revalidatePath("/", "layout");
+  redirect(`/admin/pages/${customPageId}/sections/${id}/edit?saved=1`);
+}
+
+export async function deleteCustomPageSection(customPageId: string, id: string) {
+  await requirePermission("custom_pages", "delete");
+  await prisma.pageSection.delete({ where: { id } });
+  revalidatePath(`/admin/pages/${customPageId}/edit`);
+  revalidatePath("/", "layout");
+}
+
+export async function createCustomPageSectionItem(
+  customPageId: string,
+  sectionId: string,
+  _prevState: string | undefined,
+  formData: FormData,
+) {
+  await requirePermission("custom_pages", "create");
+  const parsed = pageSectionItemSchema.safeParse(readItemForm(formData));
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
+
+  const { titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr, ...data } = parsed.data;
+  const translations = await buildItemTranslations({ titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr }, []);
+
+  await prisma.pageSectionItem.create({
+    data: {
+      ...data,
+      iconName: data.iconName || null,
+      imageUrl: data.imageUrl || null,
+      numberLabel: data.numberLabel || null,
+      ctaKey: data.ctaKey || null,
+      sectionId,
+      translations: { create: translations },
+    },
+  });
+  revalidatePath(`/admin/pages/${customPageId}/sections/${sectionId}/edit`);
+  revalidatePath("/", "layout");
+  redirect(`/admin/pages/${customPageId}/sections/${sectionId}/edit?saved=1`);
+}
+
+export async function updateCustomPageSectionItem(
+  customPageId: string,
+  sectionId: string,
+  itemId: string,
+  _prevState: string | undefined,
+  formData: FormData,
+) {
+  await requirePermission("custom_pages", "edit");
+  const parsed = pageSectionItemSchema.safeParse(readItemForm(formData));
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
+
+  const { titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr, ...data } = parsed.data;
+
+  const current = await prisma.pageSectionItem.findUnique({ where: { id: itemId }, select: { translations: true } });
+  const translations = await buildItemTranslations(
+    { titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr },
+    current?.translations ?? [],
+  );
+
+  await prisma.pageSectionItem.update({
+    where: { id: itemId },
+    data: {
+      ...data,
+      iconName: data.iconName || null,
+      imageUrl: data.imageUrl || null,
+      numberLabel: data.numberLabel || null,
+      ctaKey: data.ctaKey || null,
+      translations: {
+        upsert: translations.map((t) => {
+          const { locale, ...fields } = t;
+          return {
+            where: { itemId_locale: { itemId, locale } },
+            update: fields,
+            create: t,
+          };
+        }),
+      },
+    },
+  });
+  revalidatePath(`/admin/pages/${customPageId}/sections/${sectionId}/edit`);
+  revalidatePath("/", "layout");
+  redirect(`/admin/pages/${customPageId}/sections/${sectionId}/edit?saved=1`);
+}
+
+export async function deleteCustomPageSectionItem(customPageId: string, sectionId: string, itemId: string) {
+  await requirePermission("custom_pages", "delete");
+  await prisma.pageSectionItem.delete({ where: { id: itemId } });
+  revalidatePath(`/admin/pages/${customPageId}/sections/${sectionId}/edit`);
+  revalidatePath("/", "layout");
+}
