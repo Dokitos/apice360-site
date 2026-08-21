@@ -8,15 +8,19 @@ type User = {
   name: string;
   email: string;
   role: "ADMIN" | "EDITOR";
+  groupId: string | null;
   isActive: boolean;
 };
 
+type GroupOption = { id: string; name: string };
+
 type UserFormProps = {
   user?: User;
+  groups?: GroupOption[];
   action: (prevState: string | undefined, formData: FormData) => Promise<string | undefined>;
 };
 
-export function UserForm({ user, action }: UserFormProps) {
+export function UserForm({ user, groups = [], action }: UserFormProps) {
   const [error, formAction, isPending] = useActionState(action, undefined);
 
   return (
@@ -34,6 +38,20 @@ export function UserForm({ user, action }: UserFormProps) {
       <SelectField id="role" name="role" label="Papel" defaultValue={user?.role ?? "EDITOR"}>
         <option value="EDITOR">Editor</option>
         <option value="ADMIN">Administrador</option>
+      </SelectField>
+      <SelectField
+        id="groupId"
+        name="groupId"
+        label="Grupo de Permissões"
+        defaultValue={user?.groupId ?? ""}
+        hint="Só se aplica a Editores — Administradores têm sempre acesso total. Sem grupo, um Editor também mantém acesso total."
+      >
+        <option value="">Acesso total (padrão)</option>
+        {groups.map((g) => (
+          <option key={g.id} value={g.id}>
+            {g.name}
+          </option>
+        ))}
       </SelectField>
       <CheckboxField id="isActive" name="isActive" label="Conta ativa" defaultChecked={user?.isActive ?? true} />
       {error ? <p className="text-sm text-primary">{error}</p> : null}

@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { ctaSchema } from "@/lib/validations/cta";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
@@ -45,7 +45,7 @@ async function buildTranslationsPayload(
 }
 
 export async function createCta(_prevState: string | undefined, formData: FormData) {
-  await requireEditorOrAdmin();
+  await requirePermission("ctas", "create");
   const parsed = ctaSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -76,7 +76,7 @@ export async function createCta(_prevState: string | undefined, formData: FormDa
 }
 
 export async function updateCta(id: string, _prevState: string | undefined, formData: FormData) {
-  await requireEditorOrAdmin();
+  await requirePermission("ctas", "edit");
   const parsed = ctaSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -112,7 +112,7 @@ export async function updateCta(id: string, _prevState: string | undefined, form
 }
 
 export async function deleteCta(id: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("ctas", "delete");
   await prisma.cta.delete({ where: { id } });
   revalidatePath("/admin/ctas");
   revalidatePath("/");

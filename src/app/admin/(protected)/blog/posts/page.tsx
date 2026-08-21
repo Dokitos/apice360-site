@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
@@ -7,6 +8,7 @@ import { Icon } from "@/components/ui/Icon";
 import { deleteBlogPost } from "./actions";
 
 export default async function BlogPostsPage() {
+  await requirePermission("blog_posts", "view");
   const posts = await prisma.blogPost.findMany({
     orderBy: { createdAt: "desc" },
     include: { translations: true, author: true, category: { include: { translations: true } } },

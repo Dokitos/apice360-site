@@ -14,7 +14,10 @@ export const proxy = auth((req) => {
     return NextResponse.redirect(new URL("/admin", req.nextUrl.origin));
   }
 
-  if (pathname.startsWith("/admin/users") && req.auth?.user.role !== "ADMIN") {
+  if (
+    (pathname.startsWith("/admin/users") || pathname.startsWith("/admin/groups")) &&
+    req.auth?.user.role !== "ADMIN"
+  ) {
     return NextResponse.redirect(new URL("/admin", req.nextUrl.origin));
   }
 });

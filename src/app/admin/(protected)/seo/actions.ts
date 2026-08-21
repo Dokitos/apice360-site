@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { pageSeoSchema } from "@/lib/validations/page-seo";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
@@ -68,7 +68,7 @@ export async function upsertPageSeo(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("seo", "edit");
   const parsed = pageSeoSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 

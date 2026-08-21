@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { serviceSchema, serviceFeatureSchema } from "@/lib/validations/service";
 import { sanitizeRichText } from "@/lib/sanitize-rich-text";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
@@ -70,7 +70,7 @@ export async function upsertService(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("services", "edit");
   const parsed = serviceSchema.safeParse(readServiceForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -173,7 +173,7 @@ export async function createServiceFeature(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("services", "create");
   const parsed = serviceFeatureSchema.safeParse(readFeatureForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -198,7 +198,7 @@ export async function updateServiceFeature(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("services", "edit");
   const parsed = serviceFeatureSchema.safeParse(readFeatureForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -232,7 +232,7 @@ export async function updateServiceFeature(
 }
 
 export async function deleteServiceFeature(type: ServiceTypeKey, featureId: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("services", "delete");
   await prisma.serviceFeature.delete({ where: { id: featureId } });
   revalidatePath(`/admin/services/${type}/edit`);
   revalidatePath("/");

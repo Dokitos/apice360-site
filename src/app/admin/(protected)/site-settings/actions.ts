@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { siteSettingsSchema } from "@/lib/validations/site-settings";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
@@ -27,7 +27,7 @@ export async function updateSiteSettings(
   _prevState: SiteSettingsFormState,
   formData: FormData,
 ): Promise<SiteSettingsFormState> {
-  await requireEditorOrAdmin();
+  await requirePermission("site_settings", "edit");
   const parsed = siteSettingsSchema.safeParse(readForm(formData));
   if (!parsed.success) {
     return { ok: false, message: parsed.error.issues[0]?.message ?? "Dados inválidos." };

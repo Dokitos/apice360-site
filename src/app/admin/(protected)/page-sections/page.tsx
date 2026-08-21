@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
@@ -13,6 +14,7 @@ const PAGES = [
 ] as const;
 
 export default async function PageSectionsPage() {
+  await requirePermission("page_sections", "view");
   const counts = await prisma.pageSection.groupBy({
     by: ["page"],
     _count: true,

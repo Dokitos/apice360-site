@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
@@ -7,6 +8,7 @@ import { Icon } from "@/components/ui/Icon";
 import { deleteStat } from "./actions";
 
 export default async function StatsPage() {
+  await requirePermission("stats", "view");
   const stats = await prisma.stat.findMany({
     orderBy: { order: "asc" },
     include: { translations: true },

@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { blogPostSchema } from "@/lib/validations/blog-post";
 import { sanitizeRichText as sanitizeBody } from "@/lib/sanitize-rich-text";
 import { slugify } from "@/lib/slugify";
@@ -106,7 +106,7 @@ async function buildPostTranslations(
 }
 
 export async function createBlogPost(_prevState: string | undefined, formData: FormData) {
-  const user = await requireEditorOrAdmin();
+  const user = await requirePermission("blog_posts", "create");
   const parsed = blogPostSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -134,7 +134,7 @@ export async function updateBlogPost(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("blog_posts", "edit");
   const parsed = blogPostSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -169,7 +169,7 @@ export async function updateBlogPost(
 }
 
 export async function deleteBlogPost(id: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("blog_posts", "delete");
   await prisma.blogPost.delete({ where: { id } });
   revalidatePath("/admin/blog/posts");
   revalidatePath("/blog");

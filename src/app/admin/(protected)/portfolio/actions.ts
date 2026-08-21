@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { portfolioProjectSchema, projectImageSchema } from "@/lib/validations/portfolio";
 import { sanitizeRichText } from "@/lib/sanitize-rich-text";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
@@ -113,7 +113,7 @@ async function buildProjectTranslations(
 }
 
 export async function createProject(_prevState: string | undefined, formData: FormData) {
-  await requireEditorOrAdmin();
+  await requirePermission("portfolio", "create");
   const parsed = portfolioProjectSchema.safeParse(readProjectForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -158,7 +158,7 @@ export async function updateProject(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("portfolio", "edit");
   const parsed = portfolioProjectSchema.safeParse(readProjectForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -210,7 +210,7 @@ export async function updateProject(
 }
 
 export async function deleteProject(id: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("portfolio", "delete");
   await prisma.portfolioProject.delete({ where: { id } });
   revalidatePath("/admin/portfolio");
   revalidatePath("/");
@@ -229,7 +229,7 @@ export async function createProjectImage(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("portfolio", "edit");
   const parsed = projectImageSchema.safeParse(readImageForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -240,7 +240,7 @@ export async function createProjectImage(
 }
 
 export async function deleteProjectImage(projectId: string, imageId: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("portfolio", "edit");
   await prisma.projectImage.delete({ where: { id: imageId } });
   revalidatePath(`/admin/portfolio/${projectId}/edit`);
   revalidatePath("/");

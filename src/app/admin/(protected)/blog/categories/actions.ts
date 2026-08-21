@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { blogCategorySchema } from "@/lib/validations/blog-category";
 import { slugify } from "@/lib/slugify";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
@@ -64,7 +64,7 @@ async function buildCategoryTranslations(
 }
 
 export async function createBlogCategory(_prevState: string | undefined, formData: FormData) {
-  await requireEditorOrAdmin();
+  await requirePermission("blog_categories", "create");
   const parsed = blogCategorySchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -90,7 +90,7 @@ export async function updateBlogCategory(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("blog_categories", "edit");
   const parsed = blogCategorySchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -123,7 +123,7 @@ export async function updateBlogCategory(
 }
 
 export async function deleteBlogCategory(id: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("blog_categories", "delete");
   await prisma.blogCategory.delete({ where: { id } });
   revalidatePath("/admin/blog/categories");
   revalidatePath("/blog");

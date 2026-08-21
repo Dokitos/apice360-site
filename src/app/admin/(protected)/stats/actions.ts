@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { statSchema } from "@/lib/validations/stat";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
@@ -44,7 +44,7 @@ async function buildTranslationsPayload(
 }
 
 export async function createStat(_prevState: string | undefined, formData: FormData) {
-  await requireEditorOrAdmin();
+  await requirePermission("stats", "create");
   const parsed = statSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -63,7 +63,7 @@ export async function createStat(_prevState: string | undefined, formData: FormD
 }
 
 export async function updateStat(id: string, _prevState: string | undefined, formData: FormData) {
-  await requireEditorOrAdmin();
+  await requirePermission("stats", "edit");
   const parsed = statSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -91,7 +91,7 @@ export async function updateStat(id: string, _prevState: string | undefined, for
 }
 
 export async function deleteStat(id: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("stats", "delete");
   await prisma.stat.delete({ where: { id } });
   revalidatePath("/admin/stats");
   revalidatePath("/");

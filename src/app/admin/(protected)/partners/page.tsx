@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
@@ -7,6 +8,7 @@ import Link from "next/link";
 import { deletePartner } from "./actions";
 
 export default async function PartnersPage() {
+  await requirePermission("partners", "view");
   const partners = await prisma.partner.findMany({ orderBy: { order: "asc" } });
 
   return (

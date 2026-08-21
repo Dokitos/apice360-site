@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 
 const STATUS_LABEL: Record<string, string> = {
   NEW: "Novo",
@@ -21,7 +21,7 @@ function revalidateLead(id: string) {
 }
 
 export async function setLeadStatus(id: string, status: string) {
-  const user = await requireEditorOrAdmin();
+  const user = await requirePermission("leads", "edit");
   if (!VALID_STATUSES.has(status)) throw new Error("Estado inválido.");
 
   const current = await prisma.leadSubmission.findUniqueOrThrow({ where: { id }, select: { status: true } });
@@ -46,7 +46,7 @@ export async function setLeadStatus(id: string, status: string) {
 }
 
 export async function updateLeadNotes(id: string, notes: string) {
-  const user = await requireEditorOrAdmin();
+  const user = await requirePermission("leads", "edit");
   const trimmed = notes.trim();
 
   await prisma.$transaction([
@@ -65,7 +65,7 @@ export async function updateLeadNotes(id: string, notes: string) {
 }
 
 export async function assignLead(id: string, userId: string) {
-  const user = await requireEditorOrAdmin();
+  const user = await requirePermission("leads", "edit");
   const targetId = userId || null;
 
   const target = targetId ? await prisma.user.findUnique({ where: { id: targetId }, select: { name: true } }) : null;
@@ -86,7 +86,7 @@ export async function assignLead(id: string, userId: string) {
 }
 
 export async function logCallAttempt(id: string) {
-  const user = await requireEditorOrAdmin();
+  const user = await requirePermission("leads", "edit");
   const lead = await prisma.leadSubmission.findUniqueOrThrow({ where: { id }, select: { status: true } });
 
   await prisma.$transaction([
@@ -102,7 +102,7 @@ export async function logCallAttempt(id: string) {
 }
 
 export async function logEmailSent(id: string) {
-  const user = await requireEditorOrAdmin();
+  const user = await requirePermission("leads", "edit");
   const lead = await prisma.leadSubmission.findUniqueOrThrow({ where: { id }, select: { status: true } });
 
   await prisma.$transaction([
@@ -118,14 +118,14 @@ export async function logEmailSent(id: string) {
 }
 
 export async function deleteLead(id: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("leads", "delete");
   await prisma.leadSubmission.delete({ where: { id } });
   revalidatePath("/admin/leads");
   revalidatePath("/admin");
 }
 
 export async function bulkSetStatus(ids: string[], status: string) {
-  const user = await requireEditorOrAdmin();
+  const user = await requirePermission("leads", "edit");
   if (!VALID_STATUSES.has(status) || ids.length === 0) return;
 
   await prisma.$transaction([
@@ -148,7 +148,7 @@ export async function bulkSetStatus(ids: string[], status: string) {
 }
 
 export async function bulkDeleteLeads(ids: string[]) {
-  await requireEditorOrAdmin();
+  await requirePermission("leads", "delete");
   if (ids.length === 0) return;
   await prisma.leadSubmission.deleteMany({ where: { id: { in: ids } } });
   revalidatePath("/admin/leads");

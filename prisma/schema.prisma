@@ -84,11 +84,39 @@ model User {
   passwordHash   String
   role           Role             @default(EDITOR)
   isActive       Boolean          @default(true)
+  groupId        String?
+  group          Group?           @relation(fields: [groupId], references: [id], onDelete: SetNull)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   blogPosts      BlogPost[]       @relation("PostAuthor")
   assignedLeads  LeadSubmission[] @relation("LeadAssignee")
   leadActivities LeadActivity[]
+}
+
+/// Optional, granular permission tier layered on top of Role — only applies
+/// to EDITOR accounts explicitly assigned to a group (User.groupId). An
+/// EDITOR with no group keeps today's behavior exactly (full access);
+/// ADMIN always bypasses this regardless of group. See src/lib/permissions.ts.
+model Group {
+  id          String            @id @default(cuid())
+  name        String            @unique
+  isSystem    Boolean           @default(false)
+  createdAt   DateTime          @default(now())
+  permissions GroupPermission[]
+  users       User[]
+}
+
+model GroupPermission {
+  id        String  @id @default(cuid())
+  groupId   String
+  group     Group   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  resource  String
+  canView   Boolean @default(false)
+  canCreate Boolean @default(false)
+  canEdit   Boolean @default(false)
+  canDelete Boolean @default(false)
+
+  @@unique([groupId, resource])
 }
 
 model SiteSettings {

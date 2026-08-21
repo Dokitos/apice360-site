@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { partnerSchema } from "@/lib/validations/partner";
 
 function readForm(formData: FormData) {
@@ -18,7 +18,7 @@ function readForm(formData: FormData) {
 }
 
 export async function createPartner(_prevState: string | undefined, formData: FormData) {
-  await requireEditorOrAdmin();
+  await requirePermission("partners", "create");
 
   const parsed = partnerSchema.safeParse(readForm(formData));
   if (!parsed.success) {
@@ -36,7 +36,7 @@ export async function updatePartner(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("partners", "edit");
 
   const parsed = partnerSchema.safeParse(readForm(formData));
   if (!parsed.success) {
@@ -50,7 +50,7 @@ export async function updatePartner(
 }
 
 export async function deletePartner(id: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("partners", "delete");
   await prisma.partner.delete({ where: { id } });
   revalidatePath("/admin/partners");
   revalidatePath("/");

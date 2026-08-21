@@ -10,16 +10,19 @@ export default async function EditUserPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const user = await prisma.user.findUnique({
-    where: { id },
-    select: { id: true, name: true, email: true, role: true, isActive: true },
-  });
+  const [user, groups] = await Promise.all([
+    prisma.user.findUnique({
+      where: { id },
+      select: { id: true, name: true, email: true, role: true, groupId: true, isActive: true },
+    }),
+    prisma.group.findMany({ orderBy: { name: "asc" }, select: { id: true, name: true } }),
+  ]);
   if (!user) notFound();
 
   return (
     <div>
       <AdminPageHeader title="Editar Utilizador" />
-      <UserForm user={user} action={updateUser.bind(null, id)} />
+      <UserForm user={user} groups={groups} action={updateUser.bind(null, id)} />
     </div>
   );
 }

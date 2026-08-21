@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { testimonialSchema } from "@/lib/validations/testimonial";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
@@ -47,7 +47,7 @@ async function buildTranslationsPayload(
 }
 
 export async function createTestimonial(_prevState: string | undefined, formData: FormData) {
-  await requireEditorOrAdmin();
+  await requirePermission("testimonials", "create");
   const parsed = testimonialSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -70,7 +70,7 @@ export async function updateTestimonial(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("testimonials", "edit");
   const parsed = testimonialSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -100,7 +100,7 @@ export async function updateTestimonial(
 }
 
 export async function deleteTestimonial(id: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("testimonials", "delete");
   await prisma.testimonial.delete({ where: { id } });
   revalidatePath("/admin/testimonials");
   revalidatePath("/");

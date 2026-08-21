@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
@@ -10,6 +11,7 @@ const SERVICE_TYPES = [
 ];
 
 export default async function ServicesPage() {
+  await requirePermission("services", "view");
   const services = await prisma.service.findMany({ include: { translations: true } });
 
   return (

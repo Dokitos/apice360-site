@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { DataTable } from "@/components/admin/DataTable";
 
@@ -14,6 +15,7 @@ const PAGES = [
 ] as const;
 
 export default async function SeoPage() {
+  await requirePermission("seo", "view");
   const entries = await prisma.pageSeo.findMany({ include: { translations: true } });
 
   const rows = PAGES.map((p) => {

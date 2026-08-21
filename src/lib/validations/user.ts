@@ -5,6 +5,7 @@ export const createUserSchema = z.object({
   email: z.string().trim().email("Indica um email válido."),
   password: z.string().min(8, "A palavra-passe precisa de pelo menos 8 caracteres."),
   role: z.enum(["ADMIN", "EDITOR"]),
+  groupId: z.string().trim().optional().or(z.literal("")),
   isActive: z.boolean(),
 });
 
@@ -17,5 +18,6 @@ export const updateUserSchema = z.object({
     .optional()
     .or(z.literal("")),
   role: z.enum(["ADMIN", "EDITOR"]),
+  groupId: z.string().trim().optional().or(z.literal("")),
   isActive: z.boolean(),
 });

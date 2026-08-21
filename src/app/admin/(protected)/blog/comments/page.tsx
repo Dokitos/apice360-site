@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
@@ -18,6 +19,7 @@ export default async function BlogCommentsPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
+  await requirePermission("blog_comments", "view");
   const { status } = await searchParams;
   const activeStatus = STATUSES.some((s) => s.value === status) ? (status as string) : "PENDING";
 

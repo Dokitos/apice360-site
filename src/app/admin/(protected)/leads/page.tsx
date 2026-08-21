@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { cn } from "@/lib/cn";
 import { LeadStatsCards } from "@/components/admin/leads/LeadStatsCards";
@@ -101,6 +102,7 @@ async function getLeadStats() {
 }
 
 export default async function LeadsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  await requirePermission("leads", "view");
   const sp = await searchParams;
   const activeType = TYPES.some((t) => t.value === sp.type) ? (sp.type as string) : "ALL";
   const activeStatus = STATUSES.some((s) => s.value === sp.status) ? (sp.status as string) : "ALL";

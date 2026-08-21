@@ -13,6 +13,7 @@ function readForm(formData: FormData) {
     email: formData.get("email"),
     password: formData.get("password") || undefined,
     role: formData.get("role"),
+    groupId: formData.get("groupId") || undefined,
     isActive: formData.get("isActive") === "on",
   };
 }
@@ -32,6 +33,7 @@ export async function createUser(_prevState: string | undefined, formData: FormD
       email: parsed.data.email,
       passwordHash,
       role: parsed.data.role,
+      groupId: parsed.data.groupId || null,
       isActive: parsed.data.isActive,
     },
   });
@@ -69,6 +71,7 @@ export async function updateUser(id: string, _prevState: string | undefined, for
       name: parsed.data.name,
       email: parsed.data.email,
       role: parsed.data.role,
+      groupId: parsed.data.groupId || null,
       isActive: parsed.data.isActive,
       ...(parsed.data.password ? { passwordHash: await bcrypt.hash(parsed.data.password, 12) } : {}),
     },

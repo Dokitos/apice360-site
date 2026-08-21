@@ -38,6 +38,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: user.name,
           email: user.email,
           role: user.role,
+          groupId: user.groupId,
         };
       },
     }),
@@ -47,26 +48,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id as string;
         token.role = user.role as "ADMIN" | "EDITOR";
+        token.groupId = (user.groupId as string | null) ?? null;
         return token;
       }
 
       // Revalidate against the database on every request (not just at
-      // sign-in) so a deactivated/deleted account or a changed role takes
-      // effect immediately instead of only once the JWT expires.
+      // sign-in) so a deactivated/deleted account, a changed role, or a
+      // changed group assignment takes effect immediately instead of only
+      // once the JWT expires.
       if (!token.id) return token;
       const dbUser = await prisma.user.findUnique({
         where: { id: token.id as string },
-        select: { role: true, isActive: true },
+        select: { role: true, isActive: true, groupId: true },
       });
       if (!dbUser || !dbUser.isActive) {
         return null;
       }
       token.role = dbUser.role;
+      token.groupId = dbUser.groupId;
       return token;
     },
     session({ session, token }) {
       session.user.id = token.id as string;
       session.user.role = token.role as "ADMIN" | "EDITOR";
+      session.user.groupId = (token.groupId as string | null) ?? null;
       return session;
     },
   },

@@ -6,12 +6,14 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
+import type { Resource } from "@/lib/resources";
 
 type NavItem = {
   href: string;
   label: string;
   icon: string;
   adminOnly?: boolean;
+  resource?: Resource;
 };
 
 type NavGroup = {
@@ -24,40 +26,48 @@ const navGroups: NavGroup[] = [
     title: "Geral",
     items: [
       { href: "/admin", label: "Dashboard", icon: "dashboard" },
-      { href: "/admin/site-settings", label: "Definições do Site", icon: "settings" },
-      { href: "/admin/ctas", label: "CTAs", icon: "bolt" },
-      { href: "/admin/seo", label: "SEO por Página", icon: "search" },
+      { href: "/admin/site-settings", label: "Definições do Site", icon: "settings", resource: "site_settings" },
+      { href: "/admin/ctas", label: "CTAs", icon: "bolt", resource: "ctas" },
+      { href: "/admin/seo", label: "SEO por Página", icon: "search", resource: "seo" },
     ],
   },
   {
     title: "Conteúdo",
     items: [
-      { href: "/admin/page-sections", label: "Secções de Página", icon: "dashboard_customize" },
-      { href: "/admin/partners", label: "Parceiros", icon: "handshake" },
-      { href: "/admin/testimonials", label: "Testemunhos", icon: "format_quote" },
-      { href: "/admin/stats", label: "Estatísticas", icon: "monitoring" },
-      { href: "/admin/services", label: "Serviços", icon: "engineering" },
-      { href: "/admin/portfolio", label: "Portfólio", icon: "photo_library" },
+      { href: "/admin/page-sections", label: "Secções de Página", icon: "dashboard_customize", resource: "page_sections" },
+      { href: "/admin/partners", label: "Parceiros", icon: "handshake", resource: "partners" },
+      { href: "/admin/testimonials", label: "Testemunhos", icon: "format_quote", resource: "testimonials" },
+      { href: "/admin/stats", label: "Estatísticas", icon: "monitoring", resource: "stats" },
+      { href: "/admin/services", label: "Serviços", icon: "engineering", resource: "services" },
+      { href: "/admin/portfolio", label: "Portfólio", icon: "photo_library", resource: "portfolio" },
     ],
   },
   {
     title: "Blog",
     items: [
-      { href: "/admin/blog/posts", label: "Artigos", icon: "article" },
-      { href: "/admin/blog/categories", label: "Categorias", icon: "sell" },
-      { href: "/admin/blog/comments", label: "Comentários", icon: "forum" },
+      { href: "/admin/blog/posts", label: "Artigos", icon: "article", resource: "blog_posts" },
+      { href: "/admin/blog/categories", label: "Categorias", icon: "sell", resource: "blog_categories" },
+      { href: "/admin/blog/comments", label: "Comentários", icon: "forum", resource: "blog_comments" },
     ],
   },
   {
     title: "Operação",
     items: [
-      { href: "/admin/leads", label: "Leads", icon: "contact_mail" },
+      { href: "/admin/leads", label: "Leads", icon: "contact_mail", resource: "leads" },
       { href: "/admin/users", label: "Utilizadores", icon: "manage_accounts", adminOnly: true },
+      { href: "/admin/groups", label: "Grupos", icon: "shield_person", adminOnly: true },
     ],
   },
 ];
 
-export function AdminSidebar({ role }: { role: "ADMIN" | "EDITOR" }) {
+export function AdminSidebar({
+  role,
+  viewableResources,
+}: {
+  role: "ADMIN" | "EDITOR";
+  /** null = every resource visible (ADMIN or an EDITOR with no group assigned). */
+  viewableResources: string[] | null;
+}) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -99,7 +109,11 @@ export function AdminSidebar({ role }: { role: "ADMIN" | "EDITOR" }) {
         </Link>
 
         {navGroups.map((group) => {
-          const visibleItems = group.items.filter((item) => !item.adminOnly || role === "ADMIN");
+          const visibleItems = group.items.filter((item) => {
+            if (item.adminOnly) return role === "ADMIN";
+            if (item.resource && viewableResources) return viewableResources.includes(item.resource);
+            return true;
+          });
           if (visibleItems.length === 0) return null;
 
           return (

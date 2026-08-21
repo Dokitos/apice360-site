@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { requireEditorOrAdmin } from "@/lib/permissions";
+import { requirePermission } from "@/lib/permissions";
 import { pageSectionSchema, pageSectionItemSchema } from "@/lib/validations/page-section";
 import { sanitizeRichText } from "@/lib/sanitize-rich-text";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
@@ -105,7 +105,7 @@ export async function createPageSection(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("page_sections", "create");
   const parsed = pageSectionSchema.safeParse(readSectionForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -145,7 +145,7 @@ export async function updatePageSection(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("page_sections", "edit");
   const parsed = pageSectionSchema.safeParse(readSectionForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -195,7 +195,7 @@ export async function updatePageSection(
 }
 
 export async function deletePageSection(page: PageKeyValue, id: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("page_sections", "delete");
   await prisma.pageSection.delete({ where: { id } });
   revalidatePath(`/admin/page-sections/${page}`);
   revalidatePath("/");
@@ -256,7 +256,7 @@ export async function createPageSectionItem(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("page_sections", "create");
   const parsed = pageSectionItemSchema.safeParse(readItemForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -286,7 +286,7 @@ export async function updatePageSectionItem(
   _prevState: string | undefined,
   formData: FormData,
 ) {
-  await requireEditorOrAdmin();
+  await requirePermission("page_sections", "edit");
   const parsed = pageSectionItemSchema.safeParse(readItemForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
@@ -324,7 +324,7 @@ export async function updatePageSectionItem(
 }
 
 export async function deletePageSectionItem(page: PageKeyValue, sectionId: string, itemId: string) {
-  await requireEditorOrAdmin();
+  await requirePermission("page_sections", "delete");
   await prisma.pageSectionItem.delete({ where: { id: itemId } });
   revalidatePath(`/admin/page-sections/${page}/${sectionId}/edit`);
   revalidatePath("/");
