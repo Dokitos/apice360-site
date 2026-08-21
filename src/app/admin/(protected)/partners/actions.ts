@@ -11,6 +11,7 @@ function readForm(formData: FormData) {
     name: formData.get("name"),
     logoUrl: formData.get("logoUrl"),
     websiteUrl: formData.get("websiteUrl") || undefined,
+    cardSize: formData.get("cardSize") || "MD",
     order: formData.get("order"),
     isActive: formData.get("isActive") === "on",
   };

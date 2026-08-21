@@ -8,6 +8,7 @@ import {
   getStats,
   getBlogPosts,
   getPageSeo,
+  getSiteSettings,
 } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { HeroSection } from "@/components/sections/HeroSection";
@@ -43,6 +44,7 @@ export default async function HomePage() {
     blogCta,
     posts,
     allSections,
+    settings,
   ] = await Promise.all([
     getPageSection("HOME", "hero", locale),
     getCta("home_hero", locale),
@@ -58,6 +60,7 @@ export default async function HomePage() {
     getCta("blog_see_more", locale),
     getBlogPosts({ limit: 3 }, locale),
     getPageSections("HOME", locale),
+    getSiteSettings(locale),
   ]);
   const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.HOME.includes(s.key));
 
@@ -72,7 +75,12 @@ export default async function HomePage() {
         trustBadges={stats.slice(0, 2)}
       />
 
-      <PartnersSection heading={partnersSection?.heading} subheading={partnersSection?.subheading} partners={partners} />
+      <PartnersSection
+        heading={partnersSection?.heading}
+        subheading={partnersSection?.subheading}
+        partners={partners}
+        displayMode={settings?.partnersDisplayMode}
+      />
 
       <TestimonialsSection testimonials={testimonials} locale={locale} />
 

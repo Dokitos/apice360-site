@@ -63,6 +63,7 @@
   --animate-pulse-glow: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   --animate-bounce-slow: bounce-slow 2s ease-in-out infinite;
   --animate-fade-up: fade-up 0.8s ease-out forwards;
+  --animate-marquee: marquee 30s linear infinite;
 }
 
 @keyframes pulse-glow {
@@ -93,6 +94,18 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Duplicated-track marquee: at -50% the second copy lines up exactly where
+   the first started, so the loop has no visible seam. Direction (right to
+   left) comes from animating toward a negative translateX. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }
 
@@ -210,7 +223,8 @@ html {
     transform: none !important;
   }
   .animate-pulse-glow,
-  .animate-bounce-slow {
+  .animate-bounce-slow,
+  .animate-marquee {
     animation: none !important;
   }
 }

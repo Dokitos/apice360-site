@@ -18,6 +18,7 @@ export const siteSettingsSchema = z.object({
   socialYoutube: optionalUrl,
   defaultOgImageUrl: optionalUrl,
   nif: z.string().trim().optional().or(z.literal("")),
+  partnersDisplayMode: z.enum(["GRID", "CAROUSEL"]).default("GRID"),
   architectAreaEnabled: z.boolean(),
   maintenanceMode: z.boolean(),
   footerDescriptionPt: z.string().trim().optional().or(z.literal("")),

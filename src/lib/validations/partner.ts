@@ -15,6 +15,7 @@ export const partnerSchema = z.object({
     .refine((v) => v === "" || SAFE_HTTP_URL.test(v), "Usa um link http:// ou https://.")
     .optional()
     .or(z.literal("")),
+  cardSize: z.enum(["SM", "MD", "LG"]).default("MD"),
   order: z.coerce.number().int().default(0),
   // Parse checkboxes explicitly in the action (`formData.get("x") === "on"`) before
   // validating — an unchecked checkbox is simply absent from FormData, not "false".

@@ -3,7 +3,7 @@
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
-import { TextField, TextAreaField, CheckboxField } from "@/components/admin/form-fields";
+import { TextField, TextAreaField, CheckboxField, SelectField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { updateSiteSettings, type SiteSettingsFormState } from "@/app/admin/(protected)/site-settings/actions";
 
@@ -23,6 +23,7 @@ type SiteSettings = {
   socialYoutube: string | null;
   defaultOgImageUrl: string | null;
   nif: string | null;
+  partnersDisplayMode: string;
   architectAreaEnabled: boolean;
   maintenanceMode: boolean;
   translations: {
@@ -72,6 +73,17 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
           Bloqueia o site para todos os visitantes, mostrando uma página de manutenção. Administradores e
           editores com sessão iniciada continuam a ver o site normalmente.
         </p>
+
+        <SelectField
+          id="partnersDisplayMode"
+          name="partnersDisplayMode"
+          label="Exibição dos Parceiros"
+          defaultValue={settings?.partnersDisplayMode ?? "GRID"}
+          hint="Grelha mostra todos os logos de uma vez; Carrossel desliza os logos automaticamente da direita para a esquerda."
+        >
+          <option value="GRID">Grelha</option>
+          <option value="CAROUSEL">Carrossel</option>
+        </SelectField>
       </section>
 
       <section className="space-y-6">

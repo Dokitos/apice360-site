@@ -2,13 +2,14 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, CheckboxField, ImageField } from "@/components/admin/form-fields";
+import { TextField, CheckboxField, ImageField, SelectField } from "@/components/admin/form-fields";
 
 type Partner = {
   id: string;
   name: string;
   logoUrl: string;
   websiteUrl: string | null;
+  cardSize: string;
   order: number;
   isActive: boolean;
 };
@@ -33,6 +34,11 @@ export function PartnerForm({ partner, action }: PartnerFormProps) {
         defaultValue={partner?.websiteUrl ?? ""}
         placeholder="https://..."
       />
+      <SelectField id="cardSize" name="cardSize" label="Tamanho do Card" defaultValue={partner?.cardSize ?? "MD"}>
+        <option value="SM">Pequeno</option>
+        <option value="MD">Médio</option>
+        <option value="LG">Grande</option>
+      </SelectField>
       <TextField
         id="order"
         name="order"
