@@ -8,12 +8,12 @@ import { serviceSchema, serviceFeatureSchema } from "@/lib/validations/service";
 import { sanitizeRichText } from "@/lib/sanitize-rich-text";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
-type ServiceTypeKey = "LSF" | "REMODELACAO";
-
 const SERVICE_FIELDS = [{ key: "cardLabel" }, { key: "title" }, { key: "intro", isHtml: true }];
 
 function readServiceForm(formData: FormData) {
   return {
+    type: formData.get("type"),
+    order: formData.get("order"),
     imageUrl: formData.get("imageUrl") || undefined,
     ctaKey: formData.get("ctaKey") || undefined,
     isActive: formData.get("isActive") === "on",
@@ -65,16 +65,49 @@ async function buildServiceTranslations(
   ];
 }
 
-export async function upsertService(
-  type: ServiceTypeKey,
-  _prevState: string | undefined,
-  formData: FormData,
-) {
+export async function createService(_prevState: string | undefined, formData: FormData) {
+  await requirePermission("services", "create");
+  const parsed = serviceSchema.safeParse(readServiceForm(formData));
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
+
+  const {
+    type,
+    cardLabelPt, cardLabelEn, cardLabelEs, cardLabelFr,
+    titlePt, titleEn, titleEs, titleFr,
+    introPt, introEn, introEs, introFr,
+    ...data
+  } = parsed.data;
+
+  const existing = await prisma.service.findUnique({ where: { type } });
+  if (existing) return "Já existe um serviço com este identificador.";
+
+  const translations = await buildServiceTranslations(
+    { cardLabelPt, cardLabelEn, cardLabelEs, cardLabelFr, titlePt, titleEn, titleEs, titleFr, introPt, introEn, introEs, introFr },
+    [],
+  );
+
+  await prisma.service.create({
+    data: {
+      type,
+      ...data,
+      imageUrl: data.imageUrl || null,
+      ctaKey: data.ctaKey || null,
+      translations: { create: translations },
+    },
+  });
+
+  revalidatePath("/admin/services");
+  revalidatePath("/");
+  redirect(`/admin/services/${type}/edit?saved=1`);
+}
+
+export async function updateService(type: string, _prevState: string | undefined, formData: FormData) {
   await requirePermission("services", "edit");
   const parsed = serviceSchema.safeParse(readServiceForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
   const {
+    type: _type,
     cardLabelPt, cardLabelEn, cardLabelEs, cardLabelFr,
     titlePt, titleEn, titleEs, titleFr,
     introPt, introEn, introEs, introFr,
@@ -82,43 +115,42 @@ export async function upsertService(
   } = parsed.data;
 
   const service = await prisma.service.findUnique({ where: { type } });
+  if (!service) return "Serviço não encontrado.";
+
   const translations = await buildServiceTranslations(
     { cardLabelPt, cardLabelEn, cardLabelEs, cardLabelFr, titlePt, titleEn, titleEs, titleFr, introPt, introEn, introEs, introFr },
-    service?.id ? (await prisma.serviceTranslation.findMany({ where: { serviceId: service.id } })) : [],
+    await prisma.serviceTranslation.findMany({ where: { serviceId: service.id } }),
   );
 
-  if (service) {
-    await prisma.service.update({
-      where: { type },
-      data: {
-        ...data,
-        imageUrl: data.imageUrl || null,
-        ctaKey: data.ctaKey || null,
-        translations: {
-          upsert: translations.map((t) => {
-            const { locale, ...fields } = t;
-            return {
-              where: { serviceId_locale: { serviceId: service.id, locale } },
-              update: fields,
-              create: t,
-            };
-          }),
-        },
+  await prisma.service.update({
+    where: { type },
+    data: {
+      ...data,
+      imageUrl: data.imageUrl || null,
+      ctaKey: data.ctaKey || null,
+      translations: {
+        upsert: translations.map((t) => {
+          const { locale, ...fields } = t;
+          return {
+            where: { serviceId_locale: { serviceId: service.id, locale } },
+            update: fields,
+            create: t,
+          };
+        }),
       },
-    });
-  } else {
-    await prisma.service.create({
-      data: {
-        type,
-        ...data,
-        translations: { create: translations },
-      },
-    });
-  }
+    },
+  });
 
   revalidatePath("/admin/services");
   revalidatePath("/");
   redirect(`/admin/services/${type}/edit?saved=1`);
+}
+
+export async function deleteService(id: string) {
+  await requirePermission("services", "delete");
+  await prisma.service.delete({ where: { id } });
+  revalidatePath("/admin/services");
+  revalidatePath("/");
 }
 
 const FEATURE_FIELDS = [{ key: "title" }, { key: "body" }];
@@ -168,7 +200,7 @@ async function buildFeatureTranslations(
 }
 
 export async function createServiceFeature(
-  type: ServiceTypeKey,
+  type: string,
   serviceId: string,
   _prevState: string | undefined,
   formData: FormData,
@@ -193,7 +225,7 @@ export async function createServiceFeature(
 }
 
 export async function updateServiceFeature(
-  type: ServiceTypeKey,
+  type: string,
   featureId: string,
   _prevState: string | undefined,
   formData: FormData,
@@ -231,7 +263,7 @@ export async function updateServiceFeature(
   redirect(`/admin/services/${type}/edit?saved=1`);
 }
 
-export async function deleteServiceFeature(type: ServiceTypeKey, featureId: string) {
+export async function deleteServiceFeature(type: string, featureId: string) {
   await requirePermission("services", "delete");
   await prisma.serviceFeature.delete({ where: { id: featureId } });
   revalidatePath(`/admin/services/${type}/edit`);

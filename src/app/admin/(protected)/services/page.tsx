@@ -1,61 +1,59 @@
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { Card } from "@/components/ui/Card";
+import { DataTable } from "@/components/admin/DataTable";
+import { DeleteButton } from "@/components/admin/DeleteButton";
 import { Icon } from "@/components/ui/Icon";
-
-const SERVICE_TYPES = [
-  { type: "LSF" as const, label: "Construção em LSF" },
-  { type: "REMODELACAO" as const, label: "Remodelação Total" },
-];
+import Link from "next/link";
+import { deleteService } from "./actions";
 
 export default async function ServicesPage() {
   await requirePermission("services", "view");
-  const services = await prisma.service.findMany({ include: { translations: true } });
+  const services = await prisma.service.findMany({
+    orderBy: { order: "asc" },
+    include: { translations: true },
+  });
 
   return (
     <div>
       <AdminPageHeader
         title="Serviços"
-        description="Conteúdo das duas linhas de serviço: LSF e Remodelação Total."
+        description="Linhas de serviço mostradas na página de Serviços do site."
+        newHref="/admin/services/new"
+        newLabel="Novo Serviço"
       />
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {SERVICE_TYPES.map(({ type, label }) => {
-          const service = services.find((s) => s.type === type);
-          const title = service?.translations.find((t) => t.locale === "PT")?.title;
-          return (
-            <Card key={type} className="flex flex-col gap-4 p-8">
-              <div className="flex items-center justify-between">
-                <Icon name="engineering" className="text-3xl text-primary" />
-                {service ? (
-                  <span
-                    className={
-                      service.isActive
-                        ? "text-sm font-bold text-primary"
-                        : "text-sm font-bold text-on-surface-variant"
-                    }
-                  >
-                    {service.isActive ? "Ativo" : "Inativo"}
-                  </span>
-                ) : null}
-              </div>
-              <div>
-                <h3 className="font-heading text-headline-md">{label}</h3>
-                <p className="mt-1 text-sm text-on-surface-variant">
-                  {title ?? "Ainda não configurado."}
-                </p>
-              </div>
-              <Link
-                href={`/admin/services/${type}/edit`}
-                className="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-bold uppercase text-on-primary transition-transform hover:scale-105"
-              >
-                {service ? "Editar" : "Configurar"}
-              </Link>
-            </Card>
-          );
-        })}
-      </div>
+      <DataTable
+        rows={services}
+        getRowId={(s) => s.id}
+        emptyMessage="Ainda não há serviços."
+        columns={[
+          { header: "Identificador", render: (s) => s.type },
+          {
+            header: "Título (PT)",
+            render: (s) => s.translations.find((t) => t.locale === "PT")?.title ?? "—",
+          },
+          { header: "Ordem", render: (s) => s.order },
+          {
+            header: "Estado",
+            render: (s) => (
+              <span className={s.isActive ? "text-primary" : "text-on-surface-variant"}>
+                {s.isActive ? "Ativo" : "Inativo"}
+              </span>
+            ),
+          },
+        ]}
+        renderActions={(s) => (
+          <div className="flex items-center justify-end gap-2">
+            <Link
+              href={`/admin/services/${s.type}/edit`}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary"
+            >
+              <Icon name="edit" className="text-lg" />
+            </Link>
+            <DeleteButton action={deleteService.bind(null, s.id)} />
+          </div>
+        )}
+      />
     </div>
   );
 }

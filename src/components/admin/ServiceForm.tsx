@@ -2,13 +2,15 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, CheckboxField } from "@/components/admin/form-fields";
+import { TextField, CheckboxField, SlugField } from "@/components/admin/form-fields";
 import { ImageField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import type { SiteLocale } from "@/lib/locale";
 
 type Service = {
+  type: string;
+  order: number;
   imageUrl: string | null;
   ctaKey: string | null;
   isActive: boolean;
@@ -29,6 +31,21 @@ export function ServiceForm({ service, action }: ServiceFormProps) {
 
   return (
     <form action={formAction} className="max-w-xl space-y-6">
+      <SlugField
+        id="type"
+        name="type"
+        label="Identificador do Serviço"
+        defaultValue={service?.type}
+        placeholder="ex: lsf"
+        sourceId="cardLabelPt"
+        readOnly={Boolean(service)}
+        required
+        hint={
+          service
+            ? "O identificador não pode ser alterado depois de criado."
+            : "Usado no URL e na base de dados. Gerado automaticamente a partir do rótulo do cartão."
+        }
+      />
       <ImageField id="imageUrl" name="imageUrl" label="Imagem de Destaque" defaultValue={service?.imageUrl} />
       <TextField
         id="ctaKey"
@@ -38,6 +55,7 @@ export function ServiceForm({ service, action }: ServiceFormProps) {
         placeholder="ex: services_lsf_advantages"
         hint="Ligação a um CTA criado no módulo CTAs."
       />
+      <TextField id="order" name="order" label="Ordem de Exibição" type="number" defaultValue={service?.order ?? 0} />
       <CheckboxField
         id="isActive"
         name="isActive"

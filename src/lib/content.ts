@@ -138,7 +138,7 @@ export const getTestimonials = cache(
 );
 
 export const getService = cache(
-  async (type: "LSF" | "REMODELACAO", locale: Locale = DEFAULT_LOCALE) => {
+  async (type: string, locale: Locale = DEFAULT_LOCALE) => {
     const service = await prisma.service.findUnique({
       where: { type },
       include: {
@@ -166,13 +166,31 @@ export const getService = cache(
 );
 
 export const getServices = cache(async (locale: Locale = DEFAULT_LOCALE) => {
-  const [lsf, remodelacao] = await Promise.all([
-    getService("LSF", locale),
-    getService("REMODELACAO", locale),
-  ]);
-  return [lsf, remodelacao].filter(
-    (s): s is NonNullable<typeof s> => s !== null && s.isActive,
-  );
+  const services = await prisma.service.findMany({
+    where: { isActive: true },
+    orderBy: { order: "asc" },
+    include: {
+      translations: true,
+      features: { orderBy: { order: "asc" }, include: { translations: true } },
+    },
+  });
+
+  return services.map((service) => {
+    const t = pickTranslation(service.translations, locale);
+    return {
+      type: service.type,
+      imageUrl: service.imageUrl,
+      ctaKey: service.ctaKey,
+      isActive: service.isActive,
+      cardLabel: t?.cardLabel ?? "",
+      title: t?.title ?? "",
+      intro: t?.intro ?? "",
+      features: service.features.map((f) => {
+        const ft = pickTranslation(f.translations, locale);
+        return { id: f.id, iconName: f.iconName, title: ft?.title ?? "", body: ft?.body ?? null };
+      }),
+    };
+  });
 });
 
 function mapProject<

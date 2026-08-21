@@ -34,11 +34,6 @@ enum PageKey {
   AREA_ARQUITETO
 }
 
-enum ServiceType {
-  LSF
-  REMODELACAO
-}
-
 enum ProjectCategory {
   LSF
   REMODELACAO
@@ -312,7 +307,8 @@ model TestimonialTranslation {
 
 model Service {
   id           String               @id @default(cuid())
-  type         ServiceType          @unique
+  type         String               @unique
+  order        Int                  @default(0)
   imageUrl     String?
   ctaKey       String?
   isActive     Boolean              @default(true)

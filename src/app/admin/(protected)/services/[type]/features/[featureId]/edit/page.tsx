@@ -10,7 +10,6 @@ export default async function EditServiceFeaturePage({
   params: Promise<{ type: string; featureId: string }>;
 }) {
   const { type, featureId } = await params;
-  if (type !== "LSF" && type !== "REMODELACAO") notFound();
 
   const feature = await prisma.serviceFeature.findUnique({
     where: { id: featureId },
