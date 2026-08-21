@@ -125,8 +125,19 @@ export async function Footer() {
         </div>
 
         <div className="mt-20 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-10 font-mono text-xs uppercase tracking-widest md:flex-row">
-          <span>{dict.footer.direitos(year)}</span>
+          <span>
+            {dict.footer.direitos(year)}
+            {settings?.nif ? ` · ${dict.footer.nifLabel}: ${settings.nif}` : ""}
+          </span>
           <span>{dict.footer.tagline}</span>
+          <a
+            href="http://per4mancemd.pt"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-primary"
+          >
+            {dict.footer.creditsPrefix} Per4mance
+          </a>
         </div>
       </div>
     </footer>

@@ -105,6 +105,7 @@ model SiteSettings {
   socialLinkedin       String?
   socialYoutube        String?
   defaultOgImageUrl    String?
+  nif                  String?
   architectAreaEnabled Boolean                   @default(true)
   maintenanceMode      Boolean                   @default(false)
   updatedAt            DateTime                  @updatedAt

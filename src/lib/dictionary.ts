@@ -34,6 +34,8 @@ const dictionary = {
       descricaoDefault: "Construções em Light Steel Frame em Portugal. Cuidamos do seu projeto do início ao fim.",
       direitos: (year: number) => `© ${year} Ápice 360 — Construções em LSF.`,
       tagline: "Velocidade · Durabilidade · Qualidade",
+      nifLabel: "NIF",
+      creditsPrefix: "Desenvolvido por",
     },
     contactForm: {
       nomeCompleto: "Nome Completo",
@@ -200,6 +202,8 @@ const dictionary = {
       descricaoDefault: "Light Steel Frame construction in Portugal. We take care of your project from start to finish.",
       direitos: (year: number) => `© ${year} Ápice 360 — LSF Construction.`,
       tagline: "Speed · Durability · Quality",
+      nifLabel: "Tax ID",
+      creditsPrefix: "Developed by",
     },
     contactForm: {
       nomeCompleto: "Full Name",

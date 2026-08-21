@@ -22,6 +22,7 @@ type SiteSettings = {
   socialLinkedin: string | null;
   socialYoutube: string | null;
   defaultOgImageUrl: string | null;
+  nif: string | null;
   architectAreaEnabled: boolean;
   maintenanceMode: boolean;
   translations: {
@@ -92,6 +93,7 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
             defaultValue={settings?.whatsappGeneral ?? ""}
             placeholder="https://wa.me/351..."
           />
+          <TextField id="nif" name="nif" label="NIF da Empresa" defaultValue={settings?.nif ?? ""} />
         </div>
       </section>
 
