@@ -6,8 +6,11 @@ import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { serviceSchema, serviceFeatureSchema } from "@/lib/validations/service";
 import { sanitizeRichText } from "@/lib/sanitize-rich-text";
+import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
 type ServiceTypeKey = "LSF" | "REMODELACAO";
+
+const SERVICE_FIELDS = [{ key: "cardLabel" }, { key: "title" }, { key: "intro", isHtml: true }];
 
 function readServiceForm(formData: FormData) {
   return {
@@ -16,11 +19,50 @@ function readServiceForm(formData: FormData) {
     isActive: formData.get("isActive") === "on",
     cardLabelPt: formData.get("cardLabelPt"),
     cardLabelEn: formData.get("cardLabelEn"),
+    cardLabelEs: formData.get("cardLabelEs"),
+    cardLabelFr: formData.get("cardLabelFr"),
     titlePt: formData.get("titlePt"),
     titleEn: formData.get("titleEn"),
+    titleEs: formData.get("titleEs"),
+    titleFr: formData.get("titleFr"),
     introPt: formData.get("introPt"),
     introEn: formData.get("introEn"),
+    introEs: formData.get("introEs"),
+    introFr: formData.get("introFr"),
   };
+}
+
+async function buildServiceTranslations(
+  data: {
+    cardLabelPt: string; cardLabelEn?: string; cardLabelEs?: string; cardLabelFr?: string;
+    titlePt: string; titleEn?: string; titleEs?: string; titleFr?: string;
+    introPt: string; introEn?: string; introEs?: string; introFr?: string;
+  },
+  existingTranslations: ExistingTranslationRow[],
+) {
+  const ptIntro = sanitizeRichText(data.introPt);
+
+  const resolved = await resolveTranslations({
+    fields: SERVICE_FIELDS,
+    ptValues: { cardLabel: data.cardLabelPt, title: data.titlePt, intro: ptIntro },
+    submittedValues: {
+      EN: { cardLabel: data.cardLabelEn ?? null, title: data.titleEn ?? null, intro: data.introEn ?? null },
+      ES: { cardLabel: data.cardLabelEs ?? null, title: data.titleEs ?? null, intro: data.introEs ?? null },
+      FR: { cardLabel: data.cardLabelFr ?? null, title: data.titleFr ?? null, intro: data.introFr ?? null },
+    },
+    existingTranslations,
+  });
+
+  return [
+    { locale: "PT" as const, isAutoTranslated: false, cardLabel: data.cardLabelPt, title: data.titlePt, intro: ptIntro },
+    ...resolved.map((r) => ({
+      locale: r.locale,
+      isAutoTranslated: r.isAutoTranslated,
+      cardLabel: r.fields.cardLabel ?? "",
+      title: r.fields.title ?? "",
+      intro: r.fields.intro ? sanitizeRichText(r.fields.intro) : (r.fields.intro ?? ""),
+    })),
+  ];
 }
 
 export async function upsertService(
@@ -32,11 +74,18 @@ export async function upsertService(
   const parsed = serviceSchema.safeParse(readServiceForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
-  const { cardLabelPt, cardLabelEn, titlePt, titleEn, introPt: introPtRaw, introEn: introEnRaw, ...data } = parsed.data;
-  const introPt = sanitizeRichText(introPtRaw);
-  const introEn = sanitizeRichText(introEnRaw);
+  const {
+    cardLabelPt, cardLabelEn, cardLabelEs, cardLabelFr,
+    titlePt, titleEn, titleEs, titleFr,
+    introPt, introEn, introEs, introFr,
+    ...data
+  } = parsed.data;
 
   const service = await prisma.service.findUnique({ where: { type } });
+  const translations = await buildServiceTranslations(
+    { cardLabelPt, cardLabelEn, cardLabelEs, cardLabelFr, titlePt, titleEn, titleEs, titleFr, introPt, introEn, introEs, introFr },
+    service?.id ? (await prisma.serviceTranslation.findMany({ where: { serviceId: service.id } })) : [],
+  );
 
   if (service) {
     await prisma.service.update({
@@ -46,18 +95,14 @@ export async function upsertService(
         imageUrl: data.imageUrl || null,
         ctaKey: data.ctaKey || null,
         translations: {
-          upsert: [
-            {
-              where: { serviceId_locale: { serviceId: service.id, locale: "PT" } },
-              update: { cardLabel: cardLabelPt, title: titlePt, intro: introPt },
-              create: { locale: "PT", cardLabel: cardLabelPt, title: titlePt, intro: introPt },
-            },
-            {
-              where: { serviceId_locale: { serviceId: service.id, locale: "EN" } },
-              update: { cardLabel: cardLabelEn, title: titleEn, intro: introEn },
-              create: { locale: "EN", cardLabel: cardLabelEn, title: titleEn, intro: introEn },
-            },
-          ],
+          upsert: translations.map((t) => {
+            const { locale, ...fields } = t;
+            return {
+              where: { serviceId_locale: { serviceId: service.id, locale } },
+              update: fields,
+              create: t,
+            };
+          }),
         },
       },
     });
@@ -66,12 +111,7 @@ export async function upsertService(
       data: {
         type,
         ...data,
-        translations: {
-          create: [
-            { locale: "PT", cardLabel: cardLabelPt, title: titlePt, intro: introPt },
-            { locale: "EN", cardLabel: cardLabelEn, title: titleEn, intro: introEn },
-          ],
-        },
+        translations: { create: translations },
       },
     });
   }
@@ -81,15 +121,50 @@ export async function upsertService(
   redirect(`/admin/services/${type}/edit?saved=1`);
 }
 
+const FEATURE_FIELDS = [{ key: "title" }, { key: "body" }];
+
 function readFeatureForm(formData: FormData) {
   return {
     iconName: formData.get("iconName") || undefined,
     order: formData.get("order"),
     titlePt: formData.get("titlePt"),
     titleEn: formData.get("titleEn"),
+    titleEs: formData.get("titleEs"),
+    titleFr: formData.get("titleFr"),
     bodyPt: formData.get("bodyPt") || undefined,
     bodyEn: formData.get("bodyEn") || undefined,
+    bodyEs: formData.get("bodyEs") || undefined,
+    bodyFr: formData.get("bodyFr") || undefined,
   };
+}
+
+async function buildFeatureTranslations(
+  data: {
+    titlePt: string; titleEn?: string; titleEs?: string; titleFr?: string;
+    bodyPt?: string; bodyEn?: string; bodyEs?: string; bodyFr?: string;
+  },
+  existingTranslations: ExistingTranslationRow[],
+) {
+  const resolved = await resolveTranslations({
+    fields: FEATURE_FIELDS,
+    ptValues: { title: data.titlePt, body: data.bodyPt ?? null },
+    submittedValues: {
+      EN: { title: data.titleEn ?? null, body: data.bodyEn ?? null },
+      ES: { title: data.titleEs ?? null, body: data.bodyEs ?? null },
+      FR: { title: data.titleFr ?? null, body: data.bodyFr ?? null },
+    },
+    existingTranslations,
+  });
+
+  return [
+    { locale: "PT" as const, isAutoTranslated: false, title: data.titlePt, body: data.bodyPt ?? null },
+    ...resolved.map((r) => ({
+      locale: r.locale,
+      isAutoTranslated: r.isAutoTranslated,
+      title: r.fields.title ?? "",
+      body: r.fields.body,
+    })),
+  ];
 }
 
 export async function createServiceFeature(
@@ -102,17 +177,14 @@ export async function createServiceFeature(
   const parsed = serviceFeatureSchema.safeParse(readFeatureForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
-  const { titlePt, titleEn, bodyPt, bodyEn, ...data } = parsed.data;
+  const { titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr, ...data } = parsed.data;
+  const translations = await buildFeatureTranslations({ titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr }, []);
+
   await prisma.serviceFeature.create({
     data: {
       ...data,
       serviceId,
-      translations: {
-        create: [
-          { locale: "PT", title: titlePt, body: bodyPt },
-          { locale: "EN", title: titleEn, body: bodyEn },
-        ],
-      },
+      translations: { create: translations },
     },
   });
   revalidatePath(`/admin/services/${type}/edit`);
@@ -130,25 +202,27 @@ export async function updateServiceFeature(
   const parsed = serviceFeatureSchema.safeParse(readFeatureForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
-  const { titlePt, titleEn, bodyPt, bodyEn, ...data } = parsed.data;
+  const { titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr, ...data } = parsed.data;
+  const current = await prisma.serviceFeature.findUnique({ where: { id: featureId }, select: { translations: true } });
+  const translations = await buildFeatureTranslations(
+    { titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr },
+    current?.translations ?? [],
+  );
+
   await prisma.serviceFeature.update({
     where: { id: featureId },
     data: {
       ...data,
       iconName: data.iconName || null,
       translations: {
-        upsert: [
-          {
-            where: { featureId_locale: { featureId, locale: "PT" } },
-            update: { title: titlePt, body: bodyPt },
-            create: { locale: "PT", title: titlePt, body: bodyPt },
-          },
-          {
-            where: { featureId_locale: { featureId, locale: "EN" } },
-            update: { title: titleEn, body: bodyEn },
-            create: { locale: "EN", title: titleEn, body: bodyEn },
-          },
-        ],
+        upsert: translations.map((t) => {
+          const { locale, ...fields } = t;
+          return {
+            where: { featureId_locale: { featureId, locale } },
+            update: fields,
+            create: t,
+          };
+        }),
       },
     },
   });

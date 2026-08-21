@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { pageSectionSchema, pageSectionItemSchema } from "@/lib/validations/page-section";
 import { sanitizeRichText } from "@/lib/sanitize-rich-text";
+import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
 type PageKeyValue =
   | "HOME"
@@ -16,6 +17,14 @@ type PageKeyValue =
   | "CONTACTO"
   | "AREA_ARQUITETO";
 
+const SECTION_FIELDS = [
+  { key: "eyebrow" },
+  { key: "heading" },
+  { key: "subheading" },
+  { key: "body", isHtml: true },
+  { key: "ctaLabel" },
+];
+
 function readSectionForm(formData: FormData) {
   return {
     key: formData.get("key"),
@@ -25,15 +34,70 @@ function readSectionForm(formData: FormData) {
     isActive: formData.get("isActive") === "on",
     eyebrowPt: formData.get("eyebrowPt") || undefined,
     eyebrowEn: formData.get("eyebrowEn") || undefined,
+    eyebrowEs: formData.get("eyebrowEs") || undefined,
+    eyebrowFr: formData.get("eyebrowFr") || undefined,
     headingPt: formData.get("headingPt") || undefined,
     headingEn: formData.get("headingEn") || undefined,
+    headingEs: formData.get("headingEs") || undefined,
+    headingFr: formData.get("headingFr") || undefined,
     subheadingPt: formData.get("subheadingPt") || undefined,
     subheadingEn: formData.get("subheadingEn") || undefined,
+    subheadingEs: formData.get("subheadingEs") || undefined,
+    subheadingFr: formData.get("subheadingFr") || undefined,
     bodyPt: formData.get("bodyPt") || undefined,
     bodyEn: formData.get("bodyEn") || undefined,
+    bodyEs: formData.get("bodyEs") || undefined,
+    bodyFr: formData.get("bodyFr") || undefined,
     ctaLabelPt: formData.get("ctaLabelPt") || undefined,
     ctaLabelEn: formData.get("ctaLabelEn") || undefined,
+    ctaLabelEs: formData.get("ctaLabelEs") || undefined,
+    ctaLabelFr: formData.get("ctaLabelFr") || undefined,
   };
+}
+
+async function buildSectionTranslations(
+  data: {
+    eyebrowPt?: string; eyebrowEn?: string; eyebrowEs?: string; eyebrowFr?: string;
+    headingPt?: string; headingEn?: string; headingEs?: string; headingFr?: string;
+    subheadingPt?: string; subheadingEn?: string; subheadingEs?: string; subheadingFr?: string;
+    bodyPt?: string; bodyEn?: string; bodyEs?: string; bodyFr?: string;
+    ctaLabelPt?: string; ctaLabelEn?: string; ctaLabelEs?: string; ctaLabelFr?: string;
+  },
+  existingTranslations: ExistingTranslationRow[],
+) {
+  const ptBody = data.bodyPt ? sanitizeRichText(data.bodyPt) : data.bodyPt;
+
+  const resolved = await resolveTranslations({
+    fields: SECTION_FIELDS,
+    ptValues: { eyebrow: data.eyebrowPt ?? null, heading: data.headingPt ?? null, subheading: data.subheadingPt ?? null, body: ptBody ?? null, ctaLabel: data.ctaLabelPt ?? null },
+    submittedValues: {
+      EN: { eyebrow: data.eyebrowEn ?? null, heading: data.headingEn ?? null, subheading: data.subheadingEn ?? null, body: data.bodyEn ?? null, ctaLabel: data.ctaLabelEn ?? null },
+      ES: { eyebrow: data.eyebrowEs ?? null, heading: data.headingEs ?? null, subheading: data.subheadingEs ?? null, body: data.bodyEs ?? null, ctaLabel: data.ctaLabelEs ?? null },
+      FR: { eyebrow: data.eyebrowFr ?? null, heading: data.headingFr ?? null, subheading: data.subheadingFr ?? null, body: data.bodyFr ?? null, ctaLabel: data.ctaLabelFr ?? null },
+    },
+    existingTranslations,
+  });
+
+  return [
+    {
+      locale: "PT" as const,
+      isAutoTranslated: false,
+      eyebrow: data.eyebrowPt ?? null,
+      heading: data.headingPt ?? null,
+      subheading: data.subheadingPt ?? null,
+      body: ptBody ?? null,
+      ctaLabel: data.ctaLabelPt ?? null,
+    },
+    ...resolved.map((r) => ({
+      locale: r.locale,
+      isAutoTranslated: r.isAutoTranslated,
+      eyebrow: r.fields.eyebrow,
+      heading: r.fields.heading,
+      subheading: r.fields.subheading,
+      body: r.fields.body ? sanitizeRichText(r.fields.body) : r.fields.body,
+      ctaLabel: r.fields.ctaLabel,
+    })),
+  ];
 }
 
 export async function createPageSection(
@@ -46,46 +110,27 @@ export async function createPageSection(
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
   const {
-    eyebrowPt,
-    eyebrowEn,
-    headingPt,
-    headingEn,
-    subheadingPt,
-    subheadingEn,
-    bodyPt,
-    bodyEn,
-    ctaLabelPt,
-    ctaLabelEn,
+    eyebrowPt, eyebrowEn, eyebrowEs, eyebrowFr,
+    headingPt, headingEn, headingEs, headingFr,
+    subheadingPt, subheadingEn, subheadingEs, subheadingFr,
+    bodyPt, bodyEn, bodyEs, bodyFr,
+    ctaLabelPt, ctaLabelEn, ctaLabelEs, ctaLabelFr,
     ...data
   } = parsed.data;
 
   const existing = await prisma.pageSection.findUnique({ where: { page_key: { page, key: data.key } } });
   if (existing) return "Já existe uma secção com esta chave nesta página.";
 
+  const translations = await buildSectionTranslations(
+    { eyebrowPt, eyebrowEn, eyebrowEs, eyebrowFr, headingPt, headingEn, headingEs, headingFr, subheadingPt, subheadingEn, subheadingEs, subheadingFr, bodyPt, bodyEn, bodyEs, bodyFr, ctaLabelPt, ctaLabelEn, ctaLabelEs, ctaLabelFr },
+    [],
+  );
+
   const section = await prisma.pageSection.create({
     data: {
       page,
       ...data,
-      translations: {
-        create: [
-          {
-            locale: "PT",
-            eyebrow: eyebrowPt,
-            heading: headingPt,
-            subheading: subheadingPt,
-            body: bodyPt ? sanitizeRichText(bodyPt) : bodyPt,
-            ctaLabel: ctaLabelPt,
-          },
-          {
-            locale: "EN",
-            eyebrow: eyebrowEn,
-            heading: headingEn,
-            subheading: subheadingEn,
-            body: bodyEn ? sanitizeRichText(bodyEn) : bodyEn,
-            ctaLabel: ctaLabelEn,
-          },
-        ],
-      },
+      translations: { create: translations },
     },
   });
 
@@ -105,21 +150,22 @@ export async function updatePageSection(
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
   const {
-    eyebrowPt,
-    eyebrowEn,
-    headingPt,
-    headingEn,
-    subheadingPt,
-    subheadingEn,
-    bodyPt,
-    bodyEn,
-    ctaLabelPt,
-    ctaLabelEn,
+    eyebrowPt, eyebrowEn, eyebrowEs, eyebrowFr,
+    headingPt, headingEn, headingEs, headingFr,
+    subheadingPt, subheadingEn, subheadingEs, subheadingFr,
+    bodyPt, bodyEn, bodyEs, bodyFr,
+    ctaLabelPt, ctaLabelEn, ctaLabelEs, ctaLabelFr,
     ...data
   } = parsed.data;
 
   const existing = await prisma.pageSection.findUnique({ where: { page_key: { page, key: data.key } } });
   if (existing && existing.id !== id) return "Já existe outra secção com esta chave nesta página.";
+
+  const current = await prisma.pageSection.findUnique({ where: { id }, select: { translations: true } });
+  const translations = await buildSectionTranslations(
+    { eyebrowPt, eyebrowEn, eyebrowEs, eyebrowFr, headingPt, headingEn, headingEs, headingFr, subheadingPt, subheadingEn, subheadingEs, subheadingFr, bodyPt, bodyEn, bodyEs, bodyFr, ctaLabelPt, ctaLabelEn, ctaLabelEs, ctaLabelFr },
+    current?.translations ?? [],
+  );
 
   await prisma.pageSection.update({
     where: { id },
@@ -131,44 +177,14 @@ export async function updatePageSection(
       imageUrl: data.imageUrl || null,
       iconName: data.iconName || null,
       translations: {
-        upsert: [
-          {
-            where: { sectionId_locale: { sectionId: id, locale: "PT" } },
-            update: {
-              eyebrow: eyebrowPt,
-              heading: headingPt,
-              subheading: subheadingPt,
-              body: bodyPt ? sanitizeRichText(bodyPt) : bodyPt,
-              ctaLabel: ctaLabelPt,
-            },
-            create: {
-              locale: "PT",
-              eyebrow: eyebrowPt,
-              heading: headingPt,
-              subheading: subheadingPt,
-              body: bodyPt ? sanitizeRichText(bodyPt) : bodyPt,
-              ctaLabel: ctaLabelPt,
-            },
-          },
-          {
-            where: { sectionId_locale: { sectionId: id, locale: "EN" } },
-            update: {
-              eyebrow: eyebrowEn,
-              heading: headingEn,
-              subheading: subheadingEn,
-              body: bodyEn ? sanitizeRichText(bodyEn) : bodyEn,
-              ctaLabel: ctaLabelEn,
-            },
-            create: {
-              locale: "EN",
-              eyebrow: eyebrowEn,
-              heading: headingEn,
-              subheading: subheadingEn,
-              body: bodyEn ? sanitizeRichText(bodyEn) : bodyEn,
-              ctaLabel: ctaLabelEn,
-            },
-          },
-        ],
+        upsert: translations.map((t) => {
+          const { locale, ...fields } = t;
+          return {
+            where: { sectionId_locale: { sectionId: id, locale } },
+            update: fields,
+            create: t,
+          };
+        }),
       },
     },
   });
@@ -185,6 +201,8 @@ export async function deletePageSection(page: PageKeyValue, id: string) {
   revalidatePath("/");
 }
 
+const ITEM_FIELDS = [{ key: "title" }, { key: "body" }];
+
 function readItemForm(formData: FormData) {
   return {
     iconName: formData.get("iconName") || undefined,
@@ -194,9 +212,42 @@ function readItemForm(formData: FormData) {
     order: formData.get("order"),
     titlePt: formData.get("titlePt"),
     titleEn: formData.get("titleEn"),
+    titleEs: formData.get("titleEs"),
+    titleFr: formData.get("titleFr"),
     bodyPt: formData.get("bodyPt") || undefined,
     bodyEn: formData.get("bodyEn") || undefined,
+    bodyEs: formData.get("bodyEs") || undefined,
+    bodyFr: formData.get("bodyFr") || undefined,
   };
+}
+
+async function buildItemTranslations(
+  data: {
+    titlePt: string; titleEn?: string; titleEs?: string; titleFr?: string;
+    bodyPt?: string; bodyEn?: string; bodyEs?: string; bodyFr?: string;
+  },
+  existingTranslations: ExistingTranslationRow[],
+) {
+  const resolved = await resolveTranslations({
+    fields: ITEM_FIELDS,
+    ptValues: { title: data.titlePt, body: data.bodyPt ?? null },
+    submittedValues: {
+      EN: { title: data.titleEn ?? null, body: data.bodyEn ?? null },
+      ES: { title: data.titleEs ?? null, body: data.bodyEs ?? null },
+      FR: { title: data.titleFr ?? null, body: data.bodyFr ?? null },
+    },
+    existingTranslations,
+  });
+
+  return [
+    { locale: "PT" as const, isAutoTranslated: false, title: data.titlePt, body: data.bodyPt ?? null },
+    ...resolved.map((r) => ({
+      locale: r.locale,
+      isAutoTranslated: r.isAutoTranslated,
+      title: r.fields.title ?? "",
+      body: r.fields.body,
+    })),
+  ];
 }
 
 export async function createPageSectionItem(
@@ -209,7 +260,9 @@ export async function createPageSectionItem(
   const parsed = pageSectionItemSchema.safeParse(readItemForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
-  const { titlePt, titleEn, bodyPt, bodyEn, ...data } = parsed.data;
+  const { titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr, ...data } = parsed.data;
+  const translations = await buildItemTranslations({ titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr }, []);
+
   await prisma.pageSectionItem.create({
     data: {
       ...data,
@@ -218,12 +271,7 @@ export async function createPageSectionItem(
       numberLabel: data.numberLabel || null,
       ctaKey: data.ctaKey || null,
       sectionId,
-      translations: {
-        create: [
-          { locale: "PT", title: titlePt, body: bodyPt },
-          { locale: "EN", title: titleEn, body: bodyEn },
-        ],
-      },
+      translations: { create: translations },
     },
   });
   revalidatePath(`/admin/page-sections/${page}/${sectionId}/edit`);
@@ -242,7 +290,14 @@ export async function updatePageSectionItem(
   const parsed = pageSectionItemSchema.safeParse(readItemForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
-  const { titlePt, titleEn, bodyPt, bodyEn, ...data } = parsed.data;
+  const { titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr, ...data } = parsed.data;
+
+  const current = await prisma.pageSectionItem.findUnique({ where: { id: itemId }, select: { translations: true } });
+  const translations = await buildItemTranslations(
+    { titlePt, titleEn, titleEs, titleFr, bodyPt, bodyEn, bodyEs, bodyFr },
+    current?.translations ?? [],
+  );
+
   await prisma.pageSectionItem.update({
     where: { id: itemId },
     data: {
@@ -252,18 +307,14 @@ export async function updatePageSectionItem(
       numberLabel: data.numberLabel || null,
       ctaKey: data.ctaKey || null,
       translations: {
-        upsert: [
-          {
-            where: { itemId_locale: { itemId, locale: "PT" } },
-            update: { title: titlePt, body: bodyPt },
-            create: { locale: "PT", title: titlePt, body: bodyPt },
-          },
-          {
-            where: { itemId_locale: { itemId, locale: "EN" } },
-            update: { title: titleEn, body: bodyEn },
-            create: { locale: "EN", title: titleEn, body: bodyEn },
-          },
-        ],
+        upsert: translations.map((t) => {
+          const { locale, ...fields } = t;
+          return {
+            where: { itemId_locale: { itemId, locale } },
+            update: fields,
+            create: t,
+          };
+        }),
       },
     },
   });

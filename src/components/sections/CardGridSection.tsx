@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { getCta } from "@/lib/content";
+import type { SiteLocale } from "@/lib/locale";
 
 type Item = { id: string; title: string; body: string | null; iconName: string | null; ctaKey?: string | null };
 
@@ -13,7 +14,7 @@ type CardGridSectionProps = {
   items: Item[];
   columns?: 2 | 3 | 4;
   cta?: { label: string; url: string; iconName?: string | null } | null;
-  locale?: "PT" | "EN";
+  locale?: SiteLocale;
 };
 
 export function CardGridSection({ eyebrow, heading, body, items, columns = 2, cta, locale = "PT" }: CardGridSectionProps) {
@@ -53,7 +54,7 @@ export function CardGridSection({ eyebrow, heading, body, items, columns = 2, ct
   );
 }
 
-async function ItemCard({ item, locale }: { item: Item; locale: "PT" | "EN" }) {
+async function ItemCard({ item, locale }: { item: Item; locale: SiteLocale }) {
   const cta = item.ctaKey ? await getCta(item.ctaKey, locale) : null;
 
   return (

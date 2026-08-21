@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField, TextAreaField, ImageField, IconPickerField, SelectField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
+import type { SiteLocale } from "@/lib/locale";
 
 type PageSectionItem = {
   iconName: string | null;
@@ -11,7 +12,7 @@ type PageSectionItem = {
   numberLabel: string | null;
   ctaKey: string | null;
   order: number;
-  translations: { locale: "PT" | "EN"; title: string; body: string | null }[];
+  translations: { locale: SiteLocale; isAutoTranslated: boolean; title: string; body: string | null }[];
 };
 
 type CtaOption = { key: string; label: string };
@@ -26,6 +27,8 @@ export function PageSectionItemForm({ item, ctas = [], action }: PageSectionItem
   const [error, formAction, isPending] = useActionState(action, undefined);
   const pt = item?.translations.find((t) => t.locale === "PT");
   const en = item?.translations.find((t) => t.locale === "EN");
+  const es = item?.translations.find((t) => t.locale === "ES");
+  const fr = item?.translations.find((t) => t.locale === "FR");
 
   return (
     <form action={formAction} className="max-w-xl space-y-6">
@@ -57,10 +60,27 @@ export function PageSectionItemForm({ item, ctas = [], action }: PageSectionItem
         }
         en={
           <>
-            <TextField id="titleEn" name="titleEn" label="Title (EN)" defaultValue={en?.title} required />
+            <TextField id="titleEn" name="titleEn" label="Title (EN)" defaultValue={en?.title ?? ""} />
             <TextAreaField id="bodyEn" name="bodyEn" label="Body (EN)" defaultValue={en?.body ?? ""} />
           </>
         }
+        es={
+          <>
+            <TextField id="titleEs" name="titleEs" label="Título (ES)" defaultValue={es?.title ?? ""} />
+            <TextAreaField id="bodyEs" name="bodyEs" label="Texto (ES)" defaultValue={es?.body ?? ""} />
+          </>
+        }
+        fr={
+          <>
+            <TextField id="titleFr" name="titleFr" label="Titre (FR)" defaultValue={fr?.title ?? ""} />
+            <TextAreaField id="bodyFr" name="bodyFr" label="Texte (FR)" defaultValue={fr?.body ?? ""} />
+          </>
+        }
+        autoTranslated={{
+          EN: en?.isAutoTranslated ?? true,
+          ES: es?.isAutoTranslated ?? true,
+          FR: fr?.isAutoTranslated ?? true,
+        }}
       />
       <TextField id="order" name="order" label="Ordem" type="number" defaultValue={item?.order ?? 0} />
       {error ? <p className="text-sm text-primary">{error}</p> : null}

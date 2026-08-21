@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
+import type { SiteLocale } from "@/lib/locale";
 import {
   assignLead,
   deleteLead,
@@ -24,7 +25,7 @@ type Lead = {
   phone: string | null;
   message: string | null;
   sourcePage: string | null;
-  locale: "PT" | "EN";
+  locale: SiteLocale;
   status: "NEW" | "CONTACTED" | "QUALIFIED" | "WON" | "LOST";
   notes: string | null;
   createdAt: string;

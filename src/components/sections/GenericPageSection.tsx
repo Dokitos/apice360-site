@@ -3,6 +3,7 @@ import { Icon } from "@/components/ui/Icon";
 import { RichText } from "@/components/ui/RichText";
 import { Button } from "@/components/ui/Button";
 import { getCta } from "@/lib/content";
+import type { SiteLocale } from "@/lib/locale";
 
 type GenericSectionItem = {
   id: string;
@@ -38,7 +39,7 @@ export async function GenericPageSection({
   alt = false,
 }: {
   section: GenericSectionData;
-  locale: "PT" | "EN";
+  locale: SiteLocale;
   alt?: boolean;
 }) {
   const hasContent = Boolean(
@@ -98,7 +99,7 @@ export async function GenericPageSection({
   );
 }
 
-async function ItemCard({ item, locale }: { item: GenericSectionItem; locale: "PT" | "EN" }) {
+async function ItemCard({ item, locale }: { item: GenericSectionItem; locale: SiteLocale }) {
   const cta = item.ctaKey ? await getCta(item.ctaKey, locale) : null;
 
   return (

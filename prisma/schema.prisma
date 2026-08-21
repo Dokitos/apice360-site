@@ -15,6 +15,8 @@ datasource db {
 enum Locale {
   PT
   EN
+  ES
+  FR
 }
 
 enum Role {
@@ -118,6 +120,7 @@ model SiteSettingsTranslation {
   siteSettingsId        String
   siteSettings          SiteSettings @relation(fields: [siteSettingsId], references: [id], onDelete: Cascade)
   locale                Locale
+  isAutoTranslated      Boolean      @default(false)
   footerDescription     String?
   showroomText          String?
   defaultSeoTitle       String?
@@ -138,11 +141,12 @@ model Cta {
 }
 
 model CtaTranslation {
-  id     String @id @default(cuid())
-  ctaId  String
-  cta    Cta    @relation(fields: [ctaId], references: [id], onDelete: Cascade)
-  locale Locale
-  label  String
+  id               String  @id @default(cuid())
+  ctaId            String
+  cta              Cta     @relation(fields: [ctaId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean @default(false)
+  label            String
 
   @@unique([ctaId, locale])
 }
@@ -155,12 +159,13 @@ model PageSeo {
 }
 
 model PageSeoTranslation {
-  id          String  @id @default(cuid())
-  pageSeoId   String
-  pageSeo     PageSeo @relation(fields: [pageSeoId], references: [id], onDelete: Cascade)
-  locale      Locale
-  title       String
-  description String
+  id               String  @id @default(cuid())
+  pageSeoId        String
+  pageSeo          PageSeo @relation(fields: [pageSeoId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean @default(false)
+  title            String
+  description      String
 
   @@unique([pageSeoId, locale])
 }
@@ -184,15 +189,16 @@ model PageSection {
 }
 
 model PageSectionTranslation {
-  id         String      @id @default(cuid())
-  sectionId  String
-  section    PageSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-  locale     Locale
-  eyebrow    String?
-  heading    String?
-  subheading String?
-  body       String?
-  ctaLabel   String?
+  id               String      @id @default(cuid())
+  sectionId        String
+  section          PageSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean     @default(false)
+  eyebrow          String?
+  heading          String?
+  subheading       String?
+  body             String?
+  ctaLabel         String?
 
   @@unique([sectionId, locale])
 }
@@ -212,12 +218,13 @@ model PageSectionItem {
 }
 
 model PageSectionItemTranslation {
-  id     String          @id @default(cuid())
-  itemId String
-  item   PageSectionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  locale Locale
-  title  String
-  body   String?
+  id               String          @id @default(cuid())
+  itemId           String
+  item             PageSectionItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean         @default(false)
+  title            String
+  body             String?
 
   @@unique([itemId, locale])
 }
@@ -232,11 +239,12 @@ model Stat {
 }
 
 model StatTranslation {
-  id     String @id @default(cuid())
-  statId String
-  stat   Stat   @relation(fields: [statId], references: [id], onDelete: Cascade)
-  locale Locale
-  label  String
+  id               String  @id @default(cuid())
+  statId           String
+  stat             Stat    @relation(fields: [statId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean @default(false)
+  label            String
 
   @@unique([statId, locale])
 }
@@ -264,11 +272,12 @@ model Testimonial {
 }
 
 model TestimonialTranslation {
-  id            String      @id @default(cuid())
-  testimonialId String
-  testimonial   Testimonial @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
-  locale        Locale
-  quote         String
+  id               String      @id @default(cuid())
+  testimonialId    String
+  testimonial      Testimonial @relation(fields: [testimonialId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean     @default(false)
+  quote            String
 
   @@unique([testimonialId, locale])
 }
@@ -284,13 +293,14 @@ model Service {
 }
 
 model ServiceTranslation {
-  id        String  @id @default(cuid())
-  serviceId String
-  service   Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
-  locale    Locale
-  cardLabel String
-  title     String
-  intro     String
+  id               String  @id @default(cuid())
+  serviceId        String
+  service          Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean @default(false)
+  cardLabel        String
+  title            String
+  intro            String
 
   @@unique([serviceId, locale])
 }
@@ -305,12 +315,13 @@ model ServiceFeature {
 }
 
 model ServiceFeatureTranslation {
-  id        String         @id @default(cuid())
-  featureId String
-  feature   ServiceFeature @relation(fields: [featureId], references: [id], onDelete: Cascade)
-  locale    Locale
-  title     String
-  body      String?
+  id               String         @id @default(cuid())
+  featureId        String
+  feature          ServiceFeature @relation(fields: [featureId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean        @default(false)
+  title            String
+  body             String?
 
   @@unique([featureId, locale])
 }
@@ -338,6 +349,7 @@ model ProjectTranslation {
   projectId        String
   project          PortfolioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
   locale           Locale
+  isAutoTranslated Boolean          @default(false)
   title            String
   shortDescription String?
   challenge        String?
@@ -365,12 +377,13 @@ model BlogCategory {
 }
 
 model BlogCategoryTranslation {
-  id         String       @id @default(cuid())
-  categoryId String
-  category   BlogCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  locale     Locale
-  name       String
-  slug       String
+  id               String       @id @default(cuid())
+  categoryId       String
+  category         BlogCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean      @default(false)
+  name             String
+  slug             String
 
   @@unique([categoryId, locale])
   @@unique([locale, slug])
@@ -392,16 +405,17 @@ model BlogPost {
 }
 
 model BlogPostTranslation {
-  id             String   @id @default(cuid())
-  postId         String
-  post           BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  locale         Locale
-  slug           String
-  title          String
-  excerpt        String?
-  bodyHtml       String
-  seoTitle       String?
-  seoDescription String?
+  id               String   @id @default(cuid())
+  postId           String
+  post             BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean  @default(false)
+  slug             String
+  title            String
+  excerpt          String?
+  bodyHtml         String
+  seoTitle         String?
+  seoDescription   String?
 
   @@unique([postId, locale])
   @@unique([locale, slug])

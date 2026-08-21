@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { setLocale } from "@/app/(public)/actions/locale";
 import { cn } from "@/lib/cn";
 import { getDictionary } from "@/lib/dictionary";
-import type { SiteLocale } from "@/lib/locale";
+import { SITE_LOCALES, type SiteLocale } from "@/lib/site-locales";
 
 export function LanguageSwitcher({ locale, className }: { locale: SiteLocale; className?: string }) {
   const router = useRouter();
@@ -33,28 +33,20 @@ export function LanguageSwitcher({ locale, className }: { locale: SiteLocale; cl
           className,
         )}
       >
-        <button
-          type="button"
-          onClick={() => choose("PT")}
-          aria-current={locale === "PT"}
-          className={cn(
-            "rounded-full px-2.5 py-1 transition-colors",
-            locale === "PT" ? "bg-primary text-on-primary" : "text-on-surface-variant hover:text-primary",
-          )}
-        >
-          PT
-        </button>
-        <button
-          type="button"
-          onClick={() => choose("EN")}
-          aria-current={locale === "EN"}
-          className={cn(
-            "rounded-full px-2.5 py-1 transition-colors",
-            locale === "EN" ? "bg-primary text-on-primary" : "text-on-surface-variant hover:text-primary",
-          )}
-        >
-          EN
-        </button>
+        {SITE_LOCALES.map((code) => (
+          <button
+            key={code}
+            type="button"
+            onClick={() => choose(code)}
+            aria-current={locale === code}
+            className={cn(
+              "rounded-full px-2.5 py-1 transition-colors",
+              locale === code ? "bg-primary text-on-primary" : "text-on-surface-variant hover:text-primary",
+            )}
+          >
+            {code}
+          </button>
+        ))}
       </div>
 
       {isPending

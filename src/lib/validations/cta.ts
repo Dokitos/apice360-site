@@ -23,5 +23,7 @@ export const ctaSchema = z.object({
   iconName: z.string().trim().optional().or(z.literal("")),
   isActive: z.boolean(),
   labelPt: z.string().trim().min(1, "Indica o texto em Português."),
-  labelEn: z.string().trim().min(1, "Indica o texto em Inglês."),
+  labelEn: z.string().trim().optional().or(z.literal("")),
+  labelEs: z.string().trim().optional().or(z.literal("")),
+  labelFr: z.string().trim().optional().or(z.literal("")),
 });

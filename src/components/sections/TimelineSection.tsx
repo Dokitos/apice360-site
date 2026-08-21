@@ -2,6 +2,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { getCta } from "@/lib/content";
+import type { SiteLocale } from "@/lib/locale";
 
 type Item = {
   id: string;
@@ -18,7 +19,7 @@ type TimelineSectionProps = {
   items: Item[];
   cta?: { label: string; url: string; iconName?: string | null } | null;
   className?: string;
-  locale?: "PT" | "EN";
+  locale?: SiteLocale;
 };
 
 export function TimelineSection({ eyebrow, heading, items, cta, className, locale = "PT" }: TimelineSectionProps) {
@@ -51,7 +52,7 @@ export function TimelineSection({ eyebrow, heading, items, cta, className, local
   );
 }
 
-async function TimelineItem({ item, index, locale }: { item: Item; index: number; locale: "PT" | "EN" }) {
+async function TimelineItem({ item, index, locale }: { item: Item; index: number; locale: SiteLocale }) {
   const cta = item.ctaKey ? await getCta(item.ctaKey, locale) : null;
 
   return (

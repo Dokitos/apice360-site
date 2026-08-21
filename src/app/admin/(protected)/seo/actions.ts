@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { pageSeoSchema } from "@/lib/validations/page-seo";
+import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
 type PageKeyValue =
   | "HOME"
@@ -15,14 +16,51 @@ type PageKeyValue =
   | "CONTACTO"
   | "AREA_ARQUITETO";
 
+const SEO_FIELDS = [{ key: "title" }, { key: "description" }];
+
 function readForm(formData: FormData) {
   return {
     ogImageUrl: formData.get("ogImageUrl") || undefined,
     titlePt: formData.get("titlePt"),
     titleEn: formData.get("titleEn"),
+    titleEs: formData.get("titleEs"),
+    titleFr: formData.get("titleFr"),
     descriptionPt: formData.get("descriptionPt"),
     descriptionEn: formData.get("descriptionEn"),
+    descriptionEs: formData.get("descriptionEs"),
+    descriptionFr: formData.get("descriptionFr"),
   };
+}
+
+async function buildSeoTranslations(
+  data: {
+    titlePt: string; descriptionPt: string;
+    titleEn?: string; descriptionEn?: string;
+    titleEs?: string; descriptionEs?: string;
+    titleFr?: string; descriptionFr?: string;
+  },
+  existingTranslations: ExistingTranslationRow[],
+) {
+  const resolved = await resolveTranslations({
+    fields: SEO_FIELDS,
+    ptValues: { title: data.titlePt, description: data.descriptionPt },
+    submittedValues: {
+      EN: { title: data.titleEn ?? null, description: data.descriptionEn ?? null },
+      ES: { title: data.titleEs ?? null, description: data.descriptionEs ?? null },
+      FR: { title: data.titleFr ?? null, description: data.descriptionFr ?? null },
+    },
+    existingTranslations,
+  });
+
+  return [
+    { locale: "PT" as const, isAutoTranslated: false, title: data.titlePt, description: data.descriptionPt },
+    ...resolved.map((r) => ({
+      locale: r.locale,
+      isAutoTranslated: r.isAutoTranslated,
+      title: r.fields.title ?? "",
+      description: r.fields.description ?? "",
+    })),
+  ];
 }
 
 export async function upsertPageSeo(
@@ -34,9 +72,13 @@ export async function upsertPageSeo(
   const parsed = pageSeoSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
-  const { titlePt, titleEn, descriptionPt, descriptionEn, ogImageUrl } = parsed.data;
+  const { titlePt, titleEn, titleEs, titleFr, descriptionPt, descriptionEn, descriptionEs, descriptionFr, ogImageUrl } = parsed.data;
 
-  const existing = await prisma.pageSeo.findUnique({ where: { page } });
+  const existing = await prisma.pageSeo.findUnique({ where: { page }, include: { translations: true } });
+  const translations = await buildSeoTranslations(
+    { titlePt, descriptionPt, titleEn, descriptionEn, titleEs, descriptionEs, titleFr, descriptionFr },
+    existing?.translations ?? [],
+  );
 
   if (existing) {
     await prisma.pageSeo.update({
@@ -44,18 +86,14 @@ export async function upsertPageSeo(
       data: {
         ogImageUrl,
         translations: {
-          upsert: [
-            {
-              where: { pageSeoId_locale: { pageSeoId: existing.id, locale: "PT" } },
-              update: { title: titlePt, description: descriptionPt },
-              create: { locale: "PT", title: titlePt, description: descriptionPt },
-            },
-            {
-              where: { pageSeoId_locale: { pageSeoId: existing.id, locale: "EN" } },
-              update: { title: titleEn, description: descriptionEn },
-              create: { locale: "EN", title: titleEn, description: descriptionEn },
-            },
-          ],
+          upsert: translations.map((t) => {
+            const { locale, ...fields } = t;
+            return {
+              where: { pageSeoId_locale: { pageSeoId: existing.id, locale } },
+              update: fields,
+              create: t,
+            };
+          }),
         },
       },
     });
@@ -64,12 +102,7 @@ export async function upsertPageSeo(
       data: {
         page,
         ogImageUrl,
-        translations: {
-          create: [
-            { locale: "PT", title: titlePt, description: descriptionPt },
-            { locale: "EN", title: titleEn, description: descriptionEn },
-          ],
-        },
+        translations: { create: translations },
       },
     });
   }

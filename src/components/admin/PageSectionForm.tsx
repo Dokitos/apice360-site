@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField, TextAreaField, CheckboxField, ImageField, IconPickerField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import type { SiteLocale } from "@/lib/locale";
 
 type PageSection = {
   key: string;
@@ -13,7 +14,8 @@ type PageSection = {
   order: number;
   isActive: boolean;
   translations: {
-    locale: "PT" | "EN";
+    locale: SiteLocale;
+    isAutoTranslated: boolean;
     eyebrow: string | null;
     heading: string | null;
     subheading: string | null;
@@ -31,6 +33,8 @@ export function PageSectionForm({ section, action }: PageSectionFormProps) {
   const [error, formAction, isPending] = useActionState(action, undefined);
   const pt = section?.translations.find((t) => t.locale === "PT");
   const en = section?.translations.find((t) => t.locale === "EN");
+  const es = section?.translations.find((t) => t.locale === "ES");
+  const fr = section?.translations.find((t) => t.locale === "FR");
 
   return (
     <form action={formAction} className="max-w-2xl space-y-6">
@@ -77,6 +81,29 @@ export function PageSectionForm({ section, action }: PageSectionFormProps) {
             <TextField id="ctaLabelEn" name="ctaLabelEn" label="CTA Label (EN)" defaultValue={en?.ctaLabel ?? ""} />
           </>
         }
+        es={
+          <>
+            <TextField id="eyebrowEs" name="eyebrowEs" label="Texto de Destaque (ES)" defaultValue={es?.eyebrow ?? ""} />
+            <TextField id="headingEs" name="headingEs" label="Título (ES)" defaultValue={es?.heading ?? ""} />
+            <TextAreaField id="subheadingEs" name="subheadingEs" label="Subtítulo (ES)" defaultValue={es?.subheading ?? ""} />
+            <RichTextEditor id="bodyEs" name="bodyEs" label="Texto (ES)" defaultValue={es?.body ?? ""} />
+            <TextField id="ctaLabelEs" name="ctaLabelEs" label="Texto do CTA (ES)" defaultValue={es?.ctaLabel ?? ""} />
+          </>
+        }
+        fr={
+          <>
+            <TextField id="eyebrowFr" name="eyebrowFr" label="Texte de Mise en Avant (FR)" defaultValue={fr?.eyebrow ?? ""} />
+            <TextField id="headingFr" name="headingFr" label="Titre (FR)" defaultValue={fr?.heading ?? ""} />
+            <TextAreaField id="subheadingFr" name="subheadingFr" label="Sous-titre (FR)" defaultValue={fr?.subheading ?? ""} />
+            <RichTextEditor id="bodyFr" name="bodyFr" label="Texte (FR)" defaultValue={fr?.body ?? ""} />
+            <TextField id="ctaLabelFr" name="ctaLabelFr" label="Texte du CTA (FR)" defaultValue={fr?.ctaLabel ?? ""} />
+          </>
+        }
+        autoTranslated={{
+          EN: en?.isAutoTranslated ?? true,
+          ES: es?.isAutoTranslated ?? true,
+          FR: fr?.isAutoTranslated ?? true,
+        }}
       />
       <TextField id="order" name="order" label="Ordem" type="number" defaultValue={section?.order ?? 0} />
       <CheckboxField id="isActive" name="isActive" label="Ativo (visível no site)" defaultChecked={section?.isActive ?? true} />

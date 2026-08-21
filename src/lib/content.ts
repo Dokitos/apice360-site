@@ -1,7 +1,8 @@
 import { cache } from "react";
 import { prisma } from "@/lib/prisma";
+import type { SiteLocale } from "@/lib/locale";
 
-type Locale = "PT" | "EN";
+type Locale = SiteLocale;
 
 export type PageKeyValue =
   | "HOME"
@@ -13,7 +14,10 @@ export type PageKeyValue =
   | "AREA_ARQUITETO";
 
 const DEFAULT_LOCALE: Locale = "PT";
-const FALLBACK_LOCALE: Locale = "EN";
+// PT is required on every entity (the source language auto-translation is
+// generated from), so it's the one fallback guaranteed to always exist —
+// unlike EN, which was the old fixed fallback back when only PT/EN existed.
+const FALLBACK_LOCALE: Locale = "PT";
 
 function pickTranslation<T extends { locale: Locale }>(
   translations: T[],

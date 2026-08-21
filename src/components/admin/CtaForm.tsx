@@ -7,6 +7,7 @@ import { TextField, SelectField, CheckboxField, IconPickerField } from "@/compon
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { PAGE_LABELS, FIXED_CTA_KEY_BY_SECTION } from "@/lib/known-page-sections";
 import type { PageKeyValue } from "@/lib/content";
+import type { SiteLocale } from "@/lib/locale";
 
 // Every place on the public site that actually reads a CTA by key (see
 // getCta() call sites). Creating a CTA with a key outside this list (and
@@ -35,7 +36,7 @@ type Cta = {
   style: string | null;
   iconName: string | null;
   isActive: boolean;
-  translations: { locale: "PT" | "EN"; label: string }[];
+  translations: { locale: SiteLocale; label: string; isAutoTranslated: boolean }[];
 };
 
 type CtaFormProps = {
@@ -49,6 +50,8 @@ export function CtaForm({ cta, existingKeys = [], sections = [], action }: CtaFo
   const [error, formAction, isPending] = useActionState(action, undefined);
   const pt = cta?.translations.find((t) => t.locale === "PT");
   const en = cta?.translations.find((t) => t.locale === "EN");
+  const es = cta?.translations.find((t) => t.locale === "ES");
+  const fr = cta?.translations.find((t) => t.locale === "FR");
 
   // Slots reachable via a section (below) are hidden here so the same
   // destination isn't listed twice under two different labels.
@@ -163,7 +166,14 @@ export function CtaForm({ cta, existingKeys = [], sections = [], action }: CtaFo
       />
       <LocaleTabs
         pt={<TextField id="labelPt" name="labelPt" label="Texto do Botão (PT)" defaultValue={pt?.label} required />}
-        en={<TextField id="labelEn" name="labelEn" label="Texto do Botão (EN)" defaultValue={en?.label} required />}
+        en={<TextField id="labelEn" name="labelEn" label="Texto do Botão (EN)" defaultValue={en?.label} />}
+        es={<TextField id="labelEs" name="labelEs" label="Texto do Botão (ES)" defaultValue={es?.label} />}
+        fr={<TextField id="labelFr" name="labelFr" label="Texto do Botão (FR)" defaultValue={fr?.label} />}
+        autoTranslated={{
+          EN: en?.isAutoTranslated ?? true,
+          ES: es?.isAutoTranslated ?? true,
+          FR: fr?.isAutoTranslated ?? true,
+        }}
       />
       <IconPickerField id="iconName" name="iconName" label="Ícone (opcional)" defaultValue={cta?.iconName} />
       <SelectField id="style" name="style" label="Estilo" defaultValue={cta?.style ?? "primary"}>

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField, TextAreaField, CheckboxField, SelectField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { updateSiteSettings, type SiteSettingsFormState } from "@/app/admin/(protected)/site-settings/actions";
+import type { SiteLocale } from "@/lib/locale";
 
 type SiteSettings = {
   phone: string | null;
@@ -27,7 +28,8 @@ type SiteSettings = {
   architectAreaEnabled: boolean;
   maintenanceMode: boolean;
   translations: {
-    locale: "PT" | "EN";
+    locale: SiteLocale;
+    isAutoTranslated: boolean;
     footerDescription: string | null;
     showroomText: string | null;
     defaultSeoTitle: string | null;
@@ -42,6 +44,8 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
   );
   const pt = settings?.translations.find((t) => t.locale === "PT");
   const en = settings?.translations.find((t) => t.locale === "EN");
+  const es = settings?.translations.find((t) => t.locale === "ES");
+  const fr = settings?.translations.find((t) => t.locale === "FR");
 
   useEffect(() => {
     if (!state) return;
@@ -199,6 +203,67 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
               />
             </>
           }
+          es={
+            <>
+              <TextAreaField
+                id="footerDescriptionEs"
+                name="footerDescriptionEs"
+                label="Descripción del Pie de Página (ES)"
+                defaultValue={es?.footerDescription ?? ""}
+              />
+              <TextAreaField
+                id="showroomTextEs"
+                name="showroomTextEs"
+                label="Texto del Showroom (ES)"
+                defaultValue={es?.showroomText ?? ""}
+              />
+              <TextField
+                id="defaultSeoTitleEs"
+                name="defaultSeoTitleEs"
+                label="Título SEO Predeterminado (ES)"
+                defaultValue={es?.defaultSeoTitle ?? ""}
+              />
+              <TextAreaField
+                id="defaultSeoDescriptionEs"
+                name="defaultSeoDescriptionEs"
+                label="Descripción SEO Predeterminada (ES)"
+                defaultValue={es?.defaultSeoDescription ?? ""}
+              />
+            </>
+          }
+          fr={
+            <>
+              <TextAreaField
+                id="footerDescriptionFr"
+                name="footerDescriptionFr"
+                label="Description du Pied de Page (FR)"
+                defaultValue={fr?.footerDescription ?? ""}
+              />
+              <TextAreaField
+                id="showroomTextFr"
+                name="showroomTextFr"
+                label="Texte du Showroom (FR)"
+                defaultValue={fr?.showroomText ?? ""}
+              />
+              <TextField
+                id="defaultSeoTitleFr"
+                name="defaultSeoTitleFr"
+                label="Titre SEO par Défaut (FR)"
+                defaultValue={fr?.defaultSeoTitle ?? ""}
+              />
+              <TextAreaField
+                id="defaultSeoDescriptionFr"
+                name="defaultSeoDescriptionFr"
+                label="Description SEO par Défaut (FR)"
+                defaultValue={fr?.defaultSeoDescription ?? ""}
+              />
+            </>
+          }
+          autoTranslated={{
+            EN: en?.isAutoTranslated ?? true,
+            ES: es?.isAutoTranslated ?? true,
+            FR: fr?.isAutoTranslated ?? true,
+          }}
         />
       </section>
 

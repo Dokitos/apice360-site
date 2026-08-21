@@ -5,6 +5,9 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { ctaSchema } from "@/lib/validations/cta";
+import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
+
+const TRANSLATABLE_FIELDS = [{ key: "label" }];
 
 function readForm(formData: FormData) {
   return {
@@ -15,7 +18,30 @@ function readForm(formData: FormData) {
     isActive: formData.get("isActive") === "on",
     labelPt: formData.get("labelPt"),
     labelEn: formData.get("labelEn"),
+    labelEs: formData.get("labelEs"),
+    labelFr: formData.get("labelFr"),
   };
+}
+
+async function buildTranslationsPayload(
+  data: { labelPt: string; labelEn?: string; labelEs?: string; labelFr?: string },
+  existingTranslations: ExistingTranslationRow[],
+) {
+  const resolved = await resolveTranslations({
+    fields: TRANSLATABLE_FIELDS,
+    ptValues: { label: data.labelPt },
+    submittedValues: {
+      EN: { label: data.labelEn ?? null },
+      ES: { label: data.labelEs ?? null },
+      FR: { label: data.labelFr ?? null },
+    },
+    existingTranslations,
+  });
+
+  return [
+    { locale: "PT" as const, isAutoTranslated: false, label: data.labelPt },
+    ...resolved.map((r) => ({ locale: r.locale, isAutoTranslated: r.isAutoTranslated, label: r.fields.label ?? "" })),
+  ];
 }
 
 export async function createCta(_prevState: string | undefined, formData: FormData) {
@@ -23,23 +49,19 @@ export async function createCta(_prevState: string | undefined, formData: FormDa
   const parsed = ctaSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
-  const { labelPt, labelEn, ...data } = parsed.data;
+  const { labelPt, labelEn, labelEs, labelFr, ...data } = parsed.data;
 
   const existing = await prisma.cta.findUnique({ where: { key: data.key } });
   if (existing) return "Já existe um CTA com esta chave.";
 
   const linkedSectionId = (formData.get("linkedSectionId") as string) || undefined;
+  const translations = await buildTranslationsPayload({ labelPt, labelEn, labelEs, labelFr }, []);
 
   await prisma.cta.create({
     data: {
       ...data,
       iconName: data.iconName || null,
-      translations: {
-        create: [
-          { locale: "PT", label: labelPt },
-          { locale: "EN", label: labelEn },
-        ],
-      },
+      translations: { create: translations },
     },
   });
 
@@ -58,7 +80,14 @@ export async function updateCta(id: string, _prevState: string | undefined, form
   const parsed = ctaSchema.safeParse(readForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
-  const { labelPt, labelEn, ...data } = parsed.data;
+  const { labelPt, labelEn, labelEs, labelFr, ...data } = parsed.data;
+
+  const current = await prisma.cta.findUnique({ where: { id }, select: { translations: true } });
+  const translations = await buildTranslationsPayload(
+    { labelPt, labelEn, labelEs, labelFr },
+    current?.translations ?? [],
+  );
+
   await prisma.cta.update({
     where: { id },
     data: {
@@ -69,18 +98,11 @@ export async function updateCta(id: string, _prevState: string | undefined, form
       // it actually persists.
       iconName: data.iconName || null,
       translations: {
-        upsert: [
-          {
-            where: { ctaId_locale: { ctaId: id, locale: "PT" } },
-            update: { label: labelPt },
-            create: { locale: "PT", label: labelPt },
-          },
-          {
-            where: { ctaId_locale: { ctaId: id, locale: "EN" } },
-            update: { label: labelEn },
-            create: { locale: "EN", label: labelEn },
-          },
-        ],
+        upsert: translations.map((t) => ({
+          where: { ctaId_locale: { ctaId: id, locale: t.locale } },
+          update: { label: t.label, isAutoTranslated: t.isAutoTranslated },
+          create: t,
+        })),
       },
     },
   });

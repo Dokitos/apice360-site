@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { RichText } from "@/components/ui/RichText";
 import { getCta } from "@/lib/content";
+import type { SiteLocale } from "@/lib/locale";
 
 type Item = { id: string; title: string; iconName: string | null; ctaKey?: string | null };
 
@@ -14,7 +15,7 @@ type WhyChooseSectionProps = {
   imageUrl?: string | null;
   items: Item[];
   cta?: { label: string; url: string; iconName?: string | null } | null;
-  locale?: "PT" | "EN";
+  locale?: SiteLocale;
 };
 
 export function WhyChooseSection({ eyebrow, heading, body, imageUrl, items, cta, locale = "PT" }: WhyChooseSectionProps) {
@@ -51,7 +52,7 @@ export function WhyChooseSection({ eyebrow, heading, body, imageUrl, items, cta,
   );
 }
 
-async function WhyChooseItem({ item, locale }: { item: Item; locale: "PT" | "EN" }) {
+async function WhyChooseItem({ item, locale }: { item: Item; locale: SiteLocale }) {
   const cta = item.ctaKey ? await getCta(item.ctaKey, locale) : null;
 
   return (

@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField, TextAreaField, CheckboxField, ImageField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
+import type { SiteLocale } from "@/lib/locale";
 
 type Testimonial = {
   id: string;
@@ -14,7 +15,7 @@ type Testimonial = {
   order: number;
   showOnHome: boolean;
   isActive: boolean;
-  translations: { locale: "PT" | "EN"; quote: string }[];
+  translations: { locale: SiteLocale; isAutoTranslated: boolean; quote: string }[];
 };
 
 type TestimonialFormProps = {
@@ -26,6 +27,8 @@ export function TestimonialForm({ testimonial, action }: TestimonialFormProps) {
   const [error, formAction, isPending] = useActionState(action, undefined);
   const pt = testimonial?.translations.find((t) => t.locale === "PT");
   const en = testimonial?.translations.find((t) => t.locale === "EN");
+  const es = testimonial?.translations.find((t) => t.locale === "ES");
+  const fr = testimonial?.translations.find((t) => t.locale === "FR");
 
   return (
     <form action={formAction} className="max-w-xl space-y-6">
@@ -40,7 +43,14 @@ export function TestimonialForm({ testimonial, action }: TestimonialFormProps) {
       <ImageField id="avatarUrl" name="avatarUrl" label="Avatar (opcional)" defaultValue={testimonial?.avatarUrl} />
       <LocaleTabs
         pt={<TextAreaField id="quotePt" name="quotePt" label="Depoimento (PT)" defaultValue={pt?.quote} required />}
-        en={<TextAreaField id="quoteEn" name="quoteEn" label="Depoimento (EN)" defaultValue={en?.quote} required />}
+        en={<TextAreaField id="quoteEn" name="quoteEn" label="Depoimento (EN)" defaultValue={en?.quote} />}
+        es={<TextAreaField id="quoteEs" name="quoteEs" label="Depoimento (ES)" defaultValue={es?.quote} />}
+        fr={<TextAreaField id="quoteFr" name="quoteFr" label="Depoimento (FR)" defaultValue={fr?.quote} />}
+        autoTranslated={{
+          EN: en?.isAutoTranslated ?? true,
+          ES: es?.isAutoTranslated ?? true,
+          FR: fr?.isAutoTranslated ?? true,
+        }}
       />
       <TextField
         id="rating"

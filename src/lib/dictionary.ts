@@ -340,7 +340,363 @@ const dictionary = {
       contact: "Need to reach us in the meantime?",
     },
   },
+  ES: {
+    nav: {
+      inicio: "Inicio",
+      quemSomos: "Quiénes Somos",
+      servicos: "Servicios",
+      portfolio: "Portafolio",
+      blog: "Blog de Construcción",
+      contactos: "Contacto",
+      areaArquiteto: "Área del Arquitecto",
+    },
+    header: {
+      orcamentoDefault: "Solicite su Presupuesto",
+      aTraduzir: "Traduciendo la página...",
+    },
+    mobileNav: {
+      abrirMenu: "Abrir menú",
+      fecharMenu: "Cerrar menú",
+    },
+    footer: {
+      navegacao: "Navegación",
+      servicos: "Servicios",
+      legal: "Legal",
+      privacidade: "Privacidad",
+      lsf: "LSF",
+      trabalheConnosco: "Trabaje con Nosotros",
+      areaDosArquitetos: "Área de los Arquitectos",
+      orcamento: "Presupuesto",
+      descricaoDefault: "Construcciones en Light Steel Frame en Portugal. Cuidamos su proyecto de principio a fin.",
+      direitos: (year: number) => `© ${year} Ápice 360 — Construcción en LSF.`,
+      tagline: "Velocidad · Durabilidad · Calidad",
+      nifLabel: "NIF",
+      creditsPrefix: "Desarrollado por",
+    },
+    contactForm: {
+      nomeCompleto: "Nombre Completo",
+      email: "Dirección de Email",
+      telefone: "Número de Contacto",
+      mensagem: "Mensaje",
+      aEnviar: "Enviando...",
+      enviar: "Enviar Contacto",
+    },
+    commentsSection: {
+      comentarios: (n: number) => `Comentarios (${n})`,
+      nome: "Nombre",
+      email: "Email",
+      corpo: "Su comentario",
+      aEnviar: "Enviando...",
+      comentar: "Comentar",
+    },
+    quemSomos: {
+      eyebrow: "Quiénes Somos",
+      headingDefault: "Ápice 360: Nacidos para Resolver la Inseguridad en la Construcción.",
+      historiaEyebrow: "Nuestra Historia",
+      historiaHeadingDefault: "Fundación y Visión",
+      metodoEyebrow: "Nuestro Método",
+      metodoHeadingDefault: "Gestión 360° de Alto Rendimiento",
+      valoresEyebrow: "Valores",
+      valoresHeadingDefault: "Lo que nos mueve",
+      ctaHeading: "¿Busca Velocidad y Garantía?",
+    },
+    servicos: {
+      eyebrow: "Servicios",
+      headingDefault: "Construcción en LSF, en modalidad Llave en Mano.",
+      modeloEyebrow: "Nuestro Modelo",
+      modeloHeadingDefault: "Gestión Llave en Mano",
+    },
+    portfolio: {
+      eyebrow: "Portafolio",
+      heading: "Nuestro Portafolio: La Excelencia de Ápice 360 en Imágenes.",
+      body: "Cada proyecto es una promesa cumplida. Vea en detalle cómo nuestro equipo transforma proyectos de alto valor en obras listas para vivir o rentabilizar, con seguridad y sin sorpresas.",
+      projetosDestaque: "Proyectos de Alto Rendimiento",
+      lsfHeading: "LSF - Light Steel Frame",
+    },
+    portfolioDetail: {
+      voltar: "Volver al Portafolio",
+      nomeProjeto: "Nombre del Proyecto:",
+      tipoServico: "Tipo de Servicio:",
+      construcaoLsf: "Construcción LSF - Llave en Mano",
+      remodelacaoTotal: "Remodelación Total - Llave en Mano",
+      desafioResolvido: "Desafío Resuelto:",
+      metodologiaApice: "Metodología Ápice:",
+      resultado: "Resultado:",
+      aprovacaoCliente: "Aprobación del Cliente:",
+    },
+    blog: {
+      eyebrow: "Blog de Construcción",
+      heading: "Blog Ápice 360: Conocimiento de Construcción de Alto Rendimiento.",
+      body: "Su recurso especializado sobre LSF y gestión de proyectos. Formamos al mercado para que pueda invertir con seguridad y total confianza.",
+      semArtigos: "Aún no hay artículos publicados.",
+      lerArtigo: "Leer artículo →",
+      lerMais: "Cargar más",
+      voltar: "Volver a los Artículos",
+      artigosRelacionados: "Artículos Relacionados",
+    },
+    contacto: {
+      eyebrow: "Contacto",
+      heading: "Contacte con Ápice 360 e Inicie la Evaluación de su Proyecto.",
+      body: "Para proyectos de alto valor, la comunicación eficiente y la seguridad son fundamentales. Conéctese directamente con nuestro equipo de especialistas.",
+      triagemHeadingDefault: "Evaluación Rápida (Recomendado)",
+      triagemBodyDefault:
+        "Utilice el canal más directo para iniciar la calificación de su proyecto y hablar con el equipo Comercial o de Arquitectura responsable.",
+      emailHeading: "Si lo prefiere, envíenos un email",
+      emailBody: "¿Su proyecto exige velocidad y garantía de calidad en la entrega? Envíenos un mensaje.",
+      showroomHeading: "Conozca Nuestro Showroom",
+      showroomBodyDefault: "Programe una visita y conozca nuestra oficina y espacio de exposición.",
+      seguranca: "Seguridad",
+      velocidade: "Velocidad",
+      qualidade: "Calidad",
+    },
+    areaArquiteto: {
+      eyebrow: "Área del Arquitecto",
+      headingDefault: "Una Alianza Construida sobre Confianza y Especialización Técnica.",
+      bodyDefault:
+        "Trabajamos codo a codo con estudios de arquitectura que comparten nuestro compromiso con la calidad y la innovación constructiva. Si busca un socio de ejecución riguroso para sus proyectos en LSF, hable con nosotros.",
+      ctaHeading: "Construyamos Juntos el Próximo Proyecto",
+    },
+    privacy: {
+      bannerPrefix:
+        "🍪 Utilizamos cookies y almacenamiento local esenciales para el funcionamiento del sitio, así como herramientas de analítica para comprender el uso del sitio. Al continuar navegando, acepta nuestra ",
+      bannerLinkLabel: "Política de Privacidad",
+      bannerSuffix: ".",
+      reject: "Rechazar",
+      acceptAll: "Aceptar todo",
+      pageEyebrow: "Privacidad",
+      pageTitle: "Política de Privacidad y Cookies",
+      rgpdNote: "De acuerdo con el RGPD (Reglamento UE 2016/679)",
+      sections: [
+        {
+          title: "Datos que recopilamos.",
+          body: "Nombre, email, teléfono/WhatsApp e información sobre su proyecto, proporcionados voluntariamente por usted a través del formulario de contacto, el simulador o conversaciones iniciadas por WhatsApp.",
+        },
+        {
+          title: "Finalidad.",
+          body: "Utilizamos estos datos exclusivamente para responder a su solicitud, elaborar estudios de viabilidad y presupuestos, y presentar los servicios de Ápice 360.",
+        },
+        {
+          title: "Compartición.",
+          body: "No vendemos ni compartimos sus datos con terceros con fines de marketing. Los datos solo se comparten cuando lo exige la ley o es necesario para prestar el servicio solicitado.",
+        },
+        {
+          title: "Cookies y almacenamiento local.",
+          body: "Este sitio utiliza almacenamiento local esencial para recordar su elección en este aviso de cookies.",
+        },
+        {
+          title: "Datos de Analítica.",
+          body: "Este sitio también recopila datos analíticos sobre el uso (como páginas visitadas, tiempo de permanencia y origen del acceso), mediante herramientas de analítica, con el objetivo de comprender y mejorar la experiencia de los visitantes.",
+        },
+        {
+          title: "Sus derechos.",
+          body: "En cualquier momento puede solicitar acceso, corrección, portabilidad o eliminación de sus datos personales, contactándonos por WhatsApp o por email a geral@apice360.com.",
+        },
+      ],
+      manageHeading: "Gestionar Ajustes de Privacidad y Cookies",
+      manageBody: "Puede cambiar su elección sobre cookies y almacenamiento local en cualquier momento.",
+      manageButton: "Gestionar Preferencias",
+      manageConfirmation: "Sus preferencias han sido restablecidas. Elija de nuevo en el aviso al final de la página.",
+      deletionHeading: "Eliminación de sus Datos",
+      deletionBody:
+        "Para solicitar el acceso, la corrección, la portabilidad o la eliminación de sus datos personales, contáctenos a través del email:",
+      deletionEmail: "geral@apice360.com",
+    },
+    maintenance: {
+      eyebrow: "Próximamente",
+      heading: "Estamos mejorando el sitio.",
+      body: "Volvemos pronto con novedades. Gracias por su paciencia.",
+      contact: "¿Necesita hablar con nosotros mientras tanto?",
+    },
+  },
+  FR: {
+    nav: {
+      inicio: "Accueil",
+      quemSomos: "Qui Sommes-Nous",
+      servicos: "Services",
+      portfolio: "Portfolio",
+      blog: "Blog Construction",
+      contactos: "Contact",
+      areaArquiteto: "Espace Architectes",
+    },
+    header: {
+      orcamentoDefault: "Demander un Devis",
+      aTraduzir: "Traduction de la page...",
+    },
+    mobileNav: {
+      abrirMenu: "Ouvrir le menu",
+      fecharMenu: "Fermer le menu",
+    },
+    footer: {
+      navegacao: "Navigation",
+      servicos: "Services",
+      legal: "Mentions Légales",
+      privacidade: "Confidentialité",
+      lsf: "LSF",
+      trabalheConnosco: "Travaillez avec Nous",
+      areaDosArquitetos: "Espace Architectes",
+      orcamento: "Devis",
+      descricaoDefault: "Construction en Light Steel Frame au Portugal. Nous prenons soin de votre projet du début à la fin.",
+      direitos: (year: number) => `© ${year} Ápice 360 — Construction LSF.`,
+      tagline: "Rapidité · Durabilité · Qualité",
+      nifLabel: "N° TVA",
+      creditsPrefix: "Développé par",
+    },
+    contactForm: {
+      nomeCompleto: "Nom Complet",
+      email: "Adresse Email",
+      telefone: "Numéro de Contact",
+      mensagem: "Message",
+      aEnviar: "Envoi en cours...",
+      enviar: "Envoyer",
+    },
+    commentsSection: {
+      comentarios: (n: number) => `Commentaires (${n})`,
+      nome: "Nom",
+      email: "Email",
+      corpo: "Votre commentaire",
+      aEnviar: "Envoi en cours...",
+      comentar: "Commenter",
+    },
+    quemSomos: {
+      eyebrow: "Qui Sommes-Nous",
+      headingDefault: "Ápice 360 : Nés pour Résoudre l'Insécurité dans la Construction.",
+      historiaEyebrow: "Notre Histoire",
+      historiaHeadingDefault: "Fondation et Vision",
+      metodoEyebrow: "Notre Méthode",
+      metodoHeadingDefault: "Gestion 360° Haute Performance",
+      valoresEyebrow: "Valeurs",
+      valoresHeadingDefault: "Ce qui nous anime",
+      ctaHeading: "Vous Recherchez Rapidité et Garantie ?",
+    },
+    servicos: {
+      eyebrow: "Services",
+      headingDefault: "Construction en LSF, clé en main.",
+      modeloEyebrow: "Notre Modèle",
+      modeloHeadingDefault: "Gestion Clé en Main",
+    },
+    portfolio: {
+      eyebrow: "Portfolio",
+      heading: "Notre Portfolio : L'Excellence d'Ápice 360 en Images.",
+      body: "Chaque projet est une promesse tenue. Découvrez en détail comment notre équipe transforme des projets à forte valeur en réalisations prêtes à habiter ou à rentabiliser, en toute sécurité et sans surprises.",
+      projetosDestaque: "Projets Haute Performance",
+      lsfHeading: "LSF - Light Steel Frame",
+    },
+    portfolioDetail: {
+      voltar: "Retour au Portfolio",
+      nomeProjeto: "Nom du Projet :",
+      tipoServico: "Type de Service :",
+      construcaoLsf: "Construction LSF - Clé en Main",
+      remodelacaoTotal: "Rénovation Complète - Clé en Main",
+      desafioResolvido: "Défi Résolu :",
+      metodologiaApice: "Méthodologie Ápice :",
+      resultado: "Résultat :",
+      aprovacaoCliente: "Approbation du Client :",
+    },
+    blog: {
+      eyebrow: "Blog Construction",
+      heading: "Blog Ápice 360 : Savoir-Faire en Construction Haute Performance.",
+      body: "Votre ressource spécialisée sur le LSF et la gestion de projets. Nous formons le marché pour que vous puissiez investir en toute sécurité et en toute confiance.",
+      semArtigos: "Aucun article publié pour l'instant.",
+      lerArtigo: "Lire l'article →",
+      lerMais: "Charger plus",
+      voltar: "Retour aux Articles",
+      artigosRelacionados: "Articles Similaires",
+    },
+    contacto: {
+      eyebrow: "Contact",
+      heading: "Contactez Ápice 360 et Lancez l'Évaluation de Votre Projet.",
+      body: "Pour les projets à forte valeur, une communication efficace et la sécurité sont essentielles. Connectez-vous directement avec notre équipe de spécialistes.",
+      triagemHeadingDefault: "Évaluation Rapide (Recommandé)",
+      triagemBodyDefault:
+        "Utilisez le canal le plus direct pour lancer la qualification de votre projet et parler à l'équipe Commerciale ou Architecture responsable.",
+      emailHeading: "Si vous préférez, envoyez-nous un email",
+      emailBody: "Votre projet exige-t-il rapidité et garantie de qualité de livraison ? Envoyez-nous un message.",
+      showroomHeading: "Découvrez Notre Showroom",
+      showroomBodyDefault: "Planifiez une visite et découvrez notre bureau et notre espace d'exposition.",
+      seguranca: "Sécurité",
+      velocidade: "Rapidité",
+      qualidade: "Qualité",
+    },
+    areaArquiteto: {
+      eyebrow: "Espace Architectes",
+      headingDefault: "Un Partenariat Bâti sur la Confiance et l'Expertise Technique.",
+      bodyDefault:
+        "Nous travaillons main dans la main avec des cabinets d'architecture qui partagent notre engagement envers la qualité et l'innovation constructive. Si vous recherchez un partenaire d'exécution rigoureux pour vos projets en LSF, contactez-nous.",
+      ctaHeading: "Construisons Ensemble le Prochain Projet",
+    },
+    privacy: {
+      bannerPrefix:
+        "🍪 Nous utilisons des cookies et un stockage local essentiels au fonctionnement du site, ainsi que des outils d'analyse pour comprendre l'utilisation du site. En continuant à naviguer, vous acceptez notre ",
+      bannerLinkLabel: "Politique de Confidentialité",
+      bannerSuffix: ".",
+      reject: "Refuser",
+      acceptAll: "Tout accepter",
+      pageEyebrow: "Confidentialité",
+      pageTitle: "Politique de Confidentialité et Cookies",
+      rgpdNote: "Conformément au RGPD (Règlement UE 2016/679)",
+      sections: [
+        {
+          title: "Données que nous collectons.",
+          body: "Nom, email, téléphone/WhatsApp et informations sur votre projet, fournis volontairement par vous via le formulaire de contact, le simulateur ou des conversations initiées par WhatsApp.",
+        },
+        {
+          title: "Finalité.",
+          body: "Nous utilisons ces données exclusivement pour répondre à votre demande, élaborer des études de faisabilité et des devis, et présenter les services d'Ápice 360.",
+        },
+        {
+          title: "Partage.",
+          body: "Nous ne vendons ni ne partageons vos données avec des tiers à des fins marketing. Les données ne sont partagées que lorsque la loi l'exige ou que cela est nécessaire pour fournir le service demandé.",
+        },
+        {
+          title: "Cookies et stockage local.",
+          body: "Ce site utilise un stockage local essentiel pour mémoriser votre choix dans cet avis relatif aux cookies.",
+        },
+        {
+          title: "Données Analytiques.",
+          body: "Ce site collecte également des données analytiques sur l'utilisation (comme les pages visitées, le temps passé et l'origine de l'accès), via des outils d'analyse, afin de comprendre et d'améliorer l'expérience des visiteurs.",
+        },
+        {
+          title: "Vos droits.",
+          body: "Vous pouvez à tout moment demander l'accès, la rectification, la portabilité ou la suppression de vos données personnelles, en nous contactant par WhatsApp ou par email à geral@apice360.com.",
+        },
+      ],
+      manageHeading: "Gérer les Paramètres de Confidentialité et Cookies",
+      manageBody: "Vous pouvez modifier votre choix concernant les cookies et le stockage local à tout moment.",
+      manageButton: "Gérer les Préférences",
+      manageConfirmation: "Vos préférences ont été réinitialisées. Choisissez à nouveau dans l'avis en bas de page.",
+      deletionHeading: "Suppression de Vos Données",
+      deletionBody:
+        "Pour demander l'accès, la rectification, la portabilité ou la suppression de vos données personnelles, contactez-nous par email :",
+      deletionEmail: "geral@apice360.com",
+    },
+    maintenance: {
+      eyebrow: "Bientôt disponible",
+      heading: "Nous améliorons le site.",
+      body: "De retour bientôt avec des nouveautés. Merci de votre patience.",
+      contact: "Besoin de nous contacter en attendant ?",
+    },
+  },
 } as const;
+
+// Widens PT's inferred string/array literal types (from `as const`) back to
+// plain string/array so this check compares *shape* (same keys at every
+// level) across locales, not exact text — otherwise every locale's strings
+// would need to literally match PT's, which defeats the purpose.
+type Widen<T> = T extends readonly (infer U)[]
+  ? readonly Widen<U>[]
+  : T extends (...args: infer A) => infer R
+    ? (...args: A) => R
+    : T extends object
+      ? { [K in keyof T]: Widen<T[K]> }
+      : T extends string
+        ? string
+        : T;
+
+// Compile-time check: EN/ES/FR must have every key PT has (missing keys fail
+// to typecheck here instead of silently falling back at runtime).
+type DictionaryShape = Widen<typeof dictionary.PT>;
+const _localeShapeCheck: Record<SiteLocale, DictionaryShape> = dictionary;
+void _localeShapeCheck;
 
 export function getDictionary(locale: SiteLocale) {
   return dictionary[locale];

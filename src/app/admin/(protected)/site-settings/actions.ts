@@ -4,8 +4,16 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireEditorOrAdmin } from "@/lib/permissions";
 import { siteSettingsSchema } from "@/lib/validations/site-settings";
+import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
 export type SiteSettingsFormState = { ok: boolean; message: string } | undefined;
+
+const SETTINGS_FIELDS = [
+  { key: "footerDescription" },
+  { key: "showroomText" },
+  { key: "defaultSeoTitle" },
+  { key: "defaultSeoDescription" },
+];
 
 function readForm(formData: FormData) {
   return {
@@ -26,79 +34,73 @@ export async function updateSiteSettings(
   }
 
   const {
-    footerDescriptionPt,
-    footerDescriptionEn,
-    showroomTextPt,
-    showroomTextEn,
-    defaultSeoTitlePt,
-    defaultSeoTitleEn,
-    defaultSeoDescriptionPt,
-    defaultSeoDescriptionEn,
+    footerDescriptionPt, footerDescriptionEn, footerDescriptionEs, footerDescriptionFr,
+    showroomTextPt, showroomTextEn, showroomTextEs, showroomTextFr,
+    defaultSeoTitlePt, defaultSeoTitleEn, defaultSeoTitleEs, defaultSeoTitleFr,
+    defaultSeoDescriptionPt, defaultSeoDescriptionEn, defaultSeoDescriptionEs, defaultSeoDescriptionFr,
     ...data
   } = parsed.data;
+
+  const existing = await prisma.siteSettings.findUnique({
+    where: { id: "singleton" },
+    select: { translations: true },
+  });
+  const existingTranslations: ExistingTranslationRow[] = existing?.translations ?? [];
+
+  const resolved = await resolveTranslations({
+    fields: SETTINGS_FIELDS,
+    ptValues: {
+      footerDescription: footerDescriptionPt ?? null,
+      showroomText: showroomTextPt ?? null,
+      defaultSeoTitle: defaultSeoTitlePt ?? null,
+      defaultSeoDescription: defaultSeoDescriptionPt ?? null,
+    },
+    submittedValues: {
+      EN: { footerDescription: footerDescriptionEn ?? null, showroomText: showroomTextEn ?? null, defaultSeoTitle: defaultSeoTitleEn ?? null, defaultSeoDescription: defaultSeoDescriptionEn ?? null },
+      ES: { footerDescription: footerDescriptionEs ?? null, showroomText: showroomTextEs ?? null, defaultSeoTitle: defaultSeoTitleEs ?? null, defaultSeoDescription: defaultSeoDescriptionEs ?? null },
+      FR: { footerDescription: footerDescriptionFr ?? null, showroomText: showroomTextFr ?? null, defaultSeoTitle: defaultSeoTitleFr ?? null, defaultSeoDescription: defaultSeoDescriptionFr ?? null },
+    },
+    existingTranslations,
+  });
+
+  const translations = [
+    {
+      locale: "PT" as const,
+      isAutoTranslated: false,
+      footerDescription: footerDescriptionPt ?? null,
+      showroomText: showroomTextPt ?? null,
+      defaultSeoTitle: defaultSeoTitlePt ?? null,
+      defaultSeoDescription: defaultSeoDescriptionPt ?? null,
+    },
+    ...resolved.map((r) => ({
+      locale: r.locale,
+      isAutoTranslated: r.isAutoTranslated,
+      footerDescription: r.fields.footerDescription,
+      showroomText: r.fields.showroomText,
+      defaultSeoTitle: r.fields.defaultSeoTitle,
+      defaultSeoDescription: r.fields.defaultSeoDescription,
+    })),
+  ];
 
   await prisma.siteSettings.upsert({
     where: { id: "singleton" },
     update: {
       ...data,
       translations: {
-        upsert: [
-          {
-            where: { siteSettingsId_locale: { siteSettingsId: "singleton", locale: "PT" } },
-            update: {
-              footerDescription: footerDescriptionPt,
-              showroomText: showroomTextPt,
-              defaultSeoTitle: defaultSeoTitlePt,
-              defaultSeoDescription: defaultSeoDescriptionPt,
-            },
-            create: {
-              locale: "PT",
-              footerDescription: footerDescriptionPt,
-              showroomText: showroomTextPt,
-              defaultSeoTitle: defaultSeoTitlePt,
-              defaultSeoDescription: defaultSeoDescriptionPt,
-            },
-          },
-          {
-            where: { siteSettingsId_locale: { siteSettingsId: "singleton", locale: "EN" } },
-            update: {
-              footerDescription: footerDescriptionEn,
-              showroomText: showroomTextEn,
-              defaultSeoTitle: defaultSeoTitleEn,
-              defaultSeoDescription: defaultSeoDescriptionEn,
-            },
-            create: {
-              locale: "EN",
-              footerDescription: footerDescriptionEn,
-              showroomText: showroomTextEn,
-              defaultSeoTitle: defaultSeoTitleEn,
-              defaultSeoDescription: defaultSeoDescriptionEn,
-            },
-          },
-        ],
+        upsert: translations.map((t) => {
+          const { locale, ...fields } = t;
+          return {
+            where: { siteSettingsId_locale: { siteSettingsId: "singleton", locale } },
+            update: fields,
+            create: t,
+          };
+        }),
       },
     },
     create: {
       id: "singleton",
       ...data,
-      translations: {
-        create: [
-          {
-            locale: "PT",
-            footerDescription: footerDescriptionPt,
-            showroomText: showroomTextPt,
-            defaultSeoTitle: defaultSeoTitlePt,
-            defaultSeoDescription: defaultSeoDescriptionPt,
-          },
-          {
-            locale: "EN",
-            footerDescription: footerDescriptionEn,
-            showroomText: showroomTextEn,
-            defaultSeoTitle: defaultSeoTitleEn,
-            defaultSeoDescription: defaultSeoDescriptionEn,
-          },
-        ],
-      },
+      translations: { create: translations },
     },
   });
 

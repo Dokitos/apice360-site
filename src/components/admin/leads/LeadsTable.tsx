@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/cn";
 import { Icon } from "@/components/ui/Icon";
 import { bulkDeleteLeads, bulkSetStatus, deleteLead, setLeadStatus } from "@/app/admin/(protected)/leads/actions";
+import type { SiteLocale } from "@/lib/locale";
 
 type LeadRow = {
   id: string;
@@ -17,7 +18,7 @@ type LeadRow = {
   phone: string | null;
   message: string | null;
   sourcePage: string | null;
-  locale: "PT" | "EN";
+  locale: SiteLocale;
   status: "NEW" | "CONTACTED" | "QUALIFIED" | "WON" | "LOST";
   createdAt: string;
   assignedTo: { id: string; name: string } | null;

@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField, CheckboxField, IconPickerField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
+import type { SiteLocale } from "@/lib/locale";
 
 type Stat = {
   id: string;
@@ -11,7 +12,7 @@ type Stat = {
   iconName: string | null;
   order: number;
   isActive: boolean;
-  translations: { locale: "PT" | "EN"; label: string }[];
+  translations: { locale: SiteLocale; isAutoTranslated: boolean; label: string }[];
 };
 
 type StatFormProps = {
@@ -23,6 +24,8 @@ export function StatForm({ stat, action }: StatFormProps) {
   const [error, formAction, isPending] = useActionState(action, undefined);
   const pt = stat?.translations.find((t) => t.locale === "PT");
   const en = stat?.translations.find((t) => t.locale === "EN");
+  const es = stat?.translations.find((t) => t.locale === "ES");
+  const fr = stat?.translations.find((t) => t.locale === "FR");
 
   return (
     <form action={formAction} className="max-w-xl space-y-6">
@@ -32,9 +35,14 @@ export function StatForm({ stat, action }: StatFormProps) {
         pt={
           <TextField id="labelPt" name="labelPt" label="Rótulo (PT)" defaultValue={pt?.label} required />
         }
-        en={
-          <TextField id="labelEn" name="labelEn" label="Rótulo (EN)" defaultValue={en?.label} required />
-        }
+        en={<TextField id="labelEn" name="labelEn" label="Rótulo (EN)" defaultValue={en?.label} />}
+        es={<TextField id="labelEs" name="labelEs" label="Rótulo (ES)" defaultValue={es?.label} />}
+        fr={<TextField id="labelFr" name="labelFr" label="Rótulo (FR)" defaultValue={fr?.label} />}
+        autoTranslated={{
+          EN: en?.isAutoTranslated ?? true,
+          ES: es?.isAutoTranslated ?? true,
+          FR: fr?.isAutoTranslated ?? true,
+        }}
       />
       <TextField
         id="order"

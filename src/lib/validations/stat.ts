@@ -6,5 +6,7 @@ export const statSchema = z.object({
   order: z.coerce.number().int(),
   isActive: z.boolean(),
   labelPt: z.string().trim().min(1, "Indica o rótulo em Português."),
-  labelEn: z.string().trim().min(1, "Indica o rótulo em Inglês."),
+  labelEn: z.string().trim().optional().or(z.literal("")),
+  labelEs: z.string().trim().optional().or(z.literal("")),
+  labelFr: z.string().trim().optional().or(z.literal("")),
 });

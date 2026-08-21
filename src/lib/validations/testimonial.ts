@@ -9,5 +9,7 @@ export const testimonialSchema = z.object({
   showOnHome: z.boolean(),
   isActive: z.boolean(),
   quotePt: z.string().trim().min(1, "Escreve o depoimento em Português."),
-  quoteEn: z.string().trim().min(1, "Escreve o depoimento em Inglês."),
+  quoteEn: z.string().trim().optional().or(z.literal("")),
+  quoteEs: z.string().trim().optional().or(z.literal("")),
+  quoteFr: z.string().trim().optional().or(z.literal("")),
 });

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField, TextAreaField, SelectField, CheckboxField, ImageField, SlugField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import type { SiteLocale } from "@/lib/locale";
 
 type Project = {
   slug: string;
@@ -17,7 +18,8 @@ type Project = {
   isFeatured: boolean;
   isPublished: boolean;
   translations: {
-    locale: "PT" | "EN";
+    locale: SiteLocale;
+    isAutoTranslated: boolean;
     title: string;
     shortDescription: string | null;
     challenge: string | null;
@@ -36,6 +38,8 @@ export function PortfolioProjectForm({ project, action }: PortfolioProjectFormPr
   const [error, formAction, isPending] = useActionState(action, undefined);
   const pt = project?.translations.find((t) => t.locale === "PT");
   const en = project?.translations.find((t) => t.locale === "EN");
+  const es = project?.translations.find((t) => t.locale === "ES");
+  const fr = project?.translations.find((t) => t.locale === "FR");
 
   return (
     <form action={formAction} className="max-w-2xl space-y-6">
@@ -96,7 +100,7 @@ export function PortfolioProjectForm({ project, action }: PortfolioProjectFormPr
         }
         en={
           <>
-            <TextField id="titleEn" name="titleEn" label="Title (EN)" defaultValue={en?.title} required />
+            <TextField id="titleEn" name="titleEn" label="Title (EN)" defaultValue={en?.title} />
             <TextAreaField
               id="shortDescriptionEn"
               name="shortDescriptionEn"
@@ -119,6 +123,61 @@ export function PortfolioProjectForm({ project, action }: PortfolioProjectFormPr
             />
           </>
         }
+        es={
+          <>
+            <TextField id="titleEs" name="titleEs" label="Título (ES)" defaultValue={es?.title} />
+            <TextAreaField
+              id="shortDescriptionEs"
+              name="shortDescriptionEs"
+              label="Descripción Corta (ES)"
+              defaultValue={es?.shortDescription ?? ""}
+            />
+            <RichTextEditor id="challengeEs" name="challengeEs" label="Desafío Resuelto (ES)" defaultValue={es?.challenge ?? ""} />
+            <RichTextEditor
+              id="methodologyEs"
+              name="methodologyEs"
+              label="Metodología Ápice (ES)"
+              defaultValue={es?.methodology ?? ""}
+            />
+            <RichTextEditor id="resultEs" name="resultEs" label="Resultado (ES)" defaultValue={es?.result ?? ""} />
+            <TextAreaField
+              id="testimonialQuoteEs"
+              name="testimonialQuoteEs"
+              label="Aprobación del Cliente (ES)"
+              defaultValue={es?.testimonialQuote ?? ""}
+            />
+          </>
+        }
+        fr={
+          <>
+            <TextField id="titleFr" name="titleFr" label="Titre (FR)" defaultValue={fr?.title} />
+            <TextAreaField
+              id="shortDescriptionFr"
+              name="shortDescriptionFr"
+              label="Description Courte (FR)"
+              defaultValue={fr?.shortDescription ?? ""}
+            />
+            <RichTextEditor id="challengeFr" name="challengeFr" label="Défi Résolu (FR)" defaultValue={fr?.challenge ?? ""} />
+            <RichTextEditor
+              id="methodologyFr"
+              name="methodologyFr"
+              label="Méthodologie Ápice (FR)"
+              defaultValue={fr?.methodology ?? ""}
+            />
+            <RichTextEditor id="resultFr" name="resultFr" label="Résultat (FR)" defaultValue={fr?.result ?? ""} />
+            <TextAreaField
+              id="testimonialQuoteFr"
+              name="testimonialQuoteFr"
+              label="Approbation du Client (FR)"
+              defaultValue={fr?.testimonialQuote ?? ""}
+            />
+          </>
+        }
+        autoTranslated={{
+          EN: en?.isAutoTranslated ?? true,
+          ES: es?.isAutoTranslated ?? true,
+          FR: fr?.isAutoTranslated ?? true,
+        }}
       />
 
       <TextField id="order" name="order" label="Ordem de Exibição" type="number" defaultValue={project?.order ?? 0} />
