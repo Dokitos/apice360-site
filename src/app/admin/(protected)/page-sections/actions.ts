@@ -138,7 +138,7 @@ export async function createPageSection(
 
   revalidatePath(`/admin/page-sections/${page}`);
   revalidatePath("/");
-  redirect(`/admin/page-sections/${page}/${section.id}/edit?saved=1`);
+  redirect(`/admin/page-sections/${page}?open=${section.id}&saved=1`);
 }
 
 export async function updatePageSection(
@@ -194,12 +194,30 @@ export async function updatePageSection(
 
   revalidatePath(`/admin/page-sections/${page}`);
   revalidatePath("/");
-  redirect(`/admin/page-sections/${page}/${id}/edit?saved=1`);
+  redirect(`/admin/page-sections/${page}?open=${id}&saved=1`);
 }
 
 export async function deletePageSection(page: PageKeyValue, id: string) {
   await requirePermission("page_sections", "delete");
   await prisma.pageSection.delete({ where: { id } });
+  revalidatePath(`/admin/page-sections/${page}`);
+  revalidatePath("/");
+}
+
+export async function reorderPageSections(page: PageKeyValue, orderedIds: string[]) {
+  await requirePermission("page_sections", "edit");
+  await prisma.$transaction(
+    orderedIds.map((id, order) => prisma.pageSection.update({ where: { id }, data: { order } })),
+  );
+  revalidatePath(`/admin/page-sections/${page}`);
+  revalidatePath("/");
+}
+
+export async function reorderPageSectionItems(page: PageKeyValue, sectionId: string, orderedIds: string[]) {
+  await requirePermission("page_sections", "edit");
+  await prisma.$transaction(
+    orderedIds.map((id, order) => prisma.pageSectionItem.update({ where: { id }, data: { order } })),
+  );
   revalidatePath(`/admin/page-sections/${page}`);
   revalidatePath("/");
 }
@@ -277,9 +295,9 @@ export async function createPageSectionItem(
       translations: { create: translations },
     },
   });
-  revalidatePath(`/admin/page-sections/${page}/${sectionId}/edit`);
+  revalidatePath(`/admin/page-sections/${page}`);
   revalidatePath("/");
-  redirect(`/admin/page-sections/${page}/${sectionId}/edit?saved=1`);
+  redirect(`/admin/page-sections/${page}?open=${sectionId}&saved=1`);
 }
 
 export async function updatePageSectionItem(
@@ -321,15 +339,15 @@ export async function updatePageSectionItem(
       },
     },
   });
-  revalidatePath(`/admin/page-sections/${page}/${sectionId}/edit`);
+  revalidatePath(`/admin/page-sections/${page}`);
   revalidatePath("/");
-  redirect(`/admin/page-sections/${page}/${sectionId}/edit?saved=1`);
+  redirect(`/admin/page-sections/${page}?open=${sectionId}&saved=1`);
 }
 
 export async function deletePageSectionItem(page: PageKeyValue, sectionId: string, itemId: string) {
   await requirePermission("page_sections", "delete");
   await prisma.pageSectionItem.delete({ where: { id: itemId } });
-  revalidatePath(`/admin/page-sections/${page}/${sectionId}/edit`);
+  revalidatePath(`/admin/page-sections/${page}`);
   revalidatePath("/");
 }
 
@@ -374,7 +392,7 @@ export async function createCustomPageSection(
 
   revalidatePath(`/admin/pages/${customPageId}/edit`);
   revalidatePath("/", "layout");
-  redirect(`/admin/pages/${customPageId}/sections/${section.id}/edit?saved=1`);
+  redirect(`/admin/pages/${customPageId}/edit?open=${section.id}&saved=1`);
 }
 
 export async function updateCustomPageSection(
@@ -427,12 +445,30 @@ export async function updateCustomPageSection(
 
   revalidatePath(`/admin/pages/${customPageId}/edit`);
   revalidatePath("/", "layout");
-  redirect(`/admin/pages/${customPageId}/sections/${id}/edit?saved=1`);
+  redirect(`/admin/pages/${customPageId}/edit?open=${id}&saved=1`);
 }
 
 export async function deleteCustomPageSection(customPageId: string, id: string) {
   await requirePermission("custom_pages", "delete");
   await prisma.pageSection.delete({ where: { id } });
+  revalidatePath(`/admin/pages/${customPageId}/edit`);
+  revalidatePath("/", "layout");
+}
+
+export async function reorderCustomPageSections(customPageId: string, orderedIds: string[]) {
+  await requirePermission("custom_pages", "edit");
+  await prisma.$transaction(
+    orderedIds.map((id, order) => prisma.pageSection.update({ where: { id }, data: { order } })),
+  );
+  revalidatePath(`/admin/pages/${customPageId}/edit`);
+  revalidatePath("/", "layout");
+}
+
+export async function reorderCustomPageSectionItems(customPageId: string, sectionId: string, orderedIds: string[]) {
+  await requirePermission("custom_pages", "edit");
+  await prisma.$transaction(
+    orderedIds.map((id, order) => prisma.pageSectionItem.update({ where: { id }, data: { order } })),
+  );
   revalidatePath(`/admin/pages/${customPageId}/edit`);
   revalidatePath("/", "layout");
 }
@@ -461,9 +497,9 @@ export async function createCustomPageSectionItem(
       translations: { create: translations },
     },
   });
-  revalidatePath(`/admin/pages/${customPageId}/sections/${sectionId}/edit`);
+  revalidatePath(`/admin/pages/${customPageId}/edit`);
   revalidatePath("/", "layout");
-  redirect(`/admin/pages/${customPageId}/sections/${sectionId}/edit?saved=1`);
+  redirect(`/admin/pages/${customPageId}/edit?open=${sectionId}&saved=1`);
 }
 
 export async function updateCustomPageSectionItem(
@@ -505,14 +541,14 @@ export async function updateCustomPageSectionItem(
       },
     },
   });
-  revalidatePath(`/admin/pages/${customPageId}/sections/${sectionId}/edit`);
+  revalidatePath(`/admin/pages/${customPageId}/edit`);
   revalidatePath("/", "layout");
-  redirect(`/admin/pages/${customPageId}/sections/${sectionId}/edit?saved=1`);
+  redirect(`/admin/pages/${customPageId}/edit?open=${sectionId}&saved=1`);
 }
 
 export async function deleteCustomPageSectionItem(customPageId: string, sectionId: string, itemId: string) {
   await requirePermission("custom_pages", "delete");
   await prisma.pageSectionItem.delete({ where: { id: itemId } });
-  revalidatePath(`/admin/pages/${customPageId}/sections/${sectionId}/edit`);
+  revalidatePath(`/admin/pages/${customPageId}/edit`);
   revalidatePath("/", "layout");
 }

@@ -1,67 +1,85 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
-import { DataTable } from "@/components/admin/DataTable";
-import { DeleteButton } from "@/components/admin/DeleteButton";
-import { Icon } from "@/components/ui/Icon";
-import { deletePageSection } from "../actions";
+import { SectionsEditor } from "@/components/admin/SectionsEditor";
+import {
+  createPageSection,
+  updatePageSection,
+  deletePageSection,
+  createPageSectionItem,
+  updatePageSectionItem,
+  deletePageSectionItem,
+  reorderPageSections,
+  reorderPageSectionItems,
+} from "../actions";
 
 const VALID_PAGES = ["HOME", "QUEM_SOMOS", "SERVICOS", "PORTFOLIO", "BLOG", "CONTACTO", "AREA_ARQUITETO"] as const;
 
-export default async function PageSectionsListPage({
+const PAGE_LABELS: Record<(typeof VALID_PAGES)[number], string> = {
+  HOME: "Home",
+  QUEM_SOMOS: "Quem Somos",
+  SERVICOS: "Serviços",
+  PORTFOLIO: "Portfólio",
+  BLOG: "Blog",
+  CONTACTO: "Contacto",
+  AREA_ARQUITETO: "Área do Arquiteto",
+};
+
+export default async function PageSectionsEditorPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ page: string }>;
+  searchParams: Promise<{ open?: string }>;
 }) {
   const { page } = await params;
+  const { open } = await searchParams;
   if (!VALID_PAGES.includes(page as (typeof VALID_PAGES)[number])) notFound();
   const pageKey = page as (typeof VALID_PAGES)[number];
+  await requirePermission("page_sections", "view");
 
-  const sections = await prisma.pageSection.findMany({
-    where: { page: pageKey },
-    orderBy: { order: "asc" },
-    include: { translations: true },
-  });
+  const [sections, ctasRaw] = await Promise.all([
+    prisma.pageSection.findMany({
+      where: { page: pageKey },
+      orderBy: { order: "asc" },
+      include: {
+        translations: true,
+        items: { orderBy: { order: "asc" }, include: { translations: true } },
+      },
+    }),
+    prisma.cta.findMany({
+      orderBy: { key: "asc" },
+      select: { key: true, translations: { where: { locale: "PT" }, select: { label: true } } },
+    }),
+  ]);
+  const ctas = ctasRaw.map((c) => ({ key: c.key, label: c.translations[0]?.label ?? c.key }));
+
+  const sectionsWithActions = sections.map((s) => ({
+    ...s,
+    updateAction: updatePageSection.bind(null, pageKey, s.id),
+    deleteAction: deletePageSection.bind(null, pageKey, s.id),
+    createItemAction: createPageSectionItem.bind(null, pageKey, s.id),
+    reorderItemsAction: reorderPageSectionItems.bind(null, pageKey, s.id),
+    items: s.items.map((i) => ({
+      ...i,
+      updateAction: updatePageSectionItem.bind(null, pageKey, s.id, i.id),
+      deleteAction: deletePageSectionItem.bind(null, pageKey, s.id, i.id),
+    })),
+  }));
 
   return (
     <div>
       <AdminPageHeader
-        title={`Secções: ${pageKey}`}
-        newHref={`/admin/page-sections/${pageKey}/new`}
-        newLabel="Nova Secção"
+        title={`Secções: ${PAGE_LABELS[pageKey]}`}
+        description="Gere os blocos de conteúdo desta página — arrasta para reordenar, clica para editar."
       />
-      <DataTable
-        rows={sections}
-        getRowId={(s) => s.id}
-        emptyMessage="Ainda não há secções configuradas para esta página."
-        columns={[
-          { header: "Chave", render: (s) => <code className="text-xs text-on-surface-variant">{s.key}</code> },
-          {
-            header: "Título (PT)",
-            render: (s) => s.translations.find((t) => t.locale === "PT")?.heading ?? "—",
-          },
-          { header: "Ordem", render: (s) => s.order },
-          {
-            header: "Estado",
-            render: (s) => (
-              <span className={s.isActive ? "text-primary" : "text-on-surface-variant"}>
-                {s.isActive ? "Ativo" : "Inativo"}
-              </span>
-            ),
-          },
-        ]}
-        renderActions={(s) => (
-          <div className="flex items-center justify-end gap-2">
-            <Link
-              href={`/admin/page-sections/${pageKey}/${s.id}/edit`}
-              className="flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary"
-            >
-              <Icon name="edit" className="text-lg" />
-            </Link>
-            <DeleteButton action={deletePageSection.bind(null, pageKey, s.id)} />
-          </div>
-        )}
+      <SectionsEditor
+        sections={sectionsWithActions}
+        ctas={ctas}
+        createSectionAction={createPageSection.bind(null, pageKey)}
+        reorderSectionsAction={reorderPageSections.bind(null, pageKey)}
+        initialOpenId={open ?? null}
       />
     </div>
   );

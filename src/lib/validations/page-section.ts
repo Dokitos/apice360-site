@@ -2,6 +2,13 @@ import { z } from "zod";
 
 const optionalText = z.string().trim().optional().or(z.literal(""));
 
+// Sections can point at either an uploaded/external URL or a root-relative
+// path into /public (e.g. seeded content like "/images/hero-bg.jpg") — plain
+// .url() rejects the latter, which would make existing seeded sections
+// un-savable the moment an admin opens and re-submits their form.
+const IMAGE_PATH = /^(https?:\/\/|\/)/i;
+const imageUrlField = z.string().trim().regex(IMAGE_PATH, "Indica um URL de imagem válido.").optional().or(z.literal(""));
+
 export const pageSectionSchema = z.object({
   key: z
     .string()
@@ -9,7 +16,7 @@ export const pageSectionSchema = z.object({
     .min(1, "Indica a chave da secção.")
     .regex(/^[a-z0-9_]+$/, "Usa apenas minúsculas, números e underscore (ex: why_choose)."),
   layout: z.enum(["standard", "grid", "timeline"]).default("standard"),
-  imageUrl: z.string().trim().url("Indica um URL de imagem válido.").optional().or(z.literal("")),
+  imageUrl: imageUrlField,
   iconName: z.string().trim().optional().or(z.literal("")),
   ctaKey: z.string().trim().optional().or(z.literal("")),
   order: z.coerce.number().int(),
@@ -38,7 +45,7 @@ export const pageSectionSchema = z.object({
 
 export const pageSectionItemSchema = z.object({
   iconName: z.string().trim().optional().or(z.literal("")),
-  imageUrl: z.string().trim().url("Indica um URL de imagem válido.").optional().or(z.literal("")),
+  imageUrl: imageUrlField,
   numberLabel: z.string().trim().optional().or(z.literal("")),
   ctaKey: z.string().trim().optional().or(z.literal("")),
   order: z.coerce.number().int(),

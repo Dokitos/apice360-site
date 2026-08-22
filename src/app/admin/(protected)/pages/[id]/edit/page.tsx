@@ -1,73 +1,74 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { CustomPageForm } from "@/components/admin/CustomPageForm";
-import { DataTable } from "@/components/admin/DataTable";
-import { DeleteButton } from "@/components/admin/DeleteButton";
-import { Icon } from "@/components/ui/Icon";
+import { SectionsEditor } from "@/components/admin/SectionsEditor";
 import { updateCustomPage } from "../../actions";
-import { deleteCustomPageSection } from "../../../page-sections/actions";
+import {
+  createCustomPageSection,
+  updateCustomPageSection,
+  deleteCustomPageSection,
+  createCustomPageSectionItem,
+  updateCustomPageSectionItem,
+  deleteCustomPageSectionItem,
+  reorderCustomPageSections,
+  reorderCustomPageSectionItems,
+} from "../../../page-sections/actions";
 
 export default async function EditCustomPagePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ open?: string }>;
 }) {
   const { id } = await params;
-  const [page, sections] = await Promise.all([
+  const { open } = await searchParams;
+  const [page, sections, ctasRaw] = await Promise.all([
     prisma.customPage.findUnique({ where: { id }, include: { translations: true } }),
     prisma.pageSection.findMany({
       where: { customPageId: id },
       orderBy: { order: "asc" },
-      include: { translations: true },
+      include: {
+        translations: true,
+        items: { orderBy: { order: "asc" }, include: { translations: true } },
+      },
+    }),
+    prisma.cta.findMany({
+      orderBy: { key: "asc" },
+      select: { key: true, translations: { where: { locale: "PT" }, select: { label: true } } },
     }),
   ]);
   if (!page) notFound();
+  const ctas = ctasRaw.map((c) => ({ key: c.key, label: c.translations[0]?.label ?? c.key }));
+
+  const sectionsWithActions = sections.map((s) => ({
+    ...s,
+    updateAction: updateCustomPageSection.bind(null, id, s.id),
+    deleteAction: deleteCustomPageSection.bind(null, id, s.id),
+    createItemAction: createCustomPageSectionItem.bind(null, id, s.id),
+    reorderItemsAction: reorderCustomPageSectionItems.bind(null, id, s.id),
+    items: s.items.map((i) => ({
+      ...i,
+      updateAction: updateCustomPageSectionItem.bind(null, id, s.id, i.id),
+      deleteAction: deleteCustomPageSectionItem.bind(null, id, s.id, i.id),
+    })),
+  }));
 
   return (
     <div>
       <AdminPageHeader title={`Página: ${page.translations.find((t) => t.locale === "PT")?.navLabel ?? page.slug}`} />
       <CustomPageForm page={page} action={updateCustomPage.bind(null, id)} />
 
-      <div className="mt-16 max-w-2xl">
-        <AdminPageHeader
-          title="Secções"
-          description="Blocos de conteúdo desta página, na ordem em que aparecem."
-          newHref={`/admin/pages/${id}/sections/new`}
-          newLabel="Nova Secção"
-        />
-        <DataTable
-          rows={sections}
-          getRowId={(s) => s.id}
-          emptyMessage="Ainda não há secções configuradas para esta página."
-          columns={[
-            { header: "Chave", render: (s) => <code className="text-xs text-on-surface-variant">{s.key}</code> },
-            {
-              header: "Título (PT)",
-              render: (s) => s.translations.find((t) => t.locale === "PT")?.heading ?? "—",
-            },
-            { header: "Ordem", render: (s) => s.order },
-            {
-              header: "Estado",
-              render: (s) => (
-                <span className={s.isActive ? "text-primary" : "text-on-surface-variant"}>
-                  {s.isActive ? "Ativo" : "Inativo"}
-                </span>
-              ),
-            },
-          ]}
-          renderActions={(s) => (
-            <div className="flex items-center justify-end gap-2">
-              <Link
-                href={`/admin/pages/${id}/sections/${s.id}/edit`}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary"
-              >
-                <Icon name="edit" className="text-lg" />
-              </Link>
-              <DeleteButton action={deleteCustomPageSection.bind(null, id, s.id)} />
-            </div>
-          )}
+      <div className="mt-16">
+        <h2 className="mb-2 font-heading text-headline-lg">Secções</h2>
+        <p className="mb-8 text-sm text-on-surface-variant">Blocos de conteúdo desta página, na ordem em que aparecem.</p>
+        <SectionsEditor
+          sections={sectionsWithActions}
+          ctas={ctas}
+          createSectionAction={createCustomPageSection.bind(null, id)}
+          reorderSectionsAction={reorderCustomPageSections.bind(null, id)}
+          initialOpenId={open ?? null}
         />
       </div>
     </div>

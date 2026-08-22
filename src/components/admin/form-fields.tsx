@@ -346,7 +346,7 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
           <input
             id={id}
             name={name}
-            type="url"
+            type="text"
             ref={urlInputRef}
             defaultValue={defaultValue ?? ""}
             placeholder="https://..."
