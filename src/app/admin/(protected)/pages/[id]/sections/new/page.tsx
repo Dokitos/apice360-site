@@ -10,13 +10,20 @@ export default async function NewCustomPageSectionPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const page = await prisma.customPage.findUnique({ where: { id } });
+  const [page, ctasRaw] = await Promise.all([
+    prisma.customPage.findUnique({ where: { id } }),
+    prisma.cta.findMany({
+      orderBy: { key: "asc" },
+      select: { key: true, translations: { where: { locale: "PT" }, select: { label: true } } },
+    }),
+  ]);
   if (!page) notFound();
+  const ctas = ctasRaw.map((c) => ({ key: c.key, label: c.translations[0]?.label ?? c.key }));
 
   return (
     <div>
       <AdminPageHeader title="Nova Secção" />
-      <PageSectionForm action={createCustomPageSection.bind(null, id)} />
+      <PageSectionForm action={createCustomPageSection.bind(null, id)} ctas={ctas} />
     </div>
   );
 }

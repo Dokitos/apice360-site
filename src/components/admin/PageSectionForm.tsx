@@ -2,15 +2,17 @@
 
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
-import { TextField, TextAreaField, CheckboxField, ImageField, IconPickerField } from "@/components/admin/form-fields";
+import { TextField, TextAreaField, CheckboxField, ImageField, IconPickerField, SelectField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import type { SiteLocale } from "@/lib/locale";
 
 type PageSection = {
   key: string;
+  layout: string;
   imageUrl: string | null;
   iconName: string | null;
+  ctaKey: string | null;
   order: number;
   isActive: boolean;
   translations: {
@@ -24,12 +26,15 @@ type PageSection = {
   }[];
 };
 
+type CtaOption = { key: string; label: string };
+
 type PageSectionFormProps = {
   section?: PageSection;
+  ctas?: CtaOption[];
   action: (prevState: string | undefined, formData: FormData) => Promise<string | undefined>;
 };
 
-export function PageSectionForm({ section, action }: PageSectionFormProps) {
+export function PageSectionForm({ section, ctas = [], action }: PageSectionFormProps) {
   const [error, formAction, isPending] = useActionState(action, undefined);
   const pt = section?.translations.find((t) => t.locale === "PT");
   const en = section?.translations.find((t) => t.locale === "EN");
@@ -48,8 +53,33 @@ export function PageSectionForm({ section, action }: PageSectionFormProps) {
         required
         hint={section ? "A chave não pode ser alterada depois de criada." : "minúsculas, números e underscore."}
       />
+      <SelectField
+        id="layout"
+        name="layout"
+        label="Layout"
+        defaultValue={section?.layout ?? "standard"}
+        hint="Como os itens desta secção são apresentados no site."
+      >
+        <option value="standard">Padrão (texto centrado + grelha de itens)</option>
+        <option value="grid">Grelha de cartões</option>
+        <option value="timeline">Linha do tempo</option>
+      </SelectField>
       <ImageField id="imageUrl" name="imageUrl" label="Imagem (opcional)" defaultValue={section?.imageUrl} />
       <IconPickerField id="iconName" name="iconName" label="Ícone (opcional)" defaultValue={section?.iconName} />
+      <SelectField
+        id="ctaKey"
+        name="ctaKey"
+        label="Botão associado (opcional)"
+        defaultValue={section?.ctaKey ?? ""}
+        hint="Mostra um botão nesta secção, usando um CTA já criado em CTAs."
+      >
+        <option value="">Nenhum</option>
+        {ctas.map((c) => (
+          <option key={c.key} value={c.key}>
+            {c.label} ({c.key})
+          </option>
+        ))}
+      </SelectField>
       <LocaleTabs
         pt={
           <>

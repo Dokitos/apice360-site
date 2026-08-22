@@ -68,6 +68,7 @@ export const getPageSections = cache(
       const t = pickTranslation(section.translations, locale);
       return {
         key: section.key,
+        layout: section.layout,
         imageUrl: section.imageUrl,
         iconName: section.iconName,
         ctaKey: section.ctaKey,
@@ -152,6 +153,7 @@ export const getCustomPageSections = cache(async (customPageId: string, locale: 
     const t = pickTranslation(section.translations, locale);
     return {
       key: section.key,
+      layout: section.layout,
       imageUrl: section.imageUrl,
       iconName: section.iconName,
       ctaKey: section.ctaKey,

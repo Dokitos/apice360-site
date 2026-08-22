@@ -207,6 +207,9 @@ model PageSection {
   customPageId String?
   customPage   CustomPage?              @relation(fields: [customPageId], references: [id], onDelete: Cascade)
   key          String
+  /// Como a GenericPageSection desenha esta secção quando não é uma das
+  /// hand-built (standard/grid/timeline) — ver src/components/sections/GenericPageSection.tsx.
+  layout       String                   @default("standard")
   order        Int                      @default(0)
   imageUrl     String?
   iconName     String?

@@ -8,8 +8,10 @@ export const pageSectionSchema = z.object({
     .trim()
     .min(1, "Indica a chave da secção.")
     .regex(/^[a-z0-9_]+$/, "Usa apenas minúsculas, números e underscore (ex: why_choose)."),
+  layout: z.enum(["standard", "grid", "timeline"]).default("standard"),
   imageUrl: z.string().trim().url("Indica um URL de imagem válido.").optional().or(z.literal("")),
   iconName: z.string().trim().optional().or(z.literal("")),
+  ctaKey: z.string().trim().optional().or(z.literal("")),
   order: z.coerce.number().int(),
   isActive: z.boolean(),
   eyebrowPt: optionalText,

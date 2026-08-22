@@ -19,19 +19,26 @@ export default async function EditPageSectionPage({
   if (!VALID_PAGES.includes(page as (typeof VALID_PAGES)[number])) notFound();
   const pageKey = page as (typeof VALID_PAGES)[number];
 
-  const section = await prisma.pageSection.findUnique({
-    where: { id: sectionId },
-    include: {
-      translations: true,
-      items: { orderBy: { order: "asc" }, include: { translations: true } },
-    },
-  });
+  const [section, ctasRaw] = await Promise.all([
+    prisma.pageSection.findUnique({
+      where: { id: sectionId },
+      include: {
+        translations: true,
+        items: { orderBy: { order: "asc" }, include: { translations: true } },
+      },
+    }),
+    prisma.cta.findMany({
+      orderBy: { key: "asc" },
+      select: { key: true, translations: { where: { locale: "PT" }, select: { label: true } } },
+    }),
+  ]);
   if (!section) notFound();
+  const ctas = ctasRaw.map((c) => ({ key: c.key, label: c.translations[0]?.label ?? c.key }));
 
   return (
     <div>
       <AdminPageHeader title={`Secção: ${section.key}`} />
-      <PageSectionForm section={section} action={updatePageSection.bind(null, pageKey, sectionId)} />
+      <PageSectionForm section={section} ctas={ctas} action={updatePageSection.bind(null, pageKey, sectionId)} />
 
       <div className="mt-16 max-w-2xl">
         <AdminPageHeader

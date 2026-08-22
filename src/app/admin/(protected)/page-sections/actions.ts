@@ -28,8 +28,10 @@ const SECTION_FIELDS = [
 function readSectionForm(formData: FormData) {
   return {
     key: formData.get("key"),
+    layout: formData.get("layout") || "standard",
     imageUrl: formData.get("imageUrl") || undefined,
     iconName: formData.get("iconName") || undefined,
+    ctaKey: formData.get("ctaKey") || undefined,
     order: formData.get("order"),
     isActive: formData.get("isActive") === "on",
     eyebrowPt: formData.get("eyebrowPt") || undefined,
@@ -176,6 +178,7 @@ export async function updatePageSection(
       // the old value. Coerce to null so clearing actually persists.
       imageUrl: data.imageUrl || null,
       iconName: data.iconName || null,
+      ctaKey: data.ctaKey || null,
       translations: {
         upsert: translations.map((t) => {
           const { locale, ...fields } = t;
@@ -408,6 +411,7 @@ export async function updateCustomPageSection(
       ...data,
       imageUrl: data.imageUrl || null,
       iconName: data.iconName || null,
+      ctaKey: data.ctaKey || null,
       translations: {
         upsert: translations.map((t) => {
           const { locale, ...fields } = t;

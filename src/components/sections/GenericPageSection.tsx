@@ -4,6 +4,8 @@ import { RichText } from "@/components/ui/RichText";
 import { Button } from "@/components/ui/Button";
 import { getCta } from "@/lib/content";
 import type { SiteLocale } from "@/lib/locale";
+import { CardGridSection } from "@/components/sections/CardGridSection";
+import { TimelineSection } from "@/components/sections/TimelineSection";
 
 type GenericSectionItem = {
   id: string;
@@ -17,6 +19,8 @@ type GenericSectionItem = {
 
 export type GenericSectionData = {
   key: string;
+  /** "standard" (this file's own layout) | "grid" | "timeline" — see the dispatch below. */
+  layout: string;
   imageUrl: string | null;
   iconName: string | null;
   ctaKey: string | null;
@@ -28,10 +32,12 @@ export type GenericSectionData = {
 };
 
 /**
- * Fallback renderer for page sections created in the admin that aren't tied
- * to a specific hand-built layout on the page. Lets an editor add a new
- * section from the admin ("+ Nova Secção") and have it actually show up on
- * the site, instead of silently doing nothing.
+ * Renderer for page sections created in the admin that aren't tied to a
+ * page-specific hand-built component. Dispatches on section.layout so an
+ * admin-created section isn't permanently stuck looking like every other
+ * one — "grid" and "timeline" delegate to the same components the
+ * hand-built pages use; "standard" (the default) is this file's own
+ * centered-text-then-items layout.
  */
 export async function GenericPageSection({
   section,
@@ -48,6 +54,35 @@ export async function GenericPageSection({
   if (!hasContent) return null;
 
   const cta = section.ctaKey ? await getCta(section.ctaKey, locale) : null;
+
+  // Both delegated layouts require a heading; without one, fall back to the
+  // standard layout below rather than rendering an empty <h2>.
+  if (section.layout === "grid" && section.heading) {
+    return (
+      <CardGridSection
+        eyebrow={section.eyebrow}
+        heading={section.heading}
+        body={section.body}
+        items={section.items}
+        columns={3}
+        cta={cta}
+        locale={locale}
+      />
+    );
+  }
+
+  if (section.layout === "timeline" && section.heading) {
+    return (
+      <TimelineSection
+        eyebrow={section.eyebrow}
+        heading={section.heading}
+        items={section.items}
+        cta={cta}
+        className={alt ? "bg-surface-container-lowest py-32" : "bg-surface py-32"}
+        locale={locale}
+      />
+    );
+  }
 
   return (
     <Reveal as="section" className={alt ? "bg-surface-container-lowest py-24" : "bg-surface py-24"}>
