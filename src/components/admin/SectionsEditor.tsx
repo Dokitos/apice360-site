@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition, type RefObject } from "react";
 import { useRouter } from "next/navigation";
 import {
   DndContext,
@@ -184,6 +184,7 @@ function SectionRow({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: section.id });
   const style = { transform: CSS.Transform.toString(transform), transition };
   const pt = section.translations.find((t) => t.locale === "PT");
+  const formContainerRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
@@ -219,12 +220,86 @@ function SectionRow({
       </div>
       {isOpen ? (
         <div className="border-t border-outline-variant/20 p-6">
-          <PageSectionForm section={section} ctas={ctas} action={section.updateAction} />
+          <div className="grid grid-cols-1 gap-8 xl:grid-cols-2">
+            <div ref={formContainerRef}>
+              <PageSectionForm section={section} ctas={ctas} action={section.updateAction} />
+            </div>
+            <SectionPreview sectionId={section.id} containerRef={formContainerRef} />
+          </div>
           <div className="mt-10 border-t border-outline-variant/20 pt-8">
             <ItemsEditor section={section} ctas={ctas} />
           </div>
         </div>
       ) : null}
+    </div>
+  );
+}
+
+// Maps the section form's field names to the query params the preview route
+// reads. Only plain, uncontrolled inputs are tracked here — icon (a
+// click-to-pick component) and body (the TipTap rich text editor) keep their
+// value in a React-controlled hidden input that never fires a native
+// input/change event, so they can't be picked up by this delegated listener.
+// Those two fall back to the section's last-saved content in the preview.
+const PREVIEW_FIELD_MAP: Record<string, string> = {
+  layout: "layout",
+  imageUrl: "imageUrl",
+  ctaKey: "ctaKey",
+  eyebrowPt: "eyebrow",
+  headingPt: "heading",
+  subheadingPt: "subheading",
+};
+
+function SectionPreview({
+  sectionId,
+  containerRef,
+}: {
+  sectionId: string;
+  containerRef: RefObject<HTMLDivElement | null>;
+}) {
+  const [src, setSrc] = useState(`/admin/preview/section/${sectionId}`);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+
+    function update() {
+      const form = container?.querySelector("form");
+      if (!(form instanceof HTMLFormElement)) return;
+      const data = new FormData(form);
+      const params = new URLSearchParams();
+      for (const [field, param] of Object.entries(PREVIEW_FIELD_MAP)) {
+        const value = data.get(field);
+        if (typeof value === "string") params.set(param, value);
+      }
+      setSrc(`/admin/preview/section/${sectionId}?${params.toString()}`);
+    }
+
+    function scheduleUpdate() {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(update, 500);
+    }
+
+    container.addEventListener("input", scheduleUpdate);
+    container.addEventListener("change", scheduleUpdate);
+    update();
+
+    return () => {
+      container.removeEventListener("input", scheduleUpdate);
+      container.removeEventListener("change", scheduleUpdate);
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [sectionId, containerRef]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <span className="font-mono text-label-mono uppercase tracking-widest text-on-surface-variant">
+        Pré-visualização
+      </span>
+      <div className="overflow-hidden rounded-lg border border-outline-variant/20 bg-surface">
+        <iframe src={src} title="Pré-visualização da secção" className="h-[520px] w-full" />
+      </div>
     </div>
   );
 }
