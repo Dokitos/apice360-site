@@ -36,6 +36,7 @@ const navGroups: NavGroup[] = [
     items: [
       { href: "/admin/page-sections", label: "Secções de Página", icon: "dashboard_customize", resource: "page_sections" },
       { href: "/admin/pages", label: "Páginas Personalizadas", icon: "note_add", resource: "custom_pages" },
+      { href: "/admin/landing-page", label: "Landing Page (/lp)", icon: "ads_click", resource: "landing_page" },
       { href: "/admin/partners", label: "Parceiros", icon: "handshake", resource: "partners" },
       { href: "/admin/testimonials", label: "Testemunhos", icon: "format_quote", resource: "testimonials" },
       { href: "/admin/stats", label: "Estatísticas", icon: "monitoring", resource: "stats" },
@@ -106,7 +107,7 @@ export function AdminSidebar({
         )}
       >
         <Link href="/admin" className="mb-2 flex items-center gap-2 pl-12 lg:pl-0">
-          <Logo wordmarkClassName="text-headline-md" />
+          <Logo className="h-10" />
         </Link>
 
         {navGroups.map((group) => {

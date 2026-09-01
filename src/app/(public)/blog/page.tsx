@@ -49,7 +49,7 @@ export default async function BlogPage({
       />
 
       <Reveal as="section" className="bg-surface py-24">
-        <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+        <div className="mx-auto max-w-site px-5 md:px-20">
           {posts.length === 0 ? (
             <p className="text-center text-on-surface-variant">{dict.blog.semArtigos}</p>
           ) : (

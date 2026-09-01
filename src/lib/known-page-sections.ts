@@ -13,6 +13,7 @@ export const KNOWN_PAGE_SECTION_KEYS: Record<PageKeyValue, string[]> = {
   BLOG: ["intro"],
   CONTACTO: ["intro", "triagem"],
   AREA_ARQUITETO: ["intro"],
+  LP: ["hero", "benefits", "simulator", "trust", "contact"],
 };
 
 /**
@@ -44,4 +45,5 @@ export const PAGE_LABELS: Record<PageKeyValue, string> = {
   BLOG: "Blog",
   CONTACTO: "Contacto",
   AREA_ARQUITETO: "Área do Arquiteto",
+  LP: "Landing Page (/lp)",
 };

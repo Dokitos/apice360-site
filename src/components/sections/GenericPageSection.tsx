@@ -86,7 +86,7 @@ export async function GenericPageSection({
 
   return (
     <Reveal as="section" className={alt ? "bg-surface-container-lowest py-24" : "bg-surface py-24"}>
-      <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+      <div className="mx-auto max-w-site px-5 md:px-20">
         <div className="mx-auto max-w-3xl text-center">
           {section.iconName ? (
             <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">

@@ -43,7 +43,7 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
         {/* Kept dark for legibility over the photo, independent of the site's light theme. */}
         <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/40 to-ink/10" />
       </div>
-      <div className="relative z-10 mx-auto w-full max-w-[1280px] px-5 py-32 text-center md:px-20 lg:text-left">
+      <div className="relative z-10 mx-auto w-full max-w-site px-5 py-32 text-center md:px-20 lg:text-left">
         <div className="max-w-4xl lg:mx-0 mx-auto">
           {eyebrow ? (
             <span className="mb-8 inline-block bg-gradient-to-r from-primary to-primary-deep px-4 py-1.5 font-mono text-label-mono uppercase tracking-[0.3em] text-white shadow-[0_4px_20px_rgba(255,106,19,0.35)]">

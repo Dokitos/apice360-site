@@ -54,7 +54,7 @@ export default async function ContactoPage() {
       />
 
       <Reveal as="section" className="bg-surface py-24">
-        <div className="mx-auto max-w-[1280px] px-5 text-center md:px-20">
+        <div className="mx-auto max-w-site px-5 text-center md:px-20">
           <h2 className="mb-4 font-heading text-headline-md">
             {triagem?.heading ?? dict.contacto.triagemHeadingDefault}
           </h2>
@@ -83,7 +83,7 @@ export default async function ContactoPage() {
       </Reveal>
 
       <Reveal as="section" className="bg-surface-container-lowest py-24">
-        <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-16 px-5 md:px-20 lg:grid-cols-2">
+        <div className="mx-auto grid max-w-site grid-cols-1 gap-16 px-5 md:px-20 lg:grid-cols-2">
           <div>
             <h2 className="mb-4 font-heading text-headline-md">{dict.contacto.emailHeading}</h2>
             <p className="mb-10 text-on-surface-variant">{dict.contacto.emailBody}</p>

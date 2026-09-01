@@ -15,7 +15,8 @@ type PageKeyValue =
   | "PORTFOLIO"
   | "BLOG"
   | "CONTACTO"
-  | "AREA_ARQUITETO";
+  | "AREA_ARQUITETO"
+  | "LP";
 
 const SECTION_FIELDS = [
   { key: "eyebrow" },

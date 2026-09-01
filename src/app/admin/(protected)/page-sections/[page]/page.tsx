@@ -14,7 +14,16 @@ import {
   reorderPageSectionItems,
 } from "../actions";
 
-const VALID_PAGES = ["HOME", "QUEM_SOMOS", "SERVICOS", "PORTFOLIO", "BLOG", "CONTACTO", "AREA_ARQUITETO"] as const;
+const VALID_PAGES = [
+  "HOME",
+  "QUEM_SOMOS",
+  "SERVICOS",
+  "PORTFOLIO",
+  "BLOG",
+  "CONTACTO",
+  "AREA_ARQUITETO",
+  "LP",
+] as const;
 
 const PAGE_LABELS: Record<(typeof VALID_PAGES)[number], string> = {
   HOME: "Home",
@@ -24,6 +33,7 @@ const PAGE_LABELS: Record<(typeof VALID_PAGES)[number], string> = {
   BLOG: "Blog",
   CONTACTO: "Contacto",
   AREA_ARQUITETO: "Área do Arquiteto",
+  LP: "Landing Page (/lp)",
 };
 
 export default async function PageSectionsEditorPage({

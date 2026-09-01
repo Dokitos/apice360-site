@@ -32,6 +32,7 @@ enum PageKey {
   BLOG
   CONTACTO
   AREA_ARQUITETO
+  LP
 }
 
 enum ProjectCategory {
@@ -532,4 +533,35 @@ model LeadActivity {
   createdAt DateTime         @default(now())
 
   @@index([leadId])
+}
+
+/// Escalões de preço por m² usados pelo simulador da landing page (/lp).
+/// O resultado do simulador mostra um cartão por escalão ativo, pela ordem
+/// definida aqui — tipicamente Económica, Conforto (destacada) e Premium.
+model LpPriceTier {
+  id            String                   @id @default(cuid())
+  key           String                   @unique
+  /// Preço por m² em euros (sem IVA), usado como `metros quadrados × preço`.
+  pricePerM2    Int
+  order         Int                      @default(0)
+  /// Cartão em destaque no resultado — a opção que a Ápice 360 recomenda.
+  isHighlighted Boolean                  @default(false)
+  iconName      String?
+  isActive      Boolean                  @default(true)
+  updatedAt     DateTime                 @updatedAt
+  translations  LpPriceTierTranslation[]
+}
+
+model LpPriceTierTranslation {
+  id               String      @id @default(cuid())
+  tierId           String
+  tier             LpPriceTier @relation(fields: [tierId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean     @default(false)
+  label            String
+  description      String?
+  /// Bullets do cartão, uma por linha (texto simples).
+  features         String?
+
+  @@unique([tierId, locale])
 }

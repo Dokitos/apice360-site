@@ -21,7 +21,7 @@ type WhyChooseSectionProps = {
 export function WhyChooseSection({ eyebrow, heading, body, imageUrl, items, cta, locale = "PT" }: WhyChooseSectionProps) {
   return (
     <Reveal as="section" className="bg-surface-container-lowest py-32">
-      <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+      <div className="mx-auto max-w-site px-5 md:px-20">
         <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
           {imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element

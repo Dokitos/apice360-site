@@ -16,7 +16,7 @@ type ResultsStatsSectionProps = {
 export function ResultsStatsSection({ heading, body, stats, cta }: ResultsStatsSectionProps) {
   return (
     <Reveal as="section" className="bg-surface py-32 text-center">
-      <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+      <div className="mx-auto max-w-site px-5 md:px-20">
         <h2 className="mb-4 font-heading text-headline-lg">{heading}</h2>
         <div className="mx-auto mb-16 h-1 w-24 rounded-full bg-primary" />
         <div className="grid grid-cols-2 gap-10 md:grid-cols-5">

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { clientIpFromHeaders, rateLimit } from "@/lib/rate-limit";
+import { contactableEmail, EMAIL_ISSUE_MESSAGES, PHONE_ISSUE_MESSAGES } from "@/lib/validations/public";
+import { checkPhone } from "@/lib/validations/contactable";
+import { domainAcceptsMail } from "@/lib/validations/contactable.server";
 
 // Public, unauthenticated endpoint that lets other Ápice 360 front-ends
 // (currently the static landing page at apice360-lp.vercel.app) persist a
@@ -16,8 +19,18 @@ const ALLOWED_ORIGINS = [
 const publicLeadSchema = z.object({
   type: z.enum(["CONTACT", "BUDGET", "ARCHITECT_PARTNERSHIP"]),
   name: z.string().trim().min(1, "Indica o nome.").max(200),
-  email: z.string().trim().email("Indica um email válido."),
-  phone: z.string().trim().max(40).optional().or(z.literal("")),
+  email: contactableEmail,
+  phone: z
+    .string()
+    .trim()
+    .max(40)
+    .optional()
+    .or(z.literal(""))
+    .superRefine((value, ctx) => {
+      if (!value) return;
+      const result = checkPhone(value);
+      if (!result.ok) ctx.addIssue({ code: "custom", message: PHONE_ISSUE_MESSAGES[result.reason as never] });
+    }),
   message: z.string().trim().max(4000).optional().or(z.literal("")),
   sourcePage: z.string().trim().max(200).optional(),
   // Honeypot: real visitors never fill this hidden field, bots usually do.
@@ -75,6 +88,10 @@ export async function POST(request: NextRequest) {
   // Honeypot triggered — silently pretend success so bots don't learn to adapt.
   if (parsed.data.company) {
     return NextResponse.json({ ok: true }, { headers });
+  }
+
+  if (!(await domainAcceptsMail(parsed.data.email))) {
+    return NextResponse.json({ ok: false, error: EMAIL_ISSUE_MESSAGES.no_mail_server }, { status: 400, headers });
   }
 
   await prisma.leadSubmission.create({

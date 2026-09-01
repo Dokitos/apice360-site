@@ -1,0 +1,864 @@
+{
+ "LSF": {
+  "ES": "LSF",
+  "FR": "LSF"
+ },
+ "TESTE": {
+  "ES": "PRUEBA",
+  "FR": "TEST",
+  "EN": "TEST"
+ },
+ "teste": {
+  "ES": "prueba",
+  "FR": "test",
+  "EN": "test"
+ },
+ "Teste": {
+  "ES": "Prueba",
+  "FR": "Test",
+  "EN": "Test"
+ },
+ "Valores": {
+  "ES": "Valores",
+  "FR": "Valeurs"
+ },
+ "Premium": {
+  "ES": "Premium",
+  "FR": "Premium"
+ },
+ "Pintura": {
+  "ES": "Pintura",
+  "FR": "Peinture",
+  "EN": "Painting"
+ },
+ "Inovação": {
+  "ES": "Innovación",
+  "FR": "Innovation"
+ },
+ "Conforto": {
+  "ES": "Confort",
+  "FR": "Confort"
+ },
+ "Reformas": {
+  "ES": "Reformas",
+  "FR": "Rénovations",
+  "EN": "Renovations"
+ },
+ "Económica": {
+  "ES": "Económica",
+  "FR": "Économique"
+ },
+ "Integridade": {
+  "ES": "Integridad",
+  "FR": "Intégrité"
+ },
+ "Compromisso": {
+  "ES": "Compromiso",
+  "FR": "Engagement"
+ },
+ "Falar Agora": {
+  "ES": "Hablar Ahora",
+  "FR": "Parler Maintenant"
+ },
+ "Remodelação": {
+  "ES": "Remodelación",
+  "FR": "Rénovation"
+ },
+ "Construtora": {
+  "ES": "Constructora",
+  "FR": "Entreprise de Construction"
+ },
+ "botao_teste": {
+  "ES": "botao_teste",
+  "FR": "botao_teste"
+ },
+ "A Nossa Visão": {
+  "ES": "Nuestra Visión",
+  "FR": "Notre Vision"
+ },
+ "Equipa Própria": {
+  "ES": "Equipo Propio",
+  "FR": "Équipe Interne"
+ },
+ "A Nossa Missão": {
+  "ES": "Nuestra Misión",
+  "FR": "Notre Mission"
+ },
+ "Fazemos pintura": {
+  "ES": "Hacemos pintura",
+  "FR": "Nous faisons de la peinture",
+  "EN": "We do painting"
+ },
+ "Obras Realizadas": {
+  "ES": "Obras Realizadas",
+  "FR": "Chantiers Réalisés"
+ },
+ "Anos em Portugal": {
+  "ES": "Años en Portugal",
+  "FR": "Ans au Portugal"
+ },
+ "Scoring Portugal": {
+  "ES": "Scoring Portugal",
+  "FR": "Scoring Portugal"
+ },
+ "Para Atendimento": {
+  "ES": "Para Atención",
+  "FR": "Ouvert aux Visites"
+ },
+ "Ver Mais Artigos": {
+  "ES": "Ver Más Artículos",
+  "FR": "Voir Plus d'Articles"
+ },
+ "Botão de chamada": {
+  "ES": "Botón de llamada",
+  "FR": "Bouton d'appel",
+  "EN": "Call button"
+ },
+ "Fim da Burocracia": {
+  "ES": "Fin de la Burocracia",
+  "FR": "Fin de la Bureaucratie"
+ },
+ "Reformas em geral": {
+  "ES": "Reformas en general",
+  "FR": "Rénovations en général",
+  "EN": "General renovations"
+ },
+ "Moveis planejados": {
+  "ES": "Muebles a medida",
+  "FR": "Meubles sur mesure",
+  "EN": "Fitted furniture"
+ },
+ "Agendar uma Visita": {
+  "ES": "Programar una Visita",
+  "FR": "Planifier une Visite"
+ },
+ "Showroom no Seixal": {
+  "ES": "Showroom en Seixal",
+  "FR": "Showroom à Seixal"
+ },
+ "Excelência Técnica": {
+  "ES": "Excelencia Técnica",
+  "FR": "Excellence Technique"
+ },
+ "Velocidade Recorde": {
+  "ES": "Velocidad Récord",
+  "FR": "Vitesse Record"
+ },
+ "Faça seu Orçamento": {
+  "ES": "Solicite su Presupuesto",
+  "FR": "Demandez Votre Devis"
+ },
+ "Eficiência Superior": {
+  "ES": "Eficiencia Superior",
+  "FR": "Efficacité Supérieure"
+ },
+ "Scoring em Portugal": {
+  "ES": "Scoring en Portugal",
+  "FR": "Scoring au Portugal"
+ },
+ "Segurança Estrutural": {
+  "ES": "Seguridad Estructural",
+  "FR": "Sécurité Structurelle"
+ },
+ "Serviços | Ápice 360": {
+  "ES": "Servicios | Ápice 360",
+  "FR": "Services | Ápice 360"
+ },
+ "Contacto | Ápice 360": {
+  "ES": "Contacto | Ápice 360",
+  "FR": "Contact | Ápice 360"
+ },
+ "Fundador e Autoridade": {
+  "ES": "Fundador y Autoridad",
+  "FR": "Fondateur et Référence"
+ },
+ "Qualidade Inegociável": {
+  "ES": "Calidad Innegociable",
+  "FR": "Qualité Non Négociable"
+ },
+ "Portfólio | Ápice 360": {
+  "ES": "Portafolio | Ápice 360",
+  "FR": "Portfolio | Ápice 360"
+ },
+ "Foco em LSF e Inovação": {
+  "ES": "Enfoque en LSF e Innovación",
+  "FR": "Focus sur le LSF et l'Innovation"
+ },
+ "Quem Somos | Ápice 360": {
+  "ES": "Quiénes Somos | Ápice 360",
+  "FR": "Qui Sommes-Nous | Ápice 360"
+ },
+ "Construímos o Seu Sonho": {
+  "ES": "Construimos Su Sueño",
+  "FR": "Nous Construisons Votre Rêve"
+ },
+ "Fale com a Nossa Equipa": {
+  "ES": "Hable con Nuestro Equipo",
+  "FR": "Parlez à Notre Équipe"
+ },
+ "Conheça Nossos Serviços": {
+  "ES": "Conozca Nuestros Servicios",
+  "FR": "Découvrez Nos Services"
+ },
+ "Excelência e Compromisso": {
+  "ES": "Excelencia y Compromiso",
+  "FR": "Excellence et Engagement"
+ },
+ "Falar com a Nossa Equipa": {
+  "ES": "Hablar con Nuestro Equipo",
+  "FR": "Parler à Notre Équipe"
+ },
+ "Por Detrás da Excelência": {
+  "ES": "Detrás de la Excelencia",
+  "FR": "Derrière l'Excellence"
+ },
+ "Converse com Nossa Equipa": {
+  "ES": "Converse con Nuestro Equipo",
+  "FR": "Échangez avec Notre Équipe"
+ },
+ "Simular a minha estimativa": {
+  "ES": "Simular mi estimación",
+  "FR": "Simuler mon estimation"
+ },
+ "Durabilidade a Longo Prazo": {
+  "ES": "Durabilidad a Largo Plazo",
+  "FR": "Durabilité à Long Terme"
+ },
+ "Porque Escolher a Ápice 360": {
+  "ES": "Por Qué Elegir Ápice 360",
+  "FR": "Pourquoi Choisir Ápice 360"
+ },
+ "Porquê Escolher a Ápice 360": {
+  "ES": "Por Qué Elegir a Ápice 360",
+  "FR": "Pourquoi Choisir Ápice 360 ?"
+ },
+ "Conforto Térmico e Acústico": {
+  "ES": "Confort Térmico y Acústico",
+  "FR": "Confort Thermique et Acoustique"
+ },
+ "Ruínas e Alta Rentabilidade": {
+  "ES": "Ruinas y Alta Rentabilidad",
+  "FR": "Ruines et Haute Rentabilité"
+ },
+ "Conheça as Vantagens do LSF": {
+  "ES": "Conozca las Ventajas del LSF",
+  "FR": "Découvrez les Avantages du LSF"
+ },
+ "Triagem Rápida (Recomendado)": {
+  "ES": "Evaluación Rápida (Recomendado)",
+  "FR": "Évaluation Rapide (Recommandé)"
+ },
+ "Rapidez sem Perder Qualidade": {
+  "ES": "Rapidez sin Perder Calidad",
+  "FR": "Rapidité sans Perdre en Qualité"
+ },
+ "Integridade e Controlo Total": {
+  "ES": "Integridad y Control Total",
+  "FR": "Intégrité et Contrôle Total"
+ },
+ "Rapidez Sem Perder Qualidade": {
+  "ES": "Rapidez Sin Perder Calidad",
+  "FR": "Rapidité Sans Perdre en Qualité"
+ },
+ "Construção Limpa e Organizada": {
+  "ES": "Construcción Limpia y Organizada",
+  "FR": "Chantier Propre et Organisé"
+ },
+ "Área do Arquiteto | Ápice 360": {
+  "ES": "Área del Arquitecto | Ápice 360",
+  "FR": "Espace Architecte | Ápice 360"
+ },
+ "Equipa Própria e Especializada": {
+  "ES": "Equipo Propio y Especializado",
+  "FR": "Équipe Interne et Spécialisée"
+ },
+ "Melhor Certificação Energética": {
+  "ES": "Mejor Certificación Energética",
+  "FR": "Meilleure Certification Énergétique"
+ },
+ "Segurança e Garantia Estendida": {
+  "ES": "Seguridad y Garantía Extendida",
+  "FR": "Sécurité et Garantie Étendue"
+ },
+ "Blog da Construção | Ápice 360": {
+  "ES": "Blog de Construcción | Ápice 360",
+  "FR": "Blog de la Construction | Ápice 360"
+ },
+ "Construção em Remodelação Total": {
+  "ES": "Construcción en Remodelación Total",
+  "FR": "Construction en Rénovation Totale"
+ },
+ "Transformou uma ruína num sonho.": {
+  "ES": "Transformó una ruina en un sueño.",
+  "FR": "A transformé une ruine en un rêve."
+ },
+ "+8 Anos de Experiência em Portugal": {
+  "ES": "+8 Años de Experiencia en Portugal",
+  "FR": "+8 Ans d'Expérience au Portugal"
+ },
+ "Base: o projeto que dá vida à obra": {
+  "ES": "Base: el proyecto que da vida a la obra",
+  "FR": "Base : le projet qui donne vie au chantier"
+ },
+ "O Futuro da Construção em Portugal": {
+  "ES": "El Futuro de la Construcción en Portugal",
+  "FR": "L'Avenir de la Construction au Portugal"
+ },
+ "A Nossa História (Fundação e Visão)": {
+  "ES": "Nuestra Historia (Fundación y Visión)",
+  "FR": "Notre Histoire (Fondation et Vision)"
+ },
+ "Simule a Sua Estimativa em 1 Minuto": {
+  "ES": "Simule Su Estimación en 1 Minuto",
+  "FR": "Simulez Votre Estimation en 1 Minute"
+ },
+ "Durabilidade e Resistência a Sismos": {
+  "ES": "Durabilidad y Resistencia Sísmica",
+  "FR": "Durabilité et Résistance aux Séismes"
+ },
+ "Converse e Entenda a Melhor Solução": {
+  "ES": "Converse y Descubra la Mejor Solución",
+  "FR": "Échangez et Trouvez la Meilleure Solution"
+ },
+ "Execução: onde a moradia ganha forma": {
+  "ES": "Ejecución: donde la vivienda toma forma",
+  "FR": "Exécution : là où la maison prend forme"
+ },
+ "Conforto Térmico e Acústico Superior": {
+  "ES": "Confort Térmico y Acústico Superior",
+  "FR": "Confort Thermique et Acoustique Supérieur"
+ },
+ "Acompanhamento 360 do início ao fim.": {
+  "ES": "Acompañamiento 360 de principio a fin.",
+  "FR": "Accompagnement 360 du début à la fin."
+ },
+ "Construção em LSF - Light Steel Frame": {
+  "ES": "Construcción en LSF - Light Steel Frame",
+  "FR": "Construction en LSF - Light Steel Frame"
+ },
+ "Visão: onde começa uma obra inteligente": {
+  "ES": "Visión: donde empieza una obra inteligente",
+  "FR": "Vision : là où commence un chantier intelligent"
+ },
+ "Construção em LSF, no modelo Chave na Mão.": {
+  "ES": "Construcción en LSF, en modalidad Llave en Mano.",
+  "FR": "Construction en LSF, en modèle Clé en Main."
+ },
+ "Porque o LSF é a Melhor Escolha em Portugal?": {
+  "ES": "¿Por Qué el LSF es la Mejor Opción en Portugal?",
+  "FR": "Pourquoi le LSF est-il le Meilleur Choix au Portugal ?"
+ },
+ "Remodelar uma Ruína: O Caminho Mais Rentável": {
+  "ES": "Remodelar una Ruina: El Camino Más Rentable",
+  "FR": "Rénover une Ruine : La Voie la Plus Rentable"
+ },
+ "Aprenda com quem constrói no mais alto nível.": {
+  "ES": "Aprenda de quien construye al más alto nivel.",
+  "FR": "Apprenez auprès de ceux qui construisent au plus haut niveau."
+ },
+ "Velocidade na entrega sem perder na qualidade.": {
+  "ES": "Velocidad en la entrega sin perder calidad.",
+  "FR": "Rapidité de livraison sans perte de qualité."
+ },
+ "Foi realizado em tempo recorde e sem surpresas.": {
+  "ES": "Se realizó en tiempo récord y sin sorpresas.",
+  "FR": "Réalisé en un temps record et sans surprises."
+ },
+ "Chave na Mão: A Garantia de uma Obra sem Riscos": {
+  "ES": "Llave en Mano: La Garantía de una Obra sin Riesgos",
+  "FR": "Clé en Main : La Garantie d'un Chantier sans Risques"
+ },
+ "O Nosso Método: A Gestão 360° de Alto Desempenho": {
+  "ES": "Nuestro Método: La Gestión 360° de Alto Rendimiento",
+  "FR": "Notre Méthode : La Gestion 360° de Haute Performance"
+ },
+ "Mais de 60 obras realizadas, com equipa própria.": {
+  "ES": "Más de 60 obras realizadas, con equipo propio.",
+  "FR": "Plus de 60 chantiers réalisés, avec notre propre équipe."
+ },
+ "Projeto realizado para cliente final em 8 meses.": {
+  "ES": "Proyecto realizado para cliente final en 8 meses.",
+  "FR": "Projet réalisé pour un client final en 8 mois."
+ },
+ "O Modelo de Construção Mais Utilizado em Portugal": {
+  "ES": "El Modelo de Construcción Más Utilizado en Portugal",
+  "FR": "Le Modèle de Construction le Plus Utilisé au Portugal"
+ },
+ "Remodelação completa de casa abandonada em Lisboa.": {
+  "ES": "Remodelación completa de una casa abandonada en Lisboa.",
+  "FR": "Rénovation complète d'une maison abandonnée à Lisbonne."
+ },
+ "A confiança constrói-se com parcerias e resultados.": {
+  "ES": "La confianza se construye con alianzas y resultados.",
+  "FR": "La confiance se construit avec des partenariats et des résultats."
+ },
+ "Clique Aqui e Converse com a Nossa Equipa Comercial": {
+  "ES": "Haga Clic Aquí y Hable con Nuestro Equipo Comercial",
+  "FR": "Cliquez Ici et Échangez avec Notre Équipe Commerciale"
+ },
+ "Construção LSF completa junto ao litoral de Cascais.": {
+  "ES": "Construcción LSF completa junto al litoral de Cascais.",
+  "FR": "Construction LSF complète sur le littoral de Cascais."
+ },
+ "Qualidade impecável, realmente entrega o que promete.": {
+  "ES": "Calidad impecable, realmente cumple lo que promete.",
+  "FR": "Qualité impeccable, tient vraiment ses promesses."
+ },
+ "O Caminho da Construção Inteligente: Método de 4 Fases": {
+  "ES": "El Camino de la Construcción Inteligente: Método de 4 Fases",
+  "FR": "Le Chemin de la Construction Intelligente : Méthode en 4 Phases"
+ },
+ "Remodelação ou Construção Convencional: Qual Escolher?": {
+  "ES": "¿Remodelación o Construcción Convencional: Cuál Elegir?",
+  "FR": "Rénovation ou Construction Conventionnelle : Que Choisir ?"
+ },
+ "LSF: Uma solução moderna e eficiente para a construção": {
+  "ES": "LSF: Una solución moderna y eficiente para la construcción",
+  "FR": "LSF : Une solution moderne et efficace pour la construction"
+ },
+ "Finalização: da última verificação à entrega das chaves": {
+  "ES": "Finalización: de la última verificación a la entrega de llaves",
+  "FR": "Finalisation : de la dernière vérification à la remise des clés"
+ },
+ "LSF: A Tecnologia Construtiva Mais Eficiente da Europa.": {
+  "ES": "LSF: La Tecnología Constructiva Más Eficiente de Europa.",
+  "FR": "LSF : La Technologie de Construction la Plus Efficace d'Europe."
+ },
+ "Contacte a Ápice 360 e inicie a triagem do seu projeto.": {
+  "ES": "Contacte con Ápice 360 e inicie la evaluación de su proyecto.",
+  "FR": "Contactez Ápice 360 et lancez l'évaluation de votre projet."
+ },
+ "Ápice 360 | Construções em Light Steel Frame em Portugal": {
+  "ES": "Ápice 360 | Construcciones en Light Steel Frame en Portugal",
+  "FR": "Ápice 360 | Constructions en Light Steel Frame au Portugal"
+ },
+ "Projeto realizado em parceria com Gabinete de Arquitetura.": {
+  "ES": "Proyecto realizado en colaboración con un Estudio de Arquitectura.",
+  "FR": "Projet réalisé en partenariat avec un Cabinet d'Architecture."
+ },
+ "Transformação completa de ruína em moradia de alto padrão.": {
+  "ES": "Transformación completa de una ruina en una vivienda de alta gama.",
+  "FR": "Transformation complète d'une ruine en maison haut de gamme."
+ },
+ "O seu recurso especializado sobre LSF e gestão de projetos.": {
+  "ES": "Su recurso especializado sobre LSF y gestión de proyectos.",
+  "FR": "Votre ressource spécialisée sur le LSF et la gestion de projets."
+ },
+ "Projeto realizado em uma ruína em Coimbra para cliente final.": {
+  "ES": "Proyecto realizado en una ruina en Coímbra para cliente final.",
+  "FR": "Projet réalisé dans une ruine à Coimbra pour un client final."
+ },
+ "Uma Parceria Construída em Confiança e Especialização Técnica.": {
+  "ES": "Una Alianza Construida sobre Confianza y Especialización Técnica.",
+  "FR": "Un Partenariat Construit sur la Confiance et l'Expertise Technique."
+ },
+ "Venha conhecer a estrutura em LSF de perto. Agende uma visita.": {
+  "ES": "Venga a conocer la estructura en LSF de cerca. Programe una visita.",
+  "FR": "Venez découvrir la structure LSF de près. Planifiez une visite."
+ },
+ "Ápice 360 | Construção em Light Steel Frame de Alta Performance": {
+  "ES": "Ápice 360 | Construcción en Light Steel Frame de Alto Rendimiento",
+  "FR": "Ápice 360 | Construction en Light Steel Frame de Haute Performance"
+ },
+ "Remodelação total em parceria com gabinete de arquitetura local.": {
+  "ES": "Remodelación total en colaboración con un estudio de arquitectura local.",
+  "FR": "Rénovation totale en partenariat avec un cabinet d'architecture local."
+ },
+ "O melhor equilíbrio entre conforto, durabilidade e investimento.": {
+  "ES": "El mejor equilibrio entre confort, durabilidad e inversión.",
+  "FR": "Le meilleur équilibre entre confort, durabilité et investissement."
+ },
+ "Acabamentos e equipamentos de gama alta, à medida do seu projeto.": {
+  "ES": "Acabados y equipamiento de gama alta, a medida de su proyecto.",
+  "FR": "Finitions et équipements haut de gamme, adaptés à votre projet."
+ },
+ "Acabamentos funcionais e eficientes, com o mesmo rigor construtivo.": {
+  "ES": "Acabados funcionales y eficientes, con el mismo rigor constructivo.",
+  "FR": "Finitions fonctionnelles et efficaces, avec la même rigueur de construction."
+ },
+ "Conheça a história, a missão e o método de gestão 360° da Ápice 360.": {
+  "ES": "Conozca la historia, la misión y el método de gestión 360° de Ápice 360.",
+  "FR": "Découvrez l'histoire, la mission et la méthode de gestion 360° d'Ápice 360."
+ },
+ "Necessidade de entrega ultrarrápida (8 meses) e cliente noutro país.": {
+  "ES": "Necesidad de una entrega ultrarrápida (8 meses) y cliente en otro país.",
+  "FR": "Besoin d'une livraison ultra-rapide (8 mois) et client dans un autre pays."
+ },
+ "A Sua Moradia Pronta Até 3x Mais Rápido, Com a Segurança do Aço Leve.": {
+  "ES": "Su Vivienda Lista Hasta 3x Más Rápido, Con la Seguridad del Acero Ligero.",
+  "FR": "Votre Maison Prête Jusqu'à 3x Plus Rapide, Avec la Sécurité de l'Acier Léger."
+ },
+ "Soluções de Alto Desempenho: Construção em LSF, no modelo Chave na Mão.": {
+  "ES": "Soluciones de Alto Rendimiento: Construcción en LSF, en modalidad Llave en Mano.",
+  "FR": "Solutions de Haute Performance : Construction en LSF, en modèle Clé en Main."
+ },
+ "Projeto realizado para cliente final de outro país. Acompanhamento 360.": {
+  "ES": "Proyecto realizado para un cliente final de otro país. Acompañamiento 360.",
+  "FR": "Projet réalisé pour un client final d'un autre pays. Accompagnement 360."
+ },
+ "Remodelação Total: Transformamos Ruínas em Ativos de Alta Rentabilidade.": {
+  "ES": "Remodelación Total: Transformamos Ruinas en Activos de Alta Rentabilidad.",
+  "FR": "Rénovation Totale : Nous Transformons les Ruines en Actifs à Haute Rentabilité."
+ },
+ "Transformou uma ruína num sonho, entregue com garantia estrutural total.": {
+  "ES": "Transformó una ruina en un sueño, entregado con garantía estructural total.",
+  "FR": "A transformé une ruine en un rêve, livré avec une garantie structurelle totale."
+ },
+ "Aço galvanizado de alta resistência e tratamento anticorrosivo adicional.": {
+  "ES": "Acero galvanizado de alta resistencia y tratamiento anticorrosivo adicional.",
+  "FR": "Acier galvanisé à haute résistance et traitement anticorrosion supplémentaire."
+ },
+ "Estrutura original comprometida, exigindo reforço e reconstrução parcial.": {
+  "ES": "Estructura original comprometida, que exigía refuerzo y reconstrucción parcial.",
+  "FR": "Structure d'origine compromise, exigeant renforcement et reconstruction partielle."
+ },
+ "Baixa humidade e mofo, evitando fissuras comuns na construção tradicional.": {
+  "ES": "Baja humedad y moho, evitando las fisuras habituales en la construcción tradicional.",
+  "FR": "Peu d'humidité et de moisissures, évitant les fissures courantes dans la construction traditionnelle."
+ },
+ "Moradia entregue com garantia estrutural estendida para ambiente costeiro.": {
+  "ES": "Vivienda entregada con garantía estructural ampliada para entorno costero.",
+  "FR": "Maison livrée avec une garantie structurelle étendue pour environnement côtier."
+ },
+ "Coordenação entre múltiplos stakeholders sem perder o modelo chave na mão.": {
+  "ES": "Coordinación entre múltiples actores sin perder el modelo llave en mano.",
+  "FR": "Coordination entre de multiples intervenants sans perdre le modèle clé en main."
+ },
+ "Supervisão técnica constante e comunicação clara em todas as fases da obra.": {
+  "ES": "Supervisión técnica constante y comunicación clara en todas las fases de la obra.",
+  "FR": "Supervision technique constante et communication claire à toutes les phases du chantier."
+ },
+ "Moradia de Alto Valor entregue no prazo e acompanhamento total do processo.": {
+  "ES": "Vivienda de Alto Valor entregada en plazo y acompañamiento total del proceso.",
+  "FR": "Maison de Haute Valeur livrée dans les délais et accompagnement total du processus."
+ },
+ "Venha conhecer o nosso showroom e toda a estrutura em LSF. Esperamos por si!": {
+  "ES": "Venga a conocer nuestro showroom y toda la estructura en LSF. ¡Le esperamos!",
+  "FR": "Venez découvrir notre showroom et toute la structure en LSF. Nous vous attendons !"
+ },
+ "Ápice 360: Nascidos para Solucionar a Insegurança da Construção em Portugal.": {
+  "ES": "Ápice 360: Nacidos para Resolver la Inseguridad de la Construcción en Portugal.",
+  "FR": "Ápice 360 : Nés pour Résoudre l'Insécurité de la Construction au Portugal."
+ },
+ "Renovação integral com equipa própria e parceria com Gabinete de Arquitetura.": {
+  "ES": "Renovación integral con equipo propio y colaboración con un Estudio de Arquitectura.",
+  "FR": "Rénovation intégrale avec équipe interne et partenariat avec un Cabinet d'Architecture."
+ },
+ "O Mercado que Mais Cresce na Europa (e Como a Maioria em Portugal Faz Errado)": {
+  "ES": "El Mercado que Más Crece en Europa (y Cómo la Mayoría en Portugal lo Hace Mal)",
+  "FR": "Le Marché qui Croît le Plus en Europe (et Comment la Majorité au Portugal s'y Prend Mal)"
+ },
+ "Segurança estrutural e resistência a sismos, com estrutura em aço galvanizado.": {
+  "ES": "Seguridad estructural y resistencia sísmica, con estructura de acero galvanizado.",
+  "FR": "Sécurité structurelle et résistance aux séismes, avec une ossature en acier galvanisé."
+ },
+ "Entrega de um projeto arquitetónico complexo sem desvios de prazo ou orçamento.": {
+  "ES": "Entrega de un proyecto arquitectónico complejo sin desviaciones de plazo ni presupuesto.",
+  "FR": "Livraison d'un projet architectural complexe sans dépassement de délai ni de budget."
+ },
+ "Entrega dentro do prazo com total satisfação do cliente e do gabinete parceiro.": {
+  "ES": "Entrega dentro del plazo con total satisfacción del cliente y del estudio colaborador.",
+  "FR": "Livraison dans les délais avec une entière satisfaction du client et du cabinet partenaire."
+ },
+ "Porque uma obra de alto valor exige mais do que promessas — exige controlo total.": {
+  "ES": "Porque una obra de alto valor exige más que promesas: exige control total.",
+  "FR": "Parce qu'un chantier de haute valeur exige plus que des promesses : il exige un contrôle total."
+ },
+ "Garantimos o melhor conforto térmico e acústico, com elevada poupança energética.": {
+  "ES": "Garantizamos el mejor confort térmico y acústico, con un elevado ahorro energético.",
+  "FR": "Nous garantissons le meilleur confort thermique et acoustique, avec de fortes économies d'énergie."
+ },
+ "Exposição salina exigindo especificações técnicas reforçadas na estrutura de aço.": {
+  "ES": "Exposición salina que exigía especificaciones técnicas reforzadas en la estructura de acero.",
+  "FR": "Exposition saline exigeant des spécifications techniques renforcées pour l'ossature en acier."
+ },
+ "Imóvel totalmente requalificado e valorizado, pronto para habitar ou rentabilizar.": {
+  "ES": "Inmueble totalmente rehabilitado y revalorizado, listo para habitar o rentabilizar.",
+  "FR": "Bien entièrement réhabilité et valorisé, prêt à habiter ou à rentabiliser."
+ },
+ "Transparência e ética em todas as relações. Sem surpresas no orçamento ou no prazo.": {
+  "ES": "Transparencia y ética en todas las relaciones. Sin sorpresas en el presupuesto ni en el plazo.",
+  "FR": "Transparence et éthique dans toutes les relations. Aucune surprise sur le budget ni sur les délais."
+ },
+ "Projeto realizado em parceria com Gabinete de Arquitetura totalmente personalizado.": {
+  "ES": "Proyecto totalmente personalizado, realizado en colaboración con un Estudio de Arquitectura.",
+  "FR": "Projet entièrement personnalisé, réalisé en partenariat avec un Cabinet d'Architecture."
+ },
+ "Ponto único de contacto com o cliente, mesmo trabalhando em parceria com terceiros.": {
+  "ES": "Punto único de contacto con el cliente, incluso trabajando en colaboración con terceros.",
+  "FR": "Point de contact unique avec le client, même en travaillant en partenariat avec des tiers."
+ },
+ "Design totalmente personalizado com prazos rígidos definidos pelo gabinete parceiro.": {
+  "ES": "Diseño totalmente personalizado con plazos estrictos definidos por el estudio colaborador.",
+  "FR": "Design entièrement personnalisé avec des délais stricts définis par le cabinet partenaire."
+ },
+ "Preencha os 3 passos abaixo e receba uma estimativa personalizada para o seu projeto.": {
+  "ES": "Complete los 3 pasos siguientes y reciba una estimación personalizada para su proyecto.",
+  "FR": "Remplissez les 3 étapes ci-dessous et recevez une estimation personnalisée pour votre projet."
+ },
+ "Projeto realizado de remodelação total realizado em tempo recorde para cliente final.": {
+  "ES": "Proyecto de remodelación total realizado en tiempo récord para cliente final.",
+  "FR": "Projet de rénovation totale réalisé en un temps record pour un client final."
+ },
+ "Veja em detalhe como transformamos projetos de elevado valor em obras prontas a viver.": {
+  "ES": "Vea en detalle cómo transformamos proyectos de alto valor en obras listas para vivir.",
+  "FR": "Découvrez en détail comment nous transformons des projets de haute valeur en maisons prêtes à vivre."
+ },
+ "Diagnóstico técnico detalhado seguido de reconstrução Chave na Mão com equipa própria.": {
+  "ES": "Diagnóstico técnico detallado seguido de reconstrucción Llave en Mano con equipo propio.",
+  "FR": "Diagnostic technique détaillé suivi d'une reconstruction Clé en Main avec notre propre équipe."
+ },
+ "Obra limpa, previsível e organizada, com elevado controlo de execução do início ao fim.": {
+  "ES": "Obra limpia, previsible y organizada, con un elevado control de ejecución de principio a fin.",
+  "FR": "Chantier propre, prévisible et organisé, avec un contrôle d'exécution rigoureux du début à la fin."
+ },
+ "Remodelação completa de casa abandonada em Lisboa. Parceria com Gabinete de Arquitetura.": {
+  "ES": "Remodelación completa de una casa abandonada en Lisboa. En colaboración con un Estudio de Arquitectura.",
+  "FR": "Rénovation complète d'une maison abandonnée à Lisbonne. En partenariat avec un Cabinet d'Architecture."
+ },
+ "Utilização do LSF e novas tecnologias, garantindo conforto térmico e acústico superiores.": {
+  "ES": "Uso del LSF y de nuevas tecnologías, garantizando un confort térmico y acústico superiores.",
+  "FR": "Utilisation du LSF et de nouvelles technologies, garantissant un confort thermique et acoustique supérieurs."
+ },
+ "Entregamos a sua moradia em meses, não em anos, devido à tecnologia e à gestão otimizada.": {
+  "ES": "Entregamos su vivienda en meses, no en años, gracias a la tecnología y a una gestión optimizada.",
+  "FR": "Nous livrons votre maison en mois, pas en années, grâce à la technologie et à une gestion optimisée."
+ },
+ "Imóvel devoluto há mais de uma década, com instalações elétricas e hidráulicas obsoletas.": {
+  "ES": "Inmueble abandonado desde hace más de una década, con instalaciones eléctricas e hidráulicas obsoletas.",
+  "FR": "Bien laissé à l'abandon depuis plus d'une décennie, avec des installations électriques et hydrauliques obsolètes."
+ },
+ "Uma parceria construída em confiança e especialização técnica com gabinetes de arquitetura.": {
+  "ES": "Una alianza construida sobre confianza y especialización técnica con estudios de arquitectura.",
+  "FR": "Un partenariat construit sur la confiance et l'expertise technique avec des cabinets d'architecture."
+ },
+ "Descubra o porquê de o LSF estar a crescer na Europa e como a maioria em Portugal faz errado.": {
+  "ES": "Descubra por qué el LSF está creciendo en Europa y cómo la mayoría en Portugal lo hace mal.",
+  "FR": "Découvrez pourquoi le LSF se développe en Europe et comment la majorité au Portugal s'y prend mal."
+ },
+ "Construímos o futuro com leveza, velocidade e confiança. Estruturas em LSF de alta performance.": {
+  "ES": "Construimos el futuro con ligereza, velocidad y confianza. Estructuras en LSF de alto rendimiento.",
+  "FR": "Nous construisons l'avenir avec légèreté, rapidité et confiance. Structures en LSF de haute performance."
+ },
+ "Venha conhecer o nosso showroom no Seixal e toda a estrutura em LSF de perto. Esperamos por si!": {
+  "ES": "Venga a conocer nuestro showroom en Seixal y toda la estructura en LSF de cerca. ¡Le esperamos!",
+  "FR": "Venez découvrir notre showroom à Seixal et toute la structure en LSF de près. Nous vous attendons !"
+ },
+ "No Blog da Ápice 360 partilhamos tudo o que precisa de saber sobre LSF e construção inteligente.": {
+  "ES": "En el Blog de Ápice 360 compartimos todo lo que necesita saber sobre LSF y construcción inteligente.",
+  "FR": "Sur le Blog d'Ápice 360, nous partageons tout ce qu'il faut savoir sur le LSF et la construction intelligente."
+ },
+ "Garantia de qualidade e cumprimento de prazos, assegurada pelo conceito de entrega Chave na Mão.": {
+  "ES": "Garantía de calidad y cumplimiento de plazos, asegurada por el concepto de entrega Llave en Mano.",
+  "FR": "Garantie de qualité et de respect des délais, assurée par le concept de livraison Clé en Main."
+ },
+ "Coordenação direta entre a nossa equipa técnica e o gabinete de arquitetura durante toda a obra.": {
+  "ES": "Coordinación directa entre nuestro equipo técnico y el estudio de arquitectura durante toda la obra.",
+  "FR": "Coordination directe entre notre équipe technique et le cabinet d'architecture tout au long du chantier."
+ },
+ "Cumpre os requisitos atuais de eficiência energética, com melhor certificação para a sua moradia.": {
+  "ES": "Cumple los requisitos actuales de eficiencia energética, con mejor certificación para su vivienda.",
+  "FR": "Répond aux exigences actuelles d'efficacité énergétique, avec une meilleure certification pour votre maison."
+ },
+ "Entrega até 3x mais rápida do que os métodos tradicionais, sem abrir mão da qualidade construtiva.": {
+  "ES": "Entrega hasta 3x más rápida que los métodos tradicionales, sin renunciar a la calidad constructiva.",
+  "FR": "Livraison jusqu'à 3x plus rapide que les méthodes traditionnelles, sans renoncer à la qualité de construction."
+ },
+ "Atuamos na remodelação de ruínas, oferecendo um atalho legal e rentável face à construção de raiz.": {
+  "ES": "Trabajamos en la remodelación de ruinas, ofreciendo un atajo legal y rentable frente a la construcción desde cero.",
+  "FR": "Nous intervenons dans la rénovation de ruines, offrant un raccourci légal et rentable face à la construction neuve."
+ },
+ "Especializados em obras totais Chave na Mão para quem procura uma solução completa e sem reocupações.": {
+  "ES": "Especializados en obras integrales Llave en Mano para quien busca una solución completa y sin preocupaciones.",
+  "FR": "Spécialisés dans les chantiers intégraux Clé en Main pour ceux qui cherchent une solution complète et sans souci."
+ },
+ "Eliminamos a necessidade de o cliente gerir múltiplos empreiteiros, simplificando processos complexos.": {
+  "ES": "Eliminamos la necesidad de que el cliente gestione múltiples contratistas, simplificando procesos complejos.",
+  "FR": "Nous supprimons la nécessité pour le client de gérer plusieurs entreprises, en simplifiant les processus complexes."
+ },
+ "Descubra qual a melhor opção para a sua obra e como a Ápice 360 pode ajudar nesse processo de decisão.": {
+  "ES": "Descubra cuál es la mejor opción para su obra y cómo Ápice 360 puede ayudarle en ese proceso de decisión.",
+  "FR": "Découvrez quelle est la meilleure option pour votre chantier et comment Ápice 360 peut vous aider dans cette décision."
+ },
+ "Conforto térmico durante todo o ano e conforto acústico muito acima da média da construção tradicional.": {
+  "ES": "Confort térmico durante todo el año y confort acústico muy por encima de la media de la construcción tradicional.",
+  "FR": "Confort thermique toute l'année et confort acoustique bien supérieur à la moyenne de la construction traditionnelle."
+ },
+ "O conceito \"Chave na Mão\" garante controlo total e uma garantia estrutural — fator crucial em Portugal.": {
+  "ES": "El concepto «Llave en Mano» garantiza control total y una garantía estructural: un factor crucial en Portugal.",
+  "FR": "Le concept « Clé en Main » garantit un contrôle total et une garantie structurelle — un facteur crucial au Portugal."
+ },
+ "Gestão 360 com equipa própria e utilização integral de LSF para garantir o prazo e a qualidade superior.": {
+  "ES": "Gestión 360 con equipo propio y uso integral del LSF para garantizar el plazo y una calidad superior.",
+  "FR": "Gestion 360 avec équipe interne et utilisation intégrale du LSF pour garantir les délais et une qualité supérieure."
+ },
+ "Estruturas leves, resistentes e sustentáveis, construídas sob o rigor técnico de um Arquiteto experiente.": {
+  "ES": "Estructuras ligeras, resistentes y sostenibles, construidas bajo el rigor técnico de un Arquitecto experimentado.",
+  "FR": "Structures légères, résistantes et durables, construites sous la rigueur technique d'un Architecte expérimenté."
+ },
+ "Estruturas em LSF - Light Steel Frame para transformar o seu espaço com tecnologia, rapidez e excelência.": {
+  "ES": "Estructuras en LSF - Light Steel Frame para transformar su espacio con tecnología, rapidez y excelencia.",
+  "FR": "Structures en LSF - Light Steel Frame pour transformer votre espace avec technologie, rapidité et excellence."
+ },
+ "Entenda como o modelo de Gestão 360° da Ápice 360 elimina falhas, reduz prazos e assegura qualidade total.": {
+  "ES": "Entienda cómo el modelo de Gestión 360° de Ápice 360 elimina fallos, reduce plazos y asegura una calidad total.",
+  "FR": "Comprenez comment le modèle de Gestion 360° d'Ápice 360 élimine les défauts, réduit les délais et assure une qualité totale."
+ },
+ "Sustentada por uma equipa própria e profissional com vasto conhecimento prático, garantindo o mais alto desempenho.": {
+  "ES": "Respaldada por un equipo propio y profesional con un amplio conocimiento práctico, garantizando el más alto rendimiento.",
+  "FR": "Portée par une équipe interne et professionnelle dotée d'une vaste expérience pratique, garantissant la plus haute performance."
+ },
+ "Construímos a nossa moradia em LSF com a Ápice 360 e o resultado superou as expectativas, rápido, limpo e eficiente.": {
+  "ES": "Construimos nuestra vivienda en LSF con Ápice 360 y el resultado superó las expectativas: rápido, limpio y eficiente.",
+  "FR": "Nous avons construit notre maison en LSF avec Ápice 360 et le résultat a dépassé nos attentes : rapide, propre et efficace."
+ },
+ "A Ápice 360 é a força que alia a visão de um fundador experiente à disciplina de uma equipa própria de especialistas.": {
+  "ES": "Ápice 360 es la fuerza que une la visión de un fundador experimentado a la disciplina de un equipo propio de especialistas.",
+  "FR": "Ápice 360 est la force qui allie la vision d'un fondateur expérimenté à la discipline d'une équipe interne de spécialistes."
+ },
+ "Saiba porque a remodelação total de ruínas é uma das opções mais rentáveis e menos burocráticas no mercado português.": {
+  "ES": "Sepa por qué la remodelación total de ruinas es una de las opciones más rentables y menos burocráticas del mercado portugués.",
+  "FR": "Découvrez pourquoi la rénovation totale de ruines est l'une des options les plus rentables et les moins bureaucratiques du marché portugais."
+ },
+ "Simule a estimativa da sua moradia em LSF em 1 minuto. Construção até 3x mais rápida, com equipa própria e showroom no Seixal.": {
+  "ES": "Simule la estimación de su vivienda en LSF en 1 minuto. Construcción hasta 3x más rápida, con equipo propio y showroom en Seixal.",
+  "FR": "Simulez l'estimation de votre maison en LSF en 1 minute. Construction jusqu'à 3x plus rapide, avec équipe interne et showroom à Seixal."
+ },
+ "Utilize o canal mais direto para iniciar a qualificação do seu projeto e falar com a equipa Comercial ou Arquiteta responsável.": {
+  "ES": "Utilice el canal más directo para iniciar la calificación de su proyecto y hablar con el equipo Comercial o de Arquitectura responsable.",
+  "FR": "Utilisez le canal le plus direct pour lancer la qualification de votre projet et parler à l'équipe Commerciale ou Architecture responsable."
+ },
+ "Referência em tecnologia Light Steel Frame em Portugal. Engenharia de alta performance para construções duráveis e sustentáveis.": {
+  "ES": "Referencia en tecnología Light Steel Frame en Portugal. Ingeniería de alto rendimiento para construcciones duraderas y sostenibles.",
+  "FR": "Référence en technologie Light Steel Frame au Portugal. Ingénierie de haute performance pour des constructions durables et responsables."
+ },
+ "Conheça a nossa equipa e quem atua em cada etapa do seu projeto, colaboradores próprios e especializados do início ao fim da obra.": {
+  "ES": "Conozca a nuestro equipo y a quienes intervienen en cada etapa de su proyecto: colaboradores propios y especializados de principio a fin de la obra.",
+  "FR": "Découvrez notre équipe et qui intervient à chaque étape de votre projet : des collaborateurs internes et spécialisés du début à la fin du chantier."
+ },
+ "Apostamos no Light Steel Frame (LSF), a tecnologia construtiva mais eficiente da Europa, que nos permite entregar a sua obra em meses.": {
+  "ES": "Apostamos por el Light Steel Frame (LSF), la tecnología constructiva más eficiente de Europa, que nos permite entregar su obra en meses.",
+  "FR": "Nous misons sur le Light Steel Frame (LSF), la technologie de construction la plus efficace d'Europe, qui nous permet de livrer votre chantier en mois."
+ },
+ "Trabalhamos lado a lado com gabinetes de arquitetura e design que partilham o nosso compromisso com a qualidade e a inovação construtiva.": {
+  "ES": "Trabajamos codo a codo con estudios de arquitectura y diseño que comparten nuestro compromiso con la calidad y la innovación constructiva.",
+  "FR": "Nous travaillons main dans la main avec des cabinets d'architecture et de design qui partagent notre engagement envers la qualité et l'innovation constructive."
+ },
+ "Descubra como o sistema Light Steel Frame está a revolucionar a construção europeia — com mais rapidez, precisão e eficiência energética.": {
+  "ES": "Descubra cómo el sistema Light Steel Frame está revolucionando la construcción europea: con más rapidez, precisión y eficiencia energética.",
+  "FR": "Découvrez comment le système Light Steel Frame révolutionne la construction européenne — avec plus de rapidité, de précision et d'efficacité énergétique."
+ },
+ "Ser a maior e mais respeitada referência em construção LSF de elevado valor em Portugal, e expandir essa autoridade para o mercado europeu.": {
+  "ES": "Ser la mayor y más respetada referencia en construcción LSF de alto valor en Portugal, y expandir esa autoridad al mercado europeo.",
+  "FR": "Être la plus grande et la plus respectée des références en construction LSF de haute valeur au Portugal, et étendre cette autorité au marché européen."
+ },
+ "Validamos qualidade, testamos todos os sistemas e entregamos a moradia pronta, documentada e com garantia. A entrega não é um fim, é um início.": {
+  "ES": "Validamos la calidad, probamos todos los sistemas y entregamos la vivienda lista, documentada y con garantía. La entrega no es un fin, es un inicio.",
+  "FR": "Nous validons la qualité, testons tous les systèmes et livrons la maison prête, documentée et garantie. La livraison n'est pas une fin, c'est un début."
+ },
+ "Transformar o processo de construção em Portugal e na Europa, entregando projetos de excelência com segurança, rapidez e total responsabilidade.": {
+  "ES": "Transformar el proceso de construcción en Portugal y en Europa, entregando proyectos de excelencia con seguridad, rapidez y total responsabilidad.",
+  "FR": "Transformer le processus de construction au Portugal et en Europe, en livrant des projets d'excellence avec sécurité, rapidité et pleine responsabilité."
+ },
+ "A Ápice foi responsável por construir nossa casa em meio a uma ruína que adquirimos, o resultado foi acima do esperado. Obrigada a toda a equipa!": {
+  "ES": "Ápice fue la responsable de construir nuestra casa a partir de una ruina que adquirimos; el resultado superó lo esperado. ¡Gracias a todo el equipo!",
+  "FR": "Ápice s'est chargée de construire notre maison à partir d'une ruine que nous avions acquise ; le résultat a dépassé nos attentes. Merci à toute l'équipe !"
+ },
+ "O LSF é o futuro da construção e a nossa especialidade. É a escolha natural para clientes que procuram velocidade, eficiência e segurança estrutural.": {
+  "ES": "El LSF es el futuro de la construcción y nuestra especialidad. Es la elección natural para clientes que buscan velocidad, eficiencia y seguridad estructural.",
+  "FR": "Le LSF est l'avenir de la construction et notre spécialité. C'est le choix naturel pour les clients qui recherchent rapidité, efficacité et sécurité structurelle."
+ },
+ "Os nossos valores sustentam cada projeto: Integridade, Velocidade e Qualidade Inegociável, garantidas pela equipa própria e pelo conceito chave na mão.": {
+  "ES": "Nuestros valores sostienen cada proyecto: Integridad, Velocidad y Calidad Innegociable, garantizadas por el equipo propio y por el concepto llave en mano.",
+  "FR": "Nos valeurs soutiennent chaque projet : Intégrité, Rapidité et Qualité Non Négociable, garanties par notre équipe interne et par le concept clé en main."
+ },
+ "Aqui não seguimos o modelo clássico terreno → licenciamento → execução. Criamos uma estrutura 100% original, mais simples e mais clara para o cliente final.": {
+  "ES": "Aquí no seguimos el modelo clásico terreno → licencia → ejecución. Creamos una estructura 100% original, más simple y más clara para el cliente final.",
+  "FR": "Ici, nous ne suivons pas le modèle classique terrain → permis → exécution. Nous avons créé une structure 100% originale, plus simple et plus claire pour le client final."
+ },
+ "A nossa equipa está pronta para analisar o seu projeto e mostrar como o Light Steel Frame pode acelerar a construção da sua moradia, com segurança e qualidade.": {
+  "ES": "Nuestro equipo está listo para analizar su proyecto y mostrarle cómo el Light Steel Frame puede acelerar la construcción de su vivienda, con seguridad y calidad.",
+  "FR": "Notre équipe est prête à analyser votre projet et à vous montrer comment le Light Steel Frame peut accélérer la construction de votre maison, en toute sécurité et avec qualité."
+ },
+ "Na Ápice 360, a nossa equipa própria e a gestão rigorosa garantem que o seu projeto de elevado valor é entregue com a máxima segurança e rapidez, do início ao fim.": {
+  "ES": "En Ápice 360, nuestro equipo propio y una gestión rigurosa garantizan que su proyecto de alto valor se entregue con la máxima seguridad y rapidez, de principio a fin.",
+  "FR": "Chez Ápice 360, notre équipe interne et une gestion rigoureuse garantissent que votre projet de haute valeur est livré avec un maximum de sécurité et de rapidité, du début à la fin."
+ },
+ "Garantimos o modelo Chave na Mão, com controlo total e uma garantia estrutural. Eliminamos os riscos da subcontratação através de uma equipa própria e especializada.": {
+  "ES": "Garantizamos el modelo Llave en Mano, con control total y una garantía estructural. Eliminamos los riesgos de la subcontratación mediante un equipo propio y especializado.",
+  "FR": "Nous garantissons le modèle Clé en Main, avec un contrôle total et une garantie structurelle. Nous éliminons les risques de la sous-traitance grâce à une équipe interne et spécialisée."
+ },
+ "Construímos o projeto técnico completo — arquitetura, engenharia, especialidades, preparação documental e licenciamento — a base sólida que sustenta toda a construção.": {
+  "ES": "Construimos el proyecto técnico completo —arquitectura, ingeniería, instalaciones, preparación documental y licencias—, la base sólida que sostiene toda la construcción.",
+  "FR": "Nous construisons le projet technique complet — architecture, ingénierie, lots techniques, préparation documentaire et permis — la base solide qui soutient toute la construction."
+ },
+ "Entregaram dentro do prazo combinado, sem surpresas e reportando periodicamente os avanços da obra do início até à conclusão. Satisfação total e recomendação garantida!": {
+  "ES": "Entregaron dentro del plazo acordado, sin sorpresas y reportando periódicamente los avances de la obra desde el inicio hasta la conclusión. ¡Satisfacción total y recomendación garantizada!",
+  "FR": "Ils ont livré dans les délais convenus, sans surprises et en rendant compte régulièrement de l'avancement du chantier du début à la fin. Satisfaction totale et recommandation garantie !"
+ },
+ "Da produção da estrutura em fábrica à montagem no local, fechamentos, isolamentos e acabamentos — tudo com equipa própria, supervisão técnica constante e controlo rigoroso de cada etapa.": {
+  "ES": "Desde la producción de la estructura en fábrica hasta el montaje en obra, cerramientos, aislamientos y acabados: todo con equipo propio, supervisión técnica constante y un control riguroso de cada etapa.",
+  "FR": "De la production de l'ossature en usine au montage sur place, fermetures, isolations et finitions — tout avec notre propre équipe, une supervision technique constante et un contrôle rigoureux de chaque étape."
+ },
+ "Jefferson, Arquiteto com mais de 30 anos de experiência na área da construção, identificou a ineficiência do mercado português e viu a oportunidade de atuar no sistema LSF em modelo chave na mão.": {
+  "ES": "Jefferson, Arquitecto con más de 30 años de experiencia en el sector de la construcción, identificó la ineficiencia del mercado portugués y vio la oportunidad de trabajar con el sistema LSF en modalidad llave en mano.",
+  "FR": "Jefferson, Architecte avec plus de 30 ans d'expérience dans la construction, a identifié l'inefficacité du marché portugais et a vu l'opportunité d'intervenir sur le système LSF en modèle clé en main."
+ },
+ "Eu tinha receio por ser uma construção a seco, mas o isolamento acústico é surpreendente, muito superior ao tijolo comum. A Ápice 360 entregou a casa 2 meses antes do previsto, sem um centavo de aditivo.": {
+  "ES": "Tenía miedo por tratarse de una construcción en seco, pero el aislamiento acústico es sorprendente, muy superior al ladrillo común. Ápice 360 entregó la casa 2 meses antes de lo previsto, sin un céntimo de más.",
+  "FR": "J'avais des craintes parce qu'il s'agit d'une construction à sec, mais l'isolation acoustique est surprenante, bien supérieure à la brique classique. Ápice 360 a livré la maison 2 mois avant la date prévue, sans un centime de supplément."
+ },
+ "Traduzimos as suas intenções em possibilidades reais: entendemos o projeto, avaliamos o terreno, analisamos a viabilidade e definimos o que é possível construir — alinhando expectativas desde o primeiro dia.": {
+  "ES": "Traducimos sus intenciones en posibilidades reales: entendemos el proyecto, evaluamos el terreno, analizamos la viabilidad y definimos qué es posible construir, alineando expectativas desde el primer día.",
+  "FR": "Nous traduisons vos intentions en possibilités réelles : nous comprenons le projet, évaluons le terrain, analysons la faisabilité et définissons ce qu'il est possible de construire — en alignant les attentes dès le premier jour."
+ },
+ "Construímos com a inteligência do Light Steel Frame: precisão milimétrica, conforto térmico e acústico superior, e uma equipa própria que acompanha a sua obra do início ao fim. Cuidamos do seu projeto, em Portugal.": {
+  "ES": "Construimos con la inteligencia del Light Steel Frame: precisión milimétrica, confort térmico y acústico superior, y un equipo propio que acompaña su obra de principio a fin. Cuidamos de su proyecto, en Portugal.",
+  "FR": "Nous construisons avec l'intelligence du Light Steel Frame : précision millimétrique, confort thermique et acoustique supérieur, et une équipe interne qui suit votre chantier du début à la fin. Nous prenons soin de votre projet, au Portugal."
+ },
+ "Trabalhamos lado a lado com gabinetes de arquitetura que partilham o nosso compromisso com a qualidade e a inovação construtiva. Se procura um parceiro de execução rigoroso para os seus projetos em LSF, fale connosco.": {
+  "ES": "Trabajamos codo a codo con estudios de arquitectura que comparten nuestro compromiso con la calidad y la innovación constructiva. Si busca un socio de ejecución riguroso para sus proyectos en LSF, hable con nosotros.",
+  "FR": "Nous travaillons main dans la main avec des cabinets d'architecture qui partagent notre engagement envers la qualité et l'innovation constructive. Si vous cherchez un partenaire d'exécution rigoureux pour vos projets en LSF, parlez-nous."
+ },
+ "Quando chegámos a Lisboa, confrontámo-nos com a realidade do setor: promessas quebradas, obras paralisadas e um mercado refém da incerteza. Recusámo-nos a aceitar este padrão. A Ápice 360 nasce como a resposta a este problema: somos o ponto final da insegurança.": {
+  "ES": "Cuando llegamos a Lisboa, nos encontramos con la realidad del sector: promesas rotas, obras paralizadas y un mercado rehén de la incertidumbre. Nos negamos a aceptar ese patrón. Ápice 360 nace como la respuesta a este problema: somos el punto final de la inseguridad.",
+  "FR": "En arrivant à Lisbonne, nous avons été confrontés à la réalité du secteur : promesses non tenues, chantiers à l'arrêt et un marché otage de l'incertitude. Nous avons refusé d'accepter ce schéma. Ápice 360 est née comme la réponse à ce problème : nous sommes le point final de l'insécurité."
+ },
+ "O LSF (Light Steel Frame) é um sistema construtivo que utiliza perfis leves de aço galvanizado para formar a estrutura de edifícios. Cada vez mais utilizado na construção moderna, o método destaca-se pela rapidez de execução, precisão e redução do desperdício de materiais.": {
+  "ES": "El LSF (Light Steel Frame) es un sistema constructivo que utiliza perfiles ligeros de acero galvanizado para formar la estructura de los edificios. Cada vez más utilizado en la construcción moderna, el método destaca por su rapidez de ejecución, precisión y reducción del desperdicio de materiales.",
+  "FR": "Le LSF (Light Steel Frame) est un système constructif qui utilise des profilés légers en acier galvanisé pour former l'ossature des bâtiments. De plus en plus utilisée dans la construction moderne, la méthode se distingue par sa rapidité d'exécution, sa précision et la réduction des déchets de matériaux."
+ },
+ "<h2>Fazemos reformas</h2><p>Precisa de reformar sua moradia?</p>": {
+  "ES": "<h2>Hacemos reformas</h2><p>¿Necesita reformar su vivienda?</p>",
+  "FR": "<h2>Nous faisons des rénovations</h2><p>Vous avez besoin de rénover votre maison ?</p>",
+  "EN": "<h2>We do renovations</h2><p>Do you need to renovate your home?</p>"
+ },
+ "<h2>Depende do Ponto de Partida</h2><p>Se já possui um imóvel devoluto ou uma ruína, a remodelação total costuma ser mais rápida e rentável. Se parte de um terreno vazio, o LSF oferece a melhor relação entre velocidade e qualidade.</p><p>A nossa equipa técnica avalia gratuitamente o seu caso e recomenda o caminho mais seguro.</p>": {
+  "ES": "<h2>Depende del Punto de Partida</h2><p>Si ya posee un inmueble abandonado o una ruina, la remodelación total suele ser más rápida y rentable. Si parte de un terreno vacío, el LSF ofrece la mejor relación entre velocidad y calidad.</p><p>Nuestro equipo técnico evalúa gratuitamente su caso y le recomienda el camino más seguro.</p>",
+  "FR": "<h2>Tout Dépend du Point de Départ</h2><p>Si vous possédez déjà un bien vacant ou une ruine, la rénovation totale est généralement plus rapide et plus rentable. Si vous partez d'un terrain nu, le LSF offre le meilleur rapport entre rapidité et qualité.</p><p>Notre équipe technique évalue gratuitement votre cas et vous recommande la voie la plus sûre.</p>"
+ },
+ "<h2>Uma Equipa, Zero Subcontratação Descontrolada</h2><p>Cada etapa da obra — desde a engenharia estrutural até ao acabamento — é executada por profissionais que fazem parte da nossa equipa própria.</p><p>Esta é a base da nossa garantia de qualidade: quem projeta é quem constrói, e quem constrói responde diretamente pelo resultado.</p>": {
+  "ES": "<h2>Un Equipo, Cero Subcontratación Descontrolada</h2><p>Cada etapa de la obra —desde la ingeniería estructural hasta el acabado— la ejecutan profesionales que forman parte de nuestro equipo propio.</p><p>Esta es la base de nuestra garantía de calidad: quien proyecta es quien construye, y quien construye responde directamente por el resultado.</p>",
+  "FR": "<h2>Une Équipe, Zéro Sous-Traitance Incontrôlée</h2><p>Chaque étape du chantier — de l'ingénierie structurelle aux finitions — est réalisée par des professionnels qui font partie de notre propre équipe.</p><p>C'est la base de notre garantie de qualité : celui qui conçoit est celui qui construit, et celui qui construit répond directement du résultat.</p>"
+ },
+ "<h2>Portugal Está a Chegar Atrasado — Mas Ainda Vai a Tempo</h2><p>Enquanto o LSF já representa uma fatia significativa da construção residencial em vários países europeus, em Portugal o sistema ainda é subutilizado — muitas vezes mal executado por falta de equipas especializadas.</p><p>A Ápice 360 nasce precisamente para corrigir esse desvio, aplicando o rigor técnico europeu ao mercado português.</p>": {
+  "ES": "<h2>Portugal Está Llegando Tarde — Pero Aún Está a Tiempo</h2><p>Mientras que el LSF ya representa una parte significativa de la construcción residencial en varios países europeos, en Portugal el sistema sigue estando infrautilizado y, con frecuencia, mal ejecutado por falta de equipos especializados.</p><p>Ápice 360 nace precisamente para corregir esa desviación, aplicando el rigor técnico europeo al mercado portugués.</p>",
+  "FR": "<h2>Le Portugal Arrive en Retard — Mais Il Est Encore Temps</h2><p>Alors que le LSF représente déjà une part significative de la construction résidentielle dans plusieurs pays européens, au Portugal le système reste sous-utilisé — et souvent mal exécuté, faute d'équipes spécialisées.</p><p>Ápice 360 est née précisément pour corriger cet écart, en appliquant la rigueur technique européenne au marché portugais.</p>"
+ },
+ "<h2>O Que Significa \"Chave na Mão\"?</h2><p>Significa que o cliente não precisa de se preocupar com nada. Do planeamento à entrega, toda a responsabilidade técnica e de gestão fica com a Ápice 360.</p><h3>Os Três Pilares</h3><ol><li>Planeamento 360°, com rigor desde a visão estratégica.</li><li>Execução com equipa própria, sem subcontratação descontrolada.</li><li>Entrega garantida e a tempo, sem surpresas no orçamento.</li></ol><p>É esta metodologia que nos permite prometer — e cumprir — prazos que o mercado tradicional considera impossíveis.</p>": {
+  "ES": "<h2>¿Qué Significa «Llave en Mano»?</h2><p>Significa que el cliente no tiene que preocuparse por nada. Desde la planificación hasta la entrega, toda la responsabilidad técnica y de gestión recae en Ápice 360.</p><h3>Los Tres Pilares</h3><ol><li>Planificación 360°, con rigor desde la visión estratégica.</li><li>Ejecución con equipo propio, sin subcontratación descontrolada.</li><li>Entrega garantizada y a tiempo, sin sorpresas en el presupuesto.</li></ol><p>Es esta metodología la que nos permite prometer —y cumplir— plazos que el mercado tradicional considera imposibles.</p>",
+  "FR": "<h2>Que Signifie « Clé en Main » ?</h2><p>Cela signifie que le client n'a à se soucier de rien. De la planification à la livraison, toute la responsabilité technique et de gestion revient à Ápice 360.</p><h3>Les Trois Piliers</h3><ol><li>Planification 360°, avec rigueur dès la vision stratégique.</li><li>Exécution avec notre propre équipe, sans sous-traitance incontrôlée.</li><li>Livraison garantie et dans les délais, sans surprises budgétaires.</li></ol><p>C'est cette méthodologie qui nous permet de promettre — et de tenir — des délais que le marché traditionnel juge impossibles.</p>"
+ },
+ "<h2>Porque Investir numa Ruína?</h2><p>A compra e remodelação de ruínas oferece um atalho legal e financeiramente atrativo face à construção de raiz, especialmente em centros urbanos consolidados.</p><h3>Vantagens do Modelo Chave na Mão</h3><ul><li>Controlo total do orçamento desde o primeiro dia.</li><li>Garantia estrutural em todo o processo de reconstrução.</li><li>Eliminação da necessidade de gerir múltiplos empreiteiros.</li></ul><p>Com a equipa própria da Ápice 360, cada ruína é avaliada tecnicamente antes de qualquer compromisso, evitando surpresas depois do início da obra.</p>": {
+  "ES": "<h2>¿Por Qué Invertir en una Ruina?</h2><p>La compra y remodelación de ruinas ofrece un atajo legal y financieramente atractivo frente a la construcción desde cero, especialmente en centros urbanos consolidados.</p><h3>Ventajas del Modelo Llave en Mano</h3><ul><li>Control total del presupuesto desde el primer día.</li><li>Garantía estructural en todo el proceso de reconstrucción.</li><li>Eliminación de la necesidad de gestionar múltiples contratistas.</li></ul><p>Con el equipo propio de Ápice 360, cada ruina se evalúa técnicamente antes de cualquier compromiso, evitando sorpresas una vez iniciada la obra.</p>",
+  "FR": "<h2>Pourquoi Investir dans une Ruine ?</h2><p>L'achat et la rénovation de ruines offrent un raccourci légal et financièrement attractif face à la construction neuve, en particulier dans les centres urbains consolidés.</p><h3>Avantages du Modèle Clé en Main</h3><ul><li>Contrôle total du budget dès le premier jour.</li><li>Garantie structurelle sur tout le processus de reconstruction.</li><li>Suppression de la nécessité de gérer plusieurs entreprises.</li></ul><p>Avec l'équipe interne d'Ápice 360, chaque ruine est évaluée techniquement avant tout engagement, ce qui évite les surprises une fois le chantier lancé.</p>"
+ },
+ "<h2>A Inovação que a Europa Acolheu e Portugal Resiste</h2><p>O sistema Light Steel Frame (LSF) já não é uma tendência, é uma realidade consolidada em grande parte da Europa (França, Espanha, Itália). A sua velocidade de execução, eficiência energética e sustentabilidade fazem dele a escolha natural para projetos de alto desempenho.</p><h3>Os 3 Fatores que Impulsionam o LSF na Europa</h3><ul><li><strong>Velocidade e Qualidade Inegociável.</strong> Padrão Europeu: LSF é sinónimo de entregas em meses, permitindo que investidores e proprietários rentabilizem ou usufruam rapidamente do imóvel.</li><li><strong>Qualidade Técnica vs. Amadorismo.</strong> O sistema exige conhecimento técnico especializado para garantir a excelência.</li><li><strong>Segurança Estrutural vs. Incerteza.</strong> O mercado exige garantias estruturais sólidas e transparência no processo.</li></ul><p>Se o LSF é o futuro na Europa, é essencial que em Portugal seja executado com a mesma excelência e rigor.</p>": {
+  "ES": "<h2>La Innovación que Europa Adoptó y Portugal Resiste</h2><p>El sistema Light Steel Frame (LSF) ya no es una tendencia: es una realidad consolidada en gran parte de Europa (Francia, España, Italia). Su velocidad de ejecución, eficiencia energética y sostenibilidad lo convierten en la elección natural para proyectos de alto rendimiento.</p><h3>Los 3 Factores que Impulsan el LSF en Europa</h3><ul><li><strong>Velocidad y Calidad Innegociable.</strong> Estándar Europeo: LSF es sinónimo de entregas en meses, permitiendo que inversores y propietarios rentabilicen o disfruten rápidamente del inmueble.</li><li><strong>Calidad Técnica vs. Amateurismo.</strong> El sistema exige conocimiento técnico especializado para garantizar la excelencia.</li><li><strong>Seguridad Estructural vs. Incertidumbre.</strong> El mercado exige garantías estructurales sólidas y transparencia en el proceso.</li></ul><p>Si el LSF es el futuro en Europa, es esencial que en Portugal se ejecute con la misma excelencia y rigor.</p>",
+  "FR": "<h2>L'Innovation que l'Europe a Adoptée et que le Portugal Résiste à Adopter</h2><p>Le système Light Steel Frame (LSF) n'est plus une tendance : c'est une réalité bien établie dans une grande partie de l'Europe (France, Espagne, Italie). Sa rapidité d'exécution, son efficacité énergétique et sa durabilité en font le choix naturel pour les projets de haute performance.</p><h3>Les 3 Facteurs qui Portent le LSF en Europe</h3><ul><li><strong>Rapidité et Qualité Non Négociable.</strong> Standard européen : le LSF est synonyme de livraisons en mois, permettant aux investisseurs et aux propriétaires de rentabiliser ou de profiter rapidement du bien.</li><li><strong>Qualité Technique vs. Amateurisme.</strong> Le système exige des connaissances techniques spécialisées pour garantir l'excellence.</li><li><strong>Sécurité Structurelle vs. Incertitude.</strong> Le marché exige des garanties structurelles solides et de la transparence dans le processus.</li></ul><p>Si le LSF est l'avenir en Europe, il est essentiel qu'au Portugal il soit exécuté avec la même excellence et la même rigueur.</p>"
+ },
+ "<img src=\"https://mkj3s3djdm5ljijl.public.blob.vercel-storage.com/LOGO%20%C3%81PICE%20360-Wa9TdibdPZSMVq5mMek5K4I0lvTkZq.png\" /><h1><br />LSF: Uma solução moderna e eficiente para a construção</h1><p>O <strong>LSF (Light Steel Frame)</strong> é um sistema construtivo que utiliza perfis leves de aço galvanizado para formar a estrutura de edifícios. Cada vez mais utilizado na construção moderna, o método destaca-se pela rapidez de execução, precisão e redução do desperdício de materiais.</p><p>Uma das principais vantagens do LSF é a <strong>velocidade de construção</strong>. Grande parte dos componentes pode ser preparada previamente, permitindo uma montagem mais rápida no local da obra quando comparada aos métodos tradicionais. Além disso, por utilizar uma estrutura leve e materiais industrializados, é possível obter maior controlo sobre os custos e reduzir significativamente os resíduos.</p><p>Outro benefício importante é o <strong>desempenho térmico e acústico</strong>. As paredes do sistema podem receber diferentes tipos de isolamento, proporcionando maior conforto aos ocupantes e contribuindo para uma construção mais eficiente energeticamente.</p><p>O LSF também oferece grande <strong>flexibilidade arquitetónica</strong>. Pode ser utilizado em moradias, edifícios, ampliações e diversos outros projetos, permitindo diferentes soluções de acabamento tanto no interior como no exterior.</p><p>Apesar das suas vantagens, a utilização do Light Steel Frame exige <strong>projeto e execução especializados</strong>. O dimensionamento correto da estrutura, o tratamento das ligações e a proteção adequada contra humidade e corrosão são fundamentais para garantir a durabilidade e segurança da construção.</p><p>Em conclusão, o LSF representa uma alternativa moderna à construção convencional, combinando rapidez, precisão, eficiência e sustentabilidade. Com um projeto adequado e uma equipa especializada, pode proporcionar construções de elevada qualidade e excelentes níveis de conforto.</p>": {
+  "ES": "<img src=\"https://mkj3s3djdm5ljijl.public.blob.vercel-storage.com/LOGO%20%C3%81PICE%20360-Wa9TdibdPZSMVq5mMek5K4I0lvTkZq.png\" /><h1><br />LSF: Una solución moderna y eficiente para la construcción</h1><p>El <strong>LSF (Light Steel Frame)</strong> es un sistema constructivo que utiliza perfiles ligeros de acero galvanizado para formar la estructura de los edificios. Cada vez más utilizado en la construcción moderna, el método destaca por su rapidez de ejecución, precisión y reducción del desperdicio de materiales.</p><p>Una de las principales ventajas del LSF es la <strong>velocidad de construcción</strong>. Gran parte de los componentes puede prepararse de antemano, lo que permite un montaje más rápido en la obra en comparación con los métodos tradicionales. Además, al utilizar una estructura ligera y materiales industrializados, es posible obtener un mayor control sobre los costes y reducir significativamente los residuos.</p><p>Otro beneficio importante es el <strong>desempeño térmico y acústico</strong>. Las paredes del sistema pueden recibir distintos tipos de aislamiento, proporcionando mayor confort a los ocupantes y contribuyendo a una construcción más eficiente energéticamente.</p><p>El LSF también ofrece una gran <strong>flexibilidad arquitectónica</strong>. Puede utilizarse en viviendas, edificios, ampliaciones y muchos otros proyectos, permitiendo diferentes soluciones de acabado tanto en el interior como en el exterior.</p><p>A pesar de sus ventajas, el uso del Light Steel Frame exige <strong>proyecto y ejecución especializados</strong>. El dimensionamiento correcto de la estructura, el tratamiento de las uniones y la protección adecuada frente a la humedad y la corrosión son fundamentales para garantizar la durabilidad y la seguridad de la construcción.</p><p>En conclusión, el LSF representa una alternativa moderna a la construcción convencional, combinando rapidez, precisión, eficiencia y sostenibilidad. Con un proyecto adecuado y un equipo especializado, puede proporcionar construcciones de elevada calidad y excelentes niveles de confort.</p>",
+  "FR": "<img src=\"https://mkj3s3djdm5ljijl.public.blob.vercel-storage.com/LOGO%20%C3%81PICE%20360-Wa9TdibdPZSMVq5mMek5K4I0lvTkZq.png\" /><h1><br />LSF : Une solution moderne et efficace pour la construction</h1><p>Le <strong>LSF (Light Steel Frame)</strong> est un système constructif qui utilise des profilés légers en acier galvanisé pour former l'ossature des bâtiments. De plus en plus utilisée dans la construction moderne, la méthode se distingue par sa rapidité d'exécution, sa précision et la réduction des déchets de matériaux.</p><p>L'un des principaux avantages du LSF est la <strong>rapidité de construction</strong>. Une grande partie des composants peut être préparée à l'avance, ce qui permet un montage plus rapide sur le chantier par rapport aux méthodes traditionnelles. De plus, en utilisant une ossature légère et des matériaux industrialisés, il est possible d'obtenir un meilleur contrôle des coûts et de réduire considérablement les déchets.</p><p>Un autre bénéfice important est la <strong>performance thermique et acoustique</strong>. Les murs du système peuvent recevoir différents types d'isolation, offrant un plus grand confort aux occupants et contribuant à une construction plus efficace sur le plan énergétique.</p><p>Le LSF offre également une grande <strong>flexibilité architecturale</strong>. Il peut être utilisé pour des maisons, des immeubles, des extensions et bien d'autres projets, permettant différentes solutions de finition tant à l'intérieur qu'à l'extérieur.</p><p>Malgré ses avantages, l'utilisation du Light Steel Frame exige <strong>une conception et une exécution spécialisées</strong>. Le dimensionnement correct de l'ossature, le traitement des assemblages et une protection adaptée contre l'humidité et la corrosion sont essentiels pour garantir la durabilité et la sécurité de la construction.</p><p>En conclusion, le LSF représente une alternative moderne à la construction conventionnelle, alliant rapidité, précision, efficacité et durabilité. Avec un projet adapté et une équipe spécialisée, il permet de réaliser des constructions de haute qualité offrant d'excellents niveaux de confort.</p>"
+ }
+}

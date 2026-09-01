@@ -22,7 +22,7 @@ export function PortfolioGrid({ heading, projects, variant = "featured" }: Portf
 
   return (
     <Reveal as="section" className="py-16">
-      <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+      <div className="mx-auto max-w-site px-5 md:px-20">
         {heading ? <h2 className="mb-10 font-heading text-headline-md">{heading}</h2> : null}
         <div
           className={

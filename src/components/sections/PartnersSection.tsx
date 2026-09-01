@@ -21,7 +21,7 @@ export function PartnersSection({ heading, subheading, partners, displayMode = "
 
   return (
     <Reveal as="section" className="bg-surface py-32">
-      <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+      <div className="mx-auto max-w-site px-5 md:px-20">
         <SectionHeading
           title={heading ?? "A confiança constrói-se com parcerias e resultados."}
           subtitle={subheading ?? undefined}

@@ -14,7 +14,7 @@ export function MaintenancePage({ locale, whatsappUrl, phone }: MaintenancePageP
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-surface-container-lowest px-5 text-center">
-      <Logo className="mb-12" />
+      <Logo className="mb-12 h-16" />
 
       <div className="mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
         <Icon name="construction" className="animate-pulse-glow rounded-full text-4xl text-primary" />

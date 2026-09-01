@@ -11,7 +11,8 @@ export type PageKeyValue =
   | "PORTFOLIO"
   | "BLOG"
   | "CONTACTO"
-  | "AREA_ARQUITETO";
+  | "AREA_ARQUITETO"
+  | "LP";
 
 const DEFAULT_LOCALE: Locale = "PT";
 // PT is required on every entity (the source language auto-translation is
@@ -461,4 +462,34 @@ export const getPageSeo = cache(async (page: PageKeyValue, locale: Locale = DEFA
   const t = pickTranslation(seo.translations, locale);
   if (!t) return null;
   return { title: t.title, description: t.description, ogImageUrl: seo.ogImageUrl };
+});
+
+/**
+ * Escalões de preço por m² do simulador da landing page, já resolvidos para
+ * o idioma pedido. `features` é guardado como texto com uma bullet por
+ * linha — o cartão desenha cada linha como um item da lista.
+ */
+export const getLpPriceTiers = cache(async (locale: Locale = DEFAULT_LOCALE) => {
+  const tiers = await prisma.lpPriceTier.findMany({
+    where: { isActive: true },
+    orderBy: { order: "asc" },
+    include: { translations: true },
+  });
+
+  return tiers.map((tier) => {
+    const t = pickTranslation(tier.translations, locale);
+    return {
+      id: tier.id,
+      key: tier.key,
+      pricePerM2: tier.pricePerM2,
+      isHighlighted: tier.isHighlighted,
+      iconName: tier.iconName,
+      label: t?.label ?? tier.key,
+      description: t?.description ?? null,
+      features: (t?.features ?? "")
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean),
+    };
+  });
 });

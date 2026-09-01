@@ -23,7 +23,7 @@ export function MobileNav({ locale, ctaLabel, ctaUrl, showArchitectArea = true, 
   const navLinks = getNavLinks(dict, { showArchitectArea, customPages });
 
   return (
-    <div className="xl:hidden">
+    <div className="min-[1360px]:hidden">
       <button
         type="button"
         aria-label={open ? dict.mobileNav.fecharMenu : dict.mobileNav.abrirMenu}
@@ -41,7 +41,7 @@ export function MobileNav({ locale, ctaLabel, ctaUrl, showArchitectArea = true, 
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="font-mono text-label-mono uppercase tracking-widest text-on-surface transition-colors hover:text-primary"
+                className="text-[18px] font-medium text-on-surface transition-colors hover:text-primary"
               >
                 {link.label}
               </Link>

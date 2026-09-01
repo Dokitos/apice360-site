@@ -25,7 +25,7 @@ type TimelineSectionProps = {
 export function TimelineSection({ eyebrow, heading, items, cta, className, locale = "PT" }: TimelineSectionProps) {
   return (
     <Reveal as="section" className={className ?? "bg-surface-container-high py-32"}>
-      <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+      <div className="mx-auto max-w-site px-5 md:px-20">
         <div className="mx-auto max-w-3xl">
           {eyebrow ? (
             <span className="mb-4 block text-center font-mono text-label-mono uppercase tracking-widest text-primary">

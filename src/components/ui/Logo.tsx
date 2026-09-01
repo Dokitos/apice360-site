@@ -2,26 +2,33 @@ import { cn } from "@/lib/cn";
 
 type LogoProps = {
   className?: string;
-  iconClassName?: string;
-  wordmarkClassName?: string;
-  showWordmark?: boolean;
+  /**
+   * "dark" is the black wordmark (for light backgrounds), "light" the white
+   * one (for the ink-colored footer / hero scrim). Both are the same
+   * lockup — only the ink of the letters differs.
+   */
+  variant?: "dark" | "light";
 };
 
-/** Ápice 360 brand mark (mountain-peak icon on the brand orange), matching print material. */
-export function Logo({ className, iconClassName, wordmarkClassName, showWordmark = true }: LogoProps) {
+const LOGO_SRC: Record<NonNullable<LogoProps["variant"]>, string> = {
+  dark: "/images/logo-preta.png",
+  light: "/images/logo-branca.png",
+};
+
+/**
+ * Ápice 360 brand lockup — the full "ÁPICE 360" wordmark supplied by the
+ * client, used as a single image rather than icon + live text so the
+ * spacing and the orange/red "360" accents stay exactly as in the print
+ * material. Height is controlled through className (the image keeps its
+ * own aspect ratio).
+ */
+export function Logo({ className, variant = "dark" }: LogoProps) {
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/images/logo.png"
-        alt="Ápice 360"
-        className={cn("h-8 w-8 shrink-0 rounded-md object-cover", iconClassName)}
-      />
-      {showWordmark ? (
-        <span className={cn("font-heading text-headline-md font-bold tracking-tighter text-on-surface", wordmarkClassName)}>
-          ÁPICE<span className="text-primary"> 360</span>
-        </span>
-      ) : null}
-    </span>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={LOGO_SRC[variant]}
+      alt="Ápice 360"
+      className={cn("h-11 w-auto shrink-0 object-contain", className)}
+    />
   );
 }

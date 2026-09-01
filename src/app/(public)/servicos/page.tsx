@@ -45,7 +45,7 @@ export default async function ServicosPage() {
 
       {services.length > 1 ? (
         <section className="bg-surface-container-lowest py-16">
-          <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-10 px-5 md:px-20 lg:grid-cols-2">
+          <div className="mx-auto grid max-w-site grid-cols-1 gap-10 px-5 md:px-20 lg:grid-cols-2">
             {services.map((service) => (
               <Link key={service.type} href={`#${service.type.toLowerCase()}`}>
                 <Card className="p-8 text-center">

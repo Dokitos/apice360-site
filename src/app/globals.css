@@ -28,6 +28,11 @@
   --color-outline: #dedede;
   --color-outline-variant: #ececec;
 
+  /* Largura máxima do conteúdo, partilhada por todas as secções do site
+     (utilitário `max-w-site`). Alterar aqui muda a largura do
+     site inteiro de uma só vez. */
+  --container-site: 1760px;
+
   /* Fonts — Montserrat (headings), Inter (body), JetBrains Mono (labels) */
   --font-heading: var(--font-montserrat), sans-serif;
   --font-sans: var(--font-inter), sans-serif;
@@ -100,6 +105,12 @@
 /* Duplicated-track marquee: at -50% the second copy lines up exactly where
    the first started, so the loop has no visible seam. Direction (right to
    left) comes from animating toward a negative translateX. */
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);
@@ -201,6 +212,43 @@ html {
     color: var(--color-outline);
   }
 
+  /* Cartões que rodam (landing page /lp): vira no hover em desktop e no
+     toque em ecrãs táteis (a classe .is-flipped é alternada por JS). */
+  .flip-card {
+    perspective: 1600px;
+  }
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flip-card:hover .flip-card-inner,
+  .flip-card.is-flipped .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+  .flip-card-front,
+  .flip-card-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .flip-card-back {
+    transform: rotateY(180deg);
+  }
+
+  /* Spinner do simulador da landing page */
+  .loader-spinner {
+    width: 52px;
+    height: 52px;
+    border: 4px solid var(--color-outline);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: loader-spin 0.8s linear infinite;
+  }
+
   /* Scroll-reveal base state — flipped to visible by the <Reveal> component */
   .reveal-hidden {
     opacity: 0;
@@ -224,7 +272,11 @@ html {
   }
   .animate-pulse-glow,
   .animate-bounce-slow,
-  .animate-marquee {
+  .animate-marquee,
+  .loader-spinner {
     animation: none !important;
+  }
+  .flip-card-inner {
+    transition: none !important;
   }
 }

@@ -34,11 +34,11 @@ export async function Footer() {
     // Deliberately dark ("ink") regardless of the site's light theme —
     // bookends the page the same way the hero photo's dark scrim does.
     <footer className="border-t border-white/10 bg-ink pb-24 pt-20 text-gray-300 sm:pb-14">
-      <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+      <div className="mx-auto max-w-site px-5 md:px-20">
         <div className="flex flex-col justify-between gap-16 md:flex-row">
           <div className="max-w-sm">
             <Link href="/" className="mb-8 inline-block">
-              <Logo wordmarkClassName="text-white" />
+              <Logo variant="light" className="h-12" />
             </Link>
             <p className="mb-8 leading-relaxed">
               {settings?.t?.footerDescription ?? dict.footer.descricaoDefault}

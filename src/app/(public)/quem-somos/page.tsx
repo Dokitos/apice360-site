@@ -82,7 +82,7 @@ export default async function QuemSomosPage() {
 
       {cta ? (
         <Reveal as="section" className="bg-primary py-24 text-center text-on-primary">
-          <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+          <div className="mx-auto max-w-site px-5 md:px-20">
             <h2 className="mb-10 font-heading text-headline-lg">{dict.quemSomos.ctaHeading}</h2>
             <Button
               href={cta.url}

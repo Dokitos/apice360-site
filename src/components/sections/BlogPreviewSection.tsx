@@ -28,7 +28,7 @@ export function BlogPreviewSection({ heading, subheading, posts, cta, locale = "
 
   return (
     <Reveal as="section" className="bg-surface py-32">
-      <div className="mx-auto max-w-[1280px] px-5 md:px-20">
+      <div className="mx-auto max-w-site px-5 md:px-20">
         <SectionHeading
           title={
             heading ?? (locale === "EN" ? "Learn from those who build at the highest level." : "Aprenda com quem constrói no mais alto nível.")
