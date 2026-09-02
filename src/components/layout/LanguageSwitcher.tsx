@@ -134,9 +134,9 @@ export function LanguageSwitcher({ locale, className, variant = "pill" }: Langua
                 <span className="absolute inset-0 animate-spin rounded-full border-4 border-outline-variant/30 border-t-primary" />
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src="/images/logo.png"
+                  src="/images/logo-360.png"
                   alt=""
-                  className="h-9 w-9 animate-pulse-glow rounded-md object-cover"
+                  className="h-9 w-9 animate-pulse-glow rounded-md object-contain"
                 />
               </div>
               <span className="font-mono text-xs uppercase tracking-widest text-on-surface-variant">

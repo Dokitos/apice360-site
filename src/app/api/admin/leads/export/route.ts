@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 import ExcelJS from "exceljs";
@@ -167,15 +168,23 @@ function drawLeadBlock(doc: PDFKit.PDFDocument, lead: PdfLead, top: number, bloc
 function drawPdfHeader(doc: PDFKit.PDFDocument, isFirstPage: boolean, generatedAt: string, leadCount: number) {
   doc.rect(0, 0, PAGE_WIDTH, HEADER_HEIGHT).fill(BRAND_ORANGE);
 
-  const logoPath = path.join(process.cwd(), "public/images/logo.png");
-  try {
-    doc.image(logoPath, PAGE_MARGIN, 22, { width: 56, height: 56 });
-  } catch {
-    // Logo missing on disk — fall back to text-only header rather than failing the export.
+  // Placa branca por baixo do logótipo: a faixa do cabeçalho é laranja, e os
+  // acentos laranja do "360" desapareceriam contra ela. `fit` mantém a
+  // proporção do ficheiro (1387x831) em vez de o espremer num quadrado.
+  // Confirma o ficheiro antes de desenhar: o PDF é escrito de uma assentada,
+  // por isso a placa não se poderia apagar se a imagem falhasse a seguir.
+  const logoPath = path.join(process.cwd(), "public/images/logo-preta.png");
+  if (fs.existsSync(logoPath)) {
+    try {
+      doc.roundedRect(PAGE_MARGIN, 26, 104, 48, 6).fill("#ffffff");
+      doc.image(logoPath, PAGE_MARGIN + 8, 32, { fit: [88, 36] });
+    } catch {
+      // Ficheiro ilegível — segue com o cabeçalho só de texto em vez de falhar o export.
+    }
   }
 
-  const textX = PAGE_MARGIN + 72;
-  const textWidth = CONTENT_WIDTH - 72;
+  const textX = PAGE_MARGIN + 120;
+  const textWidth = CONTENT_WIDTH - 120;
   doc
     .font("Helvetica-Bold")
     .fontSize(18)
