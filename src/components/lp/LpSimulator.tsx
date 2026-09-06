@@ -36,6 +36,23 @@ const FIELD_CLASSES =
 
 const FIELD_ERROR_CLASSES = "border-red-500 focus:border-red-500";
 
+// Botão primário de cada passo. `flex-1` (e não `w-full`) porque nos passos 2
+// e 3 ele divide a linha com o "Voltar": com `w-full` o flex encolhia-o até à
+// largura exata do texto e as letras ficavam coladas às bordas.
+//
+// O corpo de texto está calibrado para o rótulo caber sempre numa linha
+// (`whitespace-nowrap`) no idioma mais comprido, o PT: a 18px ocupa 293px e
+// só há 282px úteis ao lado do "Voltar"; a 16px passa a 260px. Em ecrãs
+// pequenos os dois botões empilham e o limite desce para 15px.
+const SUBMIT_BUTTON_CLASSES =
+  "flex min-w-0 flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-primary px-4 py-5 text-[15px] font-bold uppercase text-white shadow-[0_10px_20px_rgba(255,95,0,0.3)] transition-all hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(255,95,0,0.5)] sm:text-base";
+
+const BACK_BUTTON_CLASSES =
+  "shrink-0 rounded-lg border border-outline-variant px-4 py-4 text-sm font-bold uppercase transition-colors hover:bg-surface-container-high";
+
+/** Linha "Voltar + avançar": empilha em ecrãs estreitos, onde não há largura para os dois. */
+const STEP_ACTIONS_ROW = "mt-10 flex flex-col gap-4 sm:flex-row";
+
 export function LpSimulator({ locale, heading, subheading, tiers, whatsappNumber }: LpSimulatorProps) {
   const dict = getDictionary(locale);
   const t = dict.lp.simulator;
@@ -239,7 +256,7 @@ export function LpSimulator({ locale, heading, subheading, tiers, whatsappNumber
                     onClick={() => {
                       if (validateStep1()) goToStep(2);
                     }}
-                    className="mt-10 flex w-full items-center justify-center gap-2 bg-primary py-5 text-lg font-bold uppercase text-white shadow-[0_10px_20px_rgba(255,95,0,0.3)] transition-all hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(255,95,0,0.5)]"
+                    className={cn(SUBMIT_BUTTON_CLASSES, "mt-10")}
                   >
                     {t.continueLabel}
                     <Icon name="arrow_forward" />
@@ -272,11 +289,11 @@ export function LpSimulator({ locale, heading, subheading, tiers, whatsappNumber
                       hint={errors.buildLocation ? null : t.buildLocationHint}
                     />
                   </div>
-                  <div className="mt-10 flex gap-4">
+                  <div className={STEP_ACTIONS_ROW}>
                     <button
                       type="button"
                       onClick={() => goToStep(1)}
-                      className="rounded-lg border border-outline-variant px-6 text-sm font-bold uppercase transition-colors hover:bg-surface-container-high"
+                      className={BACK_BUTTON_CLASSES}
                     >
                       {t.back}
                     </button>
@@ -285,7 +302,7 @@ export function LpSimulator({ locale, heading, subheading, tiers, whatsappNumber
                       onClick={() => {
                         if (validateStep2()) goToStep(3);
                       }}
-                      className="flex flex-1 items-center justify-center gap-2 bg-primary py-5 text-lg font-bold uppercase text-white shadow-[0_10px_20px_rgba(255,95,0,0.3)] transition-all hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(255,95,0,0.5)]"
+                      className={SUBMIT_BUTTON_CLASSES}
                     >
                       {t.continueLabel}
                       <Icon name="arrow_forward" />
@@ -331,18 +348,18 @@ export function LpSimulator({ locale, heading, subheading, tiers, whatsappNumber
                     />
                   </div>
                   {serverError ? <p className="mt-6 text-sm text-red-600">{serverError}</p> : null}
-                  <div className="mt-10 flex gap-4">
+                  <div className={STEP_ACTIONS_ROW}>
                     <button
                       type="button"
                       onClick={() => goToStep(2)}
-                      className="rounded-lg border border-outline-variant px-6 text-sm font-bold uppercase transition-colors hover:bg-surface-container-high"
+                      className={BACK_BUTTON_CLASSES}
                     >
                       {t.back}
                     </button>
                     <button
                       type="button"
                       onClick={handleSubmit}
-                      className="w-full bg-primary py-5 text-lg font-bold uppercase text-white shadow-[0_10px_20px_rgba(255,95,0,0.3)] transition-all hover:-translate-y-1 hover:shadow-[0_15px_30px_rgba(255,95,0,0.5)]"
+                      className={SUBMIT_BUTTON_CLASSES}
                     >
                       {t.submit}
                     </button>
