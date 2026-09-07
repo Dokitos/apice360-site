@@ -14,6 +14,7 @@ export const KNOWN_PAGE_SECTION_KEYS: Record<PageKeyValue, string[]> = {
   CONTACTO: ["intro", "triagem"],
   AREA_ARQUITETO: ["intro"],
   LP: ["hero", "benefits", "simulator", "trust", "contact"],
+  LSF: ["hero", "what_is", "why_portugal", "benefits", "anatomy", "facts", "process", "fit", "mistakes", "cta"],
 };
 
 /**
@@ -46,4 +47,5 @@ export const PAGE_LABELS: Record<PageKeyValue, string> = {
   CONTACTO: "Contacto",
   AREA_ARQUITETO: "Área do Arquiteto",
   LP: "Landing Page (/lp)",
+  LSF: "LSF (/lsf)",
 };

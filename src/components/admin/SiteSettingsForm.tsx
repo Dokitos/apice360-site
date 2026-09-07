@@ -26,6 +26,7 @@ type SiteSettings = {
   nif: string | null;
   partnersDisplayMode: string;
   architectAreaEnabled: boolean;
+  lsfPageEnabled: boolean;
   maintenanceMode: boolean;
   translations: {
     locale: SiteLocale;
@@ -65,6 +66,18 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
         />
         <p className="text-xs text-on-surface-variant">
           Quando desativado, o link desaparece do menu e a página deixa de estar acessível.
+        </p>
+
+        <CheckboxField
+          id="lsfPageEnabled"
+          name="lsfPageEnabled"
+          label="Mostrar a página 'LSF' no site"
+          defaultChecked={settings?.lsfPageEnabled ?? true}
+        />
+        <p className="text-xs text-on-surface-variant">
+          Página informativa em /lsf, apresentada como uma sequência de capítulos. Quando desativada, o link
+          desaparece do menu e a página deixa de estar acessível. O conteúdo edita-se em Secções de Página →
+          LSF.
         </p>
 
         <CheckboxField

@@ -15,7 +15,8 @@ type PageKeyValue =
   | "BLOG"
   | "CONTACTO"
   | "AREA_ARQUITETO"
-  | "LP";
+  | "LP"
+  | "LSF";
 
 const SEO_FIELDS = [{ key: "title" }, { key: "description" }];
 

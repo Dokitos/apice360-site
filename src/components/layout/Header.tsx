@@ -18,8 +18,9 @@ export async function Header() {
     getCustomPages(locale),
   ]);
   const showArchitectArea = settings?.architectAreaEnabled ?? true;
+  const showLsfPage = settings?.lsfPageEnabled ?? true;
   const menuCustomPages = customPages.filter((p) => p.showInMenu);
-  const navLinks = getNavLinks(dict, { showArchitectArea, customPages: menuCustomPages });
+  const navLinks = getNavLinks(dict, { showArchitectArea, showLsfPage, customPages: menuCustomPages });
 
   return (
     <header className="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-xl">
@@ -65,6 +66,7 @@ export async function Header() {
           ctaLabel={budgetCta?.label ?? dict.header.orcamentoDefault}
           ctaUrl={budgetCta?.url ?? "/contacto"}
           showArchitectArea={showArchitectArea}
+          showLsfPage={showLsfPage}
           customPages={menuCustomPages}
         />
       </div>

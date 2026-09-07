@@ -20,6 +20,7 @@ export const siteSettingsSchema = z.object({
   nif: z.string().trim().optional().or(z.literal("")),
   partnersDisplayMode: z.enum(["GRID", "CAROUSEL"]).default("GRID"),
   architectAreaEnabled: z.boolean(),
+  lsfPageEnabled: z.boolean(),
   maintenanceMode: z.boolean(),
   footerDescriptionPt: z.string().trim().optional().or(z.literal("")),
   footerDescriptionEn: z.string().trim().optional().or(z.literal("")),

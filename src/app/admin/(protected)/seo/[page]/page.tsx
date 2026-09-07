@@ -13,6 +13,7 @@ const VALID_PAGES = [
   "CONTACTO",
   "AREA_ARQUITETO",
   "LP",
+  "LSF",
 ] as const;
 
 export default async function EditPageSeoPage({

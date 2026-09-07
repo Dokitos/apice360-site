@@ -12,7 +12,8 @@ export type PageKeyValue =
   | "BLOG"
   | "CONTACTO"
   | "AREA_ARQUITETO"
-  | "LP";
+  | "LP"
+  | "LSF";
 
 const DEFAULT_LOCALE: Locale = "PT";
 // PT is required on every entity (the source language auto-translation is

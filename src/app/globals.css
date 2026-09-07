@@ -105,6 +105,11 @@
 /* Duplicated-track marquee: at -50% the second copy lines up exactly where
    the first started, so the loop has no visible seam. Direction (right to
    left) comes from animating toward a negative translateX. */
+html.lsf-deck {
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 76px;
+}
+
 @keyframes loader-spin {
   to {
     transform: rotate(360deg);
@@ -212,6 +217,31 @@ html {
     color: var(--color-outline);
   }
 
+  /* --- Página /lsf: capítulos em modo "slide" ---------------------------
+     A classe .lsf-deck é posta no <html> só enquanto a /lsf está montada
+     (ver LsfDeck.tsx), para o snap não afetar o resto do site. Fica em
+     `proximity` e não `mandatory`: guia o scroll para o topo do capítulo
+     mas nunca prende quem quer ler um capítulo mais alto do que o ecrã.
+     O scroll-padding compensa o cabeçalho fixo de 76px. */
+  .lsf-chapter {
+    scroll-snap-align: start;
+  }
+
+  /* Conteúdo que entra em cena quando o capítulo chega ao ecrã. O atraso
+     de cada elemento vem de --reveal-delay, definido no próprio elemento. */
+  .lsf-chapter [data-reveal] {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .lsf-chapter.is-visible [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
   /* Cartões que rodam (landing page /lp): vira no hover em desktop e no
      toque em ecrãs táteis (a classe .is-flipped é alternada por JS). */
   .flip-card {
@@ -278,5 +308,13 @@ html {
   }
   .flip-card-inner {
     transition: none !important;
+  }
+  html.lsf-deck {
+    scroll-snap-type: none;
+  }
+  .lsf-chapter [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }

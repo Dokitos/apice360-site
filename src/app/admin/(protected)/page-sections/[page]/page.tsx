@@ -23,6 +23,7 @@ const VALID_PAGES = [
   "CONTACTO",
   "AREA_ARQUITETO",
   "LP",
+  "LSF",
 ] as const;
 
 const PAGE_LABELS: Record<(typeof VALID_PAGES)[number], string> = {
@@ -34,6 +35,7 @@ const PAGE_LABELS: Record<(typeof VALID_PAGES)[number], string> = {
   CONTACTO: "Contacto",
   AREA_ARQUITETO: "Área do Arquiteto",
   LP: "Landing Page (/lp)",
+  LSF: "LSF (/lsf)",
 };
 
 export default async function PageSectionsEditorPage({

@@ -14,13 +14,21 @@ type MobileNavProps = {
   ctaLabel?: string;
   ctaUrl?: string;
   showArchitectArea?: boolean;
+  showLsfPage?: boolean;
   customPages?: { slug: string; navLabel: string }[];
 };
 
-export function MobileNav({ locale, ctaLabel, ctaUrl, showArchitectArea = true, customPages }: MobileNavProps) {
+export function MobileNav({
+  locale,
+  ctaLabel,
+  ctaUrl,
+  showArchitectArea = true,
+  showLsfPage = true,
+  customPages,
+}: MobileNavProps) {
   const [open, setOpen] = useState(false);
   const dict = getDictionary(locale);
-  const navLinks = getNavLinks(dict, { showArchitectArea, customPages });
+  const navLinks = getNavLinks(dict, { showArchitectArea, showLsfPage, customPages });
 
   return (
     <div className="min-[1360px]:hidden">

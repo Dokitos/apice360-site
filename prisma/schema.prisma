@@ -33,6 +33,7 @@ enum PageKey {
   CONTACTO
   AREA_ARQUITETO
   LP
+  LSF
 }
 
 enum ProjectCategory {
@@ -134,6 +135,8 @@ model SiteSettings {
   nif                  String?
   partnersDisplayMode  String                    @default("GRID")
   architectAreaEnabled Boolean                   @default(true)
+  /// Liga/desliga a página informativa /lsf (link no menu + acesso à rota).
+  lsfPageEnabled       Boolean                   @default(true)
   maintenanceMode      Boolean                   @default(false)
   updatedAt            DateTime                  @updatedAt
   translations         SiteSettingsTranslation[]

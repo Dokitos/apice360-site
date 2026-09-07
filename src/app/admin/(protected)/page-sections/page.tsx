@@ -14,6 +14,7 @@ const PAGES = [
   { key: "CONTACTO", label: "Contacto" },
   { key: "AREA_ARQUITETO", label: "Área do Arquiteto" },
   { key: "LP", label: "Landing Page (/lp)" },
+  { key: "LSF", label: "LSF (/lsf)" },
 ] as const;
 
 export default async function PageSectionsPage() {

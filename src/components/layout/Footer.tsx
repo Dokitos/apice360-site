@@ -12,7 +12,12 @@ export async function Footer() {
   const [settings, customPages] = await Promise.all([getSiteSettings(locale), getCustomPages(locale)]);
   const year = new Date().getFullYear();
   const showArchitectArea = settings?.architectAreaEnabled ?? true;
-  const navLinks = getNavLinks(dict, { showArchitectArea, customPages: customPages.filter((p) => p.showInMenu) });
+  const showLsfPage = settings?.lsfPageEnabled ?? true;
+  const navLinks = getNavLinks(dict, {
+    showArchitectArea,
+    showLsfPage,
+    customPages: customPages.filter((p) => p.showInMenu),
+  });
 
   const serviceLinks = [
     { href: "/servicos#lsf", label: dict.footer.lsf },
