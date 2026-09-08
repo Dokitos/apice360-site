@@ -49,7 +49,7 @@ export function MobileNav({
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="text-[18px] font-medium text-on-surface transition-colors hover:text-primary"
+                className="text-[15px] font-medium uppercase tracking-wide text-on-surface transition-colors hover:text-primary"
               >
                 {link.label}
               </Link>
