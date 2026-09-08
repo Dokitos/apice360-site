@@ -3,7 +3,7 @@ import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
 import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
-import { auth } from "@/auth";
+import { requirePermission, UnauthorizedError } from "@/lib/permissions";
 import { prisma } from "@/lib/prisma";
 
 const TYPE_LABEL: Record<string, string> = {
@@ -350,9 +350,17 @@ function csvEscape(value: string) {
 }
 
 export async function GET(request: NextRequest) {
-  const session = await auth();
-  if (!session?.user) {
-    return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
+  // Mesma permissão que a página /admin/leads exige. Ter sessão iniciada não
+  // chega: sem esta verificação, um editor restrito a outro recurso (blog,
+  // por exemplo) descarregava por aqui todas as leads com os dados pessoais,
+  // apesar de o separador nem lhe aparecer no painel.
+  try {
+    await requirePermission("leads", "view");
+  } catch (error) {
+    if (error instanceof UnauthorizedError) {
+      return NextResponse.json({ error: error.message }, { status: 403 });
+    }
+    return NextResponse.json({ error: "Não autorizado." }, { status: 403 });
   }
 
   const searchParams = request.nextUrl.searchParams;

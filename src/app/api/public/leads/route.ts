@@ -10,10 +10,11 @@ import { domainAcceptsMail } from "@/lib/validations/contactable.server";
 // (currently the static landing page at apice360-lp.vercel.app) persist a
 // lead into the same database the admin panel reads from. Origin is
 // allowlisted since this has no auth of its own.
+// As origens locais só entram fora de produção — num site publicado não há
+// razão para autorizar uma página servida a partir da máquina de quem visita.
 const ALLOWED_ORIGINS = [
   "https://apice360-lp.vercel.app",
-  "http://localhost:3000",
-  "http://127.0.0.1:5500",
+  ...(process.env.NODE_ENV === "production" ? [] : ["http://localhost:3000", "http://127.0.0.1:5500"]),
 ];
 
 const publicLeadSchema = z.object({

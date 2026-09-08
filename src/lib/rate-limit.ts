@@ -33,8 +33,25 @@ export function rateLimit(key: string, limit: number, windowMs: number): { ok: b
   return { ok: true, retryAfterSeconds: 0 };
 }
 
+/**
+ * IP do cliente para efeitos de contagem.
+ *
+ * A ordem importa: `x-forwarded-for` pode ser escrito por quem faz o pedido,
+ * e a primeira entrada é precisamente a que o atacante controla — bastava
+ * mudá-la a cada tentativa para anular o limite. O Vercel escreve
+ * `x-vercel-forwarded-for` e `x-real-ip` com o IP real e não permite que o
+ * cliente os falsifique, por isso são consultados primeiro. Do
+ * `x-forwarded-for` fica a **última** entrada, a acrescentada pelo proxy mais
+ * próximo, e não a primeira.
+ */
 export function clientIpFromHeaders(headersList: Headers): string {
+  const trusted = headersList.get("x-vercel-forwarded-for") ?? headersList.get("x-real-ip");
+  if (trusted) return trusted.split(",")[0]!.trim();
+
   const forwardedFor = headersList.get("x-forwarded-for");
-  if (forwardedFor) return forwardedFor.split(",")[0]!.trim();
-  return headersList.get("x-real-ip") ?? "unknown";
+  if (forwardedFor) {
+    const hops = forwardedFor.split(",");
+    return hops[hops.length - 1]!.trim();
+  }
+  return "unknown";
 }
