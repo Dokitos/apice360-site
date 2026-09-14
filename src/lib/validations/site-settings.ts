@@ -2,6 +2,23 @@ import { z } from "zod";
 
 const optionalUrl = z.string().trim().url("Indica um URL válido.").optional().or(z.literal(""));
 
+// Os IDs de tracking são validados pelo formato porque um ID errado não dá
+// erro nenhum: o script carrega, não regista nada, e só se dá pela falta
+// semanas depois, ao olhar para relatórios vazios.
+const gaMeasurementId = z
+  .string()
+  .trim()
+  .regex(/^G-[A-Z0-9]{6,}$/i, "O ID do Google Analytics tem o formato G-XXXXXXXXXX.")
+  .optional()
+  .or(z.literal(""));
+
+const metaPixelId = z
+  .string()
+  .trim()
+  .regex(/^\d{10,20}$/, "O ID do pixel do Meta é composto apenas por dígitos (normalmente 15 ou 16).")
+  .optional()
+  .or(z.literal(""));
+
 export const siteSettingsSchema = z.object({
   phone: z.string().trim().optional().or(z.literal("")),
   whatsappCommercial: optionalUrl,
@@ -22,6 +39,8 @@ export const siteSettingsSchema = z.object({
   architectAreaEnabled: z.boolean(),
   lsfPageEnabled: z.boolean(),
   maintenanceMode: z.boolean(),
+  gaMeasurementId,
+  metaPixelId,
   footerDescriptionPt: z.string().trim().optional().or(z.literal("")),
   footerDescriptionEn: z.string().trim().optional().or(z.literal("")),
   footerDescriptionEs: z.string().trim().optional().or(z.literal("")),

@@ -138,6 +138,10 @@ model SiteSettings {
   /// Liga/desliga a página informativa /lsf (link no menu + acesso à rota).
   lsfPageEnabled       Boolean                   @default(true)
   maintenanceMode      Boolean                   @default(false)
+  /// ID de medição do Google Analytics 4 (G-XXXXXXXXXX). Vazio desliga o GA.
+  gaMeasurementId      String?
+  /// ID do pixel do Meta/Facebook Ads (só dígitos). Vazio desliga o pixel.
+  metaPixelId          String?
   updatedAt            DateTime                  @updatedAt
   translations         SiteSettingsTranslation[]
 }

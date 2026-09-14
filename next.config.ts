@@ -14,14 +14,27 @@ const nextConfig: NextConfig = {
     // used by the contact page map (see src/components/ui/map.tsx) — Carto's
     // hosted vector tiles don't send CORS headers, so OSM's raster tiles are
     // used instead; worker-src blob: is required by maplibre-gl's tile worker.
+    //
+    // googletagmanager.com / connect.facebook.net serve the Google Analytics
+    // and Meta Ads tags (see src/components/layout/Analytics.tsx), with their
+    // respective collection endpoints on connect-src. Listing a host here only
+    // permits it: nothing is requested unless the IDs are filled in under
+    // Definições do Site, and not before the visitor accepts cookies.
+    const analyticsScripts = ["https://www.googletagmanager.com", "https://connect.facebook.net"];
+    const analyticsEndpoints = [
+      "https://*.google-analytics.com",
+      "https://*.analytics.google.com",
+      "https://*.googletagmanager.com",
+      "https://www.facebook.com",
+    ];
     const csp = (frameAncestors: string) =>
       [
         "default-src 'self'",
         "img-src 'self' https: data: blob:",
-        "script-src 'self' 'unsafe-inline'",
+        `script-src 'self' 'unsafe-inline' ${analyticsScripts.join(" ")}`,
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' data: https://fonts.gstatic.com",
-        "connect-src 'self' https://*.tile.openstreetmap.org",
+        `connect-src 'self' https://*.tile.openstreetmap.org ${analyticsEndpoints.join(" ")}`,
         "worker-src 'self' blob:",
         `frame-ancestors ${frameAncestors}`,
         "base-uri 'self'",

@@ -28,6 +28,8 @@ type SiteSettings = {
   architectAreaEnabled: boolean;
   lsfPageEnabled: boolean;
   maintenanceMode: boolean;
+  gaMeasurementId: string | null;
+  metaPixelId: string | null;
   translations: {
     locale: SiteLocale;
     isAutoTranslated: boolean;
@@ -154,6 +156,32 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
           <TextField id="socialInstagram" name="socialInstagram" label="Instagram" defaultValue={settings?.socialInstagram ?? ""} />
           <TextField id="socialLinkedin" name="socialLinkedin" label="LinkedIn" defaultValue={settings?.socialLinkedin ?? ""} />
           <TextField id="socialYoutube" name="socialYoutube" label="YouTube" defaultValue={settings?.socialYoutube ?? ""} />
+        </div>
+      </section>
+
+      <section className="space-y-6">
+        <h2 className="font-heading text-headline-md">Tracking & Analítica</h2>
+        <p className="text-xs text-on-surface-variant">
+          Os dois scripts só são carregados depois de o visitante aceitar os cookies. Deixar um campo vazio
+          desliga esse serviço. Aplica-se ao site e à landing page (/lp).
+        </p>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+          <TextField
+            id="gaMeasurementId"
+            name="gaMeasurementId"
+            label="Google Analytics (ID de medição)"
+            defaultValue={settings?.gaMeasurementId ?? ""}
+            placeholder="G-XXXXXXXXXX"
+            hint="Em Administrador → Fluxos de dados, no Google Analytics."
+          />
+          <TextField
+            id="metaPixelId"
+            name="metaPixelId"
+            label="Meta Ads (ID do pixel)"
+            defaultValue={settings?.metaPixelId ?? ""}
+            placeholder="123456789012345"
+            hint="Em Gestor de Eventos → Origens de dados, no Meta Business."
+          />
         </div>
       </section>
 

@@ -50,7 +50,7 @@ export default async function LpLayout({ children }: { children: React.ReactNode
       <ScrollToTopButton />
       <WhatsAppFloatingButton />
       <CookieConsent locale={locale} />
-      <Analytics />
+      <Analytics gaMeasurementId={settings?.gaMeasurementId} metaPixelId={settings?.metaPixelId} />
     </>
   );
 }

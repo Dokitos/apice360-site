@@ -36,7 +36,7 @@ export default async function PublicLayout({ children }: { children: React.React
       <ScrollToTopButton />
       <WhatsAppFloatingButton />
       <CookieConsent locale={locale} />
-      <Analytics />
+      <Analytics gaMeasurementId={settings?.gaMeasurementId} metaPixelId={settings?.metaPixelId} />
     </>
   );
 }
