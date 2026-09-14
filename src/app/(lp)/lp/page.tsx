@@ -67,7 +67,7 @@ export default async function LandingPage() {
         subheading={hero?.subheading}
         imageUrl={hero?.imageUrl ?? "/images/hero-bg.jpg"}
         ctaLabel={hero?.ctaLabel ?? heroCta?.label ?? "Simular a minha estimativa"}
-        trustBadges={stats.slice(0, 2)}
+        trustBadges={stats.slice(0, 3)}
       />
 
       {benefits ? (

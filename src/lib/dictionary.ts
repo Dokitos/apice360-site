@@ -71,6 +71,11 @@ const dictionary = {
       modeloEyebrow: "O Nosso Modelo",
       modeloHeadingDefault: "Gestão Chave na Mão",
     },
+    testemunhos: {
+      heading: "Confiança que Constrói",
+      verMais: "Ver mais",
+      verMenos: "Ver menos",
+    },
     portfolio: {
       eyebrow: "Portfólio",
       heading: "O Nosso Portfólio: A Excelência da Ápice 360 em Imagens.",
@@ -321,6 +326,11 @@ const dictionary = {
       headingDefault: "LSF Construction, turnkey.",
       modeloEyebrow: "Our Model",
       modeloHeadingDefault: "Turnkey Management",
+    },
+    testemunhos: {
+      heading: "Trust That Builds",
+      verMais: "Read more",
+      verMenos: "Show less",
     },
     portfolio: {
       eyebrow: "Portfolio",
@@ -573,6 +583,11 @@ const dictionary = {
       modeloEyebrow: "Nuestro Modelo",
       modeloHeadingDefault: "Gestión Llave en Mano",
     },
+    testemunhos: {
+      heading: "Confianza que Construye",
+      verMais: "Ver más",
+      verMenos: "Ver menos",
+    },
     portfolio: {
       eyebrow: "Portafolio",
       heading: "Nuestro Portafolio: La Excelencia de Ápice 360 en Imágenes.",
@@ -823,6 +838,11 @@ const dictionary = {
       headingDefault: "Construction en LSF, clé en main.",
       modeloEyebrow: "Notre Modèle",
       modeloHeadingDefault: "Gestion Clé en Main",
+    },
+    testemunhos: {
+      heading: "La Confiance qui Construit",
+      verMais: "Voir plus",
+      verMenos: "Voir moins",
     },
     portfolio: {
       eyebrow: "Portfolio",

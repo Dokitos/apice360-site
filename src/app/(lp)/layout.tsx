@@ -1,4 +1,5 @@
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { ScrollToTopButton } from "@/components/layout/ScrollToTopButton";
 import { WhatsAppFloatingButton } from "@/components/layout/WhatsAppFloatingButton";
 import { CookieConsent } from "@/components/layout/CookieConsent";
@@ -37,6 +38,14 @@ export default async function LpLayout({ children }: { children: React.ReactNode
   return (
     <>
       <SmoothScroll />
+
+      {/* A LP não tem cabeçalho, por isso o seletor de idiomas vive solto no
+          canto. A placa clara garante que se lê tanto sobre a fotografia
+          escura do hero como sobre as secções claras mais abaixo. */}
+      <div className="fixed right-5 top-5 z-50 rounded-full bg-white/90 p-0.5 shadow-lg backdrop-blur-md md:right-8 md:top-6">
+        <LanguageSwitcher locale={locale} variant="compact" />
+      </div>
+
       <main className="flex-1">{children}</main>
       <ScrollToTopButton />
       <WhatsAppFloatingButton />

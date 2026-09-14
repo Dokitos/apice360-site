@@ -72,7 +72,7 @@ export default async function HomePage() {
         subheading={hero?.subheading}
         imageUrl={hero?.imageUrl}
         cta={heroCta}
-        trustBadges={stats.slice(0, 2)}
+        trustBadges={stats.slice(0, 3)}
       />
 
       <PartnersSection

@@ -41,7 +41,8 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
         style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
       >
         {/* Kept dark for legibility over the photo, independent of the site's light theme. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/40 to-ink/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/45 to-ink/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/75 via-ink/25 to-transparent lg:via-ink/10" />
       </div>
       <div className="relative z-10 mx-auto w-full max-w-site px-5 pb-24 pt-10 text-center md:px-20 md:pb-24 md:pt-12 lg:text-left">
         <div className="max-w-4xl lg:mx-0 mx-auto">
@@ -50,11 +51,11 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
               {eyebrow}
             </span>
           ) : null}
-          <h1 className="mb-5 font-heading text-[1.75rem] leading-[1.15] text-white drop-shadow-lg sm:text-[2.25rem] md:mb-6 md:text-[2.5rem] md:leading-[1.1] lg:text-[3.25rem]">
+          <h1 className="mb-5 font-heading text-[1.75rem] font-extrabold leading-[1.15] tracking-[-0.02em] text-white drop-shadow-lg sm:text-[2.25rem] md:mb-6 md:text-[2.5rem] md:leading-[1.1] lg:text-[3.25rem]">
             {renderHeadingWithEmphasis(heading)}
           </h1>
           {subheading ? (
-            <p className="mx-auto mb-8 max-w-xl text-[15px] leading-relaxed text-white/90 md:text-base lg:mx-0">
+            <p className="mx-auto mb-8 max-w-xl text-base leading-relaxed text-white/90 md:text-[17px] lg:mx-0">
               {subheading}
             </p>
           ) : null}
@@ -75,7 +76,7 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
               {trustBadges.length > 0 ? (
                 <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/10 pt-4 md:gap-6 lg:justify-start">
                   {trustBadges.map((badge) => (
-                    <div key={badge.id} className="flex items-center gap-2 font-mono text-xs text-white/80">
+                    <div key={badge.id} className="flex items-center gap-2 font-mono text-xs text-white/85 md:text-[13px]">
                       <Icon name={badge.iconName ?? "verified"} className="text-sm text-primary" />
                       {badge.value} {badge.label.toUpperCase()}
                     </div>
@@ -86,11 +87,11 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
           ) : null}
         </div>
       </div>
-      <div className="absolute bottom-12 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2">
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/70">
+      <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 md:bottom-12 md:gap-3">
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/80 md:text-[13px] md:tracking-[0.25em]">
           Descubra o LSF
         </span>
-        <Icon name="keyboard_double_arrow_down" className="animate-bounce-slow text-3xl text-primary" />
+        <Icon name="keyboard_double_arrow_down" className="animate-bounce-slow text-3xl text-primary md:text-5xl" />
       </div>
     </section>
   );

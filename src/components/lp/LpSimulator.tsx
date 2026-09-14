@@ -192,7 +192,7 @@ export function LpSimulator({ locale, heading, subheading, tiers, whatsappNumber
     <Reveal
       as="section"
       id="simulador"
-      className="relative z-20 border-t border-outline-variant/10 bg-surface-container-lowest py-32"
+      className="relative z-20 border-t border-outline-variant/10 bg-surface-container-lowest pb-24 pt-16 md:pb-32 md:pt-24"
     >
       <div className={cn("mx-auto px-5 md:px-20", stage === "result" ? "max-w-6xl" : "max-w-2xl")}>
         <div className="mb-12 text-center">
@@ -453,7 +453,10 @@ function TierCard({
   return (
     <div
       className={cn(
-        "relative flex h-full flex-col rounded-2xl border p-8 text-center transition-all",
+        "group relative flex h-full flex-col rounded-2xl border p-8 text-center transition-all duration-300",
+        // O cartão levanta e ganha moldura laranja ao passar o rato — sinaliza
+        // que é uma escolha, não apenas um valor a ler.
+        "hover:-translate-y-2 hover:border-primary hover:shadow-[0_22px_55px_rgba(255,106,19,0.25)]",
         tier.isHighlighted
           ? "border-primary bg-primary/5 shadow-[0_18px_50px_rgba(255,106,19,0.22)] md:-my-4 md:py-12"
           : "border-outline-variant bg-surface-container-lowest",
@@ -468,7 +471,10 @@ function TierCard({
       {tier.iconName ? (
         <Icon
           name={tier.iconName}
-          className={cn("mb-3 text-3xl", tier.isHighlighted ? "text-primary" : "text-on-surface-variant")}
+          className={cn(
+            "mb-3 text-3xl transition-all duration-300 group-hover:scale-110 group-hover:text-primary",
+            tier.isHighlighted ? "text-primary" : "text-on-surface-variant",
+          )}
         />
       ) : null}
 
@@ -484,8 +490,11 @@ function TierCard({
         {plusVat} · {pricePerM2}
       </p>
 
+      {/* A lista cresce para preencher o cartão: como os três níveis têm
+          descrições de alturas diferentes, isto alinha os botões de WhatsApp
+          na mesma linha nos três. */}
       {tier.features.length > 0 ? (
-        <ul className="mt-6 space-y-2 text-left">
+        <ul className="mt-6 flex-1 space-y-2 text-left">
           {tier.features.map((feature) => (
             <li key={feature} className="flex items-start gap-2 text-xs text-on-surface-variant">
               <Icon name="check" className="mt-0.5 text-sm text-primary" />
@@ -493,14 +502,19 @@ function TierCard({
             </li>
           ))}
         </ul>
-      ) : null}
+      ) : (
+        <div className="flex-1" />
+      )}
 
       <a
         href={whatsappHref}
         target="_blank"
         rel="noopener noreferrer"
         className={cn(
-          "mt-8 inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-xs font-bold uppercase tracking-wide transition-all hover:scale-105",
+          // whitespace-nowrap + tracking normal: o rótulo partia-se em duas
+          // linhas dentro do cartão, como já tinha acontecido no botão de
+          // calcular.
+          "mt-8 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 py-3 text-[11px] font-bold uppercase transition-all hover:scale-105",
           tier.isHighlighted
             ? "bg-primary text-on-primary"
             : "border border-outline-variant text-on-surface hover:border-primary hover:text-primary",

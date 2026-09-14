@@ -36,9 +36,9 @@ export function LpBenefits({
   if (items.length === 0) return null;
 
   return (
-    <Reveal as="section" id="benefits" className="relative z-20 bg-surface-container-lowest py-32">
+    <Reveal as="section" id="benefits" className="relative z-20 bg-surface-container-lowest pb-16 pt-20 md:pb-24 md:pt-28">
       <div className="relative z-10 mx-auto max-w-site px-5 md:px-20">
-        <div className="mb-20 text-center">
+        <div className="mb-12 text-center md:mb-16">
           <h2 className="mb-6 font-heading text-headline-lg">{heading}</h2>
           <div className="mx-auto h-1 w-24 rounded-full bg-primary" />
           {subheading ? (
@@ -56,15 +56,15 @@ export function LpBenefits({
               type="button"
               onClick={() => setFlipped((current) => (current === item.id ? null : item.id))}
               aria-label={item.title}
-              className={cn("flip-card h-60 cursor-pointer text-left", flipped === item.id && "is-flipped")}
+              className={cn("flip-card h-64 cursor-pointer text-left md:h-72", flipped === item.id && "is-flipped")}
             >
               <span className="flip-card-inner block">
                 <span className="flip-card-front neon-border flex flex-col items-center justify-center rounded-2xl bg-surface-container-low p-6 text-center">
                   <Icon name={item.iconName ?? "check_circle"} className="mb-3 text-3xl text-primary" />
                   <span className="text-base font-bold leading-tight">{item.title}</span>
                 </span>
-                <span className="flip-card-back flex flex-col items-center justify-center rounded-2xl bg-primary p-4 text-center">
-                  <span className="text-[11px] leading-snug text-white">{item.body}</span>
+                <span className="flip-card-back flex flex-col items-center justify-center rounded-2xl bg-primary p-5 text-center">
+                  <span className="text-[13px] leading-relaxed text-white md:text-sm">{item.body}</span>
                 </span>
               </span>
             </button>

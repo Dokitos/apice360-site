@@ -11,6 +11,13 @@ type CarouselProps = {
   children: ReactNode;
   /** Tailwind classes controlling how much width each slide takes at each breakpoint. */
   slideClassName?: string;
+  /**
+   * "stretch" (predefinido) dá a todos os slides a altura do mais alto.
+   * "start" deixa cada um com a sua altura — precisa disto quando um slide
+   * pode crescer sozinho (um "ver mais"), senão o crescimento de um abre um
+   * vazio equivalente em todos os outros.
+   */
+  alignSlides?: "stretch" | "start";
   showArrows?: boolean;
   showDots?: boolean;
   className?: string;
@@ -19,6 +26,7 @@ type CarouselProps = {
 export function Carousel({
   children,
   slideClassName = "flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%]",
+  alignSlides = "stretch",
   showArrows = true,
   showDots = true,
   className,
@@ -57,7 +65,7 @@ export function Carousel({
   return (
     <div className={cn("relative", className)}>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex -ml-6">
+        <div className={cn("flex -ml-6", alignSlides === "start" && "items-start")}>
           {slides.map((slide, index) => (
             <div
               key={index}
