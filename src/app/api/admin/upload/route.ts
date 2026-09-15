@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
+import {
+  put,
+  BlobAccessError,
+  BlobStoreNotFoundError,
+  BlobStoreSuspendedError,
+} from "@vercel/blob";
 import { requireEditorOrAdmin, UnauthorizedError } from "@/lib/permissions";
 
 const ALLOWED_TYPES = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
-const MAX_SIZE_BYTES = 8 * 1024 * 1024;
+// 4 MB e não mais: uma função serverless na Vercel recebe no máximo 4,5 MB de
+// corpo, e acima disso o pedido é cortado pela plataforma antes de chegar aqui
+// — o painel mostrava uma falha genérica sem dizer que o problema era o
+// tamanho. Para ficheiros maiores seria preciso enviar do browser direto para
+// o Blob (upload do @vercel/blob/client), que é outra conversa.
+const MAX_SIZE_BYTES = 4 * 1024 * 1024;
 
 /**
  * Assinaturas dos formatos aceites. O `file.type` é escolhido por quem envia
@@ -65,7 +75,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (file.size > MAX_SIZE_BYTES) {
-    return NextResponse.json({ error: "A imagem excede o tamanho máximo de 8MB." }, { status: 400 });
+    return NextResponse.json({ error: "A imagem excede o tamanho máximo de 4MB." }, { status: 400 });
   }
 
   // O conteúdo tem de corresponder ao que foi declarado — caso contrário
@@ -88,7 +98,36 @@ export async function POST(request: NextRequest) {
       contentType: detected.type,
     });
     return NextResponse.json({ url: blob.url });
-  } catch {
+  } catch (error) {
+    // Sem isto o motivo real perde-se e a única pista é um 500 genérico —
+    // que não distingue um token recusado de uma falha de rede. Fica nos
+    // logs da função, onde não chega a quem está a usar o painel.
+    console.error("[upload] falha ao escrever no Vercel Blob:", error);
+
+    // Os erros de configuração merecem uma mensagem própria: são os únicos
+    // que quem edita o site não resolve tentando outra vez.
+    if (error instanceof BlobAccessError) {
+      return NextResponse.json(
+        {
+          error:
+            "O armazenamento recusou o acesso. O BLOB_READ_WRITE_TOKEN do projeto é inválido ou pertence a outro store.",
+        },
+        { status: 500 },
+      );
+    }
+    if (error instanceof BlobStoreNotFoundError) {
+      return NextResponse.json(
+        { error: "O armazenamento indicado no BLOB_READ_WRITE_TOKEN já não existe." },
+        { status: 500 },
+      );
+    }
+    if (error instanceof BlobStoreSuspendedError) {
+      return NextResponse.json(
+        { error: "O armazenamento de imagens está suspenso na Vercel." },
+        { status: 500 },
+      );
+    }
+
     return NextResponse.json({ error: "Falha ao carregar a imagem. Tenta novamente." }, { status: 500 });
   }
 }
