@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   put,
+  BlobError,
   BlobAccessError,
   BlobStoreNotFoundError,
   BlobStoreSuspendedError,
@@ -126,6 +127,25 @@ export async function POST(request: NextRequest) {
         { error: "O armazenamento de imagens está suspenso na Vercel." },
         { status: 500 },
       );
+    }
+
+    // Um store privado serve ficheiros só a quem está autenticado, e estas
+    // imagens vão para dentro de <img> em páginas públicas. Não há aqui nada
+    // a corrigir no código: o store tem de ser público.
+    if (error instanceof BlobError && /private/i.test(error.message)) {
+      return NextResponse.json(
+        {
+          error:
+            "O armazenamento está configurado como privado e as imagens do site têm de ser públicas. Liga um Blob store com acesso público ao projeto na Vercel.",
+        },
+        { status: 500 },
+      );
+    }
+
+    // Qualquer outra falha do Blob: a mensagem do SDK é curta e diz mais do
+    // que "tenta novamente". Só quem edita o site chega aqui.
+    if (error instanceof BlobError) {
+      return NextResponse.json({ error: `O armazenamento recusou o pedido: ${error.message}` }, { status: 500 });
     }
 
     return NextResponse.json({ error: "Falha ao carregar a imagem. Tenta novamente." }, { status: 500 });
