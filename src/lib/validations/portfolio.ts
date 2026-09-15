@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { imageUrl, optionalImageUrl } from "@/lib/validations/image-url";
 
 export const portfolioProjectSchema = z.object({
   slug: z
@@ -10,7 +11,7 @@ export const portfolioProjectSchema = z.object({
   locationLabel: z.string().trim().optional().or(z.literal("")),
   clientName: z.string().trim().optional().or(z.literal("")),
   clientLocation: z.string().trim().optional().or(z.literal("")),
-  coverImageUrl: z.string().trim().url("Indica um URL de imagem válido.").optional().or(z.literal("")),
+  coverImageUrl: optionalImageUrl,
   order: z.coerce.number().int(),
   isFeatured: z.boolean(),
   isPublished: z.boolean(),
@@ -41,7 +42,7 @@ export const portfolioProjectSchema = z.object({
 });
 
 export const projectImageSchema = z.object({
-  url: z.string().trim().url("Indica um URL de imagem válido."),
+  url: imageUrl,
   alt: z.string().trim().optional().or(z.literal("")),
   order: z.coerce.number().int(),
 });

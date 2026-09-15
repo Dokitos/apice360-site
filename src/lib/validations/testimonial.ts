@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { optionalImageUrl } from "@/lib/validations/image-url";
 
 export const testimonialSchema = z.object({
   authorName: z.string().trim().min(1, "Indica o nome do cliente."),
   location: z.string().trim().optional().or(z.literal("")),
-  avatarUrl: z.string().trim().url("Indica um URL de imagem válido.").optional().or(z.literal("")),
+  avatarUrl: optionalImageUrl,
   rating: z.coerce.number().int().min(1).max(5),
   order: z.coerce.number().int(),
   showOnHome: z.boolean(),

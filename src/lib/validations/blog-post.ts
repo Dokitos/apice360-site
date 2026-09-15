@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalImageUrl } from "@/lib/validations/image-url";
 
 const optionalSlugField = z
   .string()
@@ -11,7 +12,7 @@ const optionalText = z.string().trim().optional().or(z.literal(""));
 
 export const blogPostSchema = z.object({
   categoryId: z.string().trim().optional().or(z.literal("")),
-  featuredImageUrl: z.string().trim().url("Indica um URL de imagem válido.").optional().or(z.literal("")),
+  featuredImageUrl: optionalImageUrl,
   status: z.enum(["DRAFT", "PUBLISHED"]),
   slugPt: z
     .string()

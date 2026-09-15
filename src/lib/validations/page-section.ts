@@ -1,13 +1,11 @@
 import { z } from "zod";
+import { optionalImageUrl } from "@/lib/validations/image-url";
 
 const optionalText = z.string().trim().optional().or(z.literal(""));
 
-// Sections can point at either an uploaded/external URL or a root-relative
-// path into /public (e.g. seeded content like "/images/hero-bg.jpg") — plain
-// .url() rejects the latter, which would make existing seeded sections
-// un-savable the moment an admin opens and re-submits their form.
-const IMAGE_PATH = /^(https?:\/\/|\/)/i;
-const imageUrlField = z.string().trim().regex(IMAGE_PATH, "Indica um URL de imagem válido.").optional().or(z.literal(""));
+// Esta regra nasceu aqui e valia só para as secções; agora é partilhada por
+// todos os campos de imagem do painel (ver image-url.ts).
+const imageUrlField = optionalImageUrl;
 
 export const pageSectionSchema = z.object({
   key: z

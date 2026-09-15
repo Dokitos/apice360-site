@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { optionalImageUrl } from "@/lib/validations/image-url";
 
 export const pageSeoSchema = z.object({
-  ogImageUrl: z.string().trim().url("Indica um URL de imagem válido.").optional().or(z.literal("")),
+  ogImageUrl: optionalImageUrl,
   titlePt: z.string().trim().min(1, "Indica o título SEO em Português."),
   titleEn: z.string().trim().optional().or(z.literal("")),
   titleEs: z.string().trim().optional().or(z.literal("")),

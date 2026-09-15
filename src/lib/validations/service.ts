@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalImageUrl } from "@/lib/validations/image-url";
 
 export const serviceSchema = z.object({
   type: z
@@ -7,7 +8,7 @@ export const serviceSchema = z.object({
     .min(1, "Indica o identificador do serviço.")
     .regex(/^[a-z0-9-]+$/, "Usa apenas minúsculas, números e hífen (ex: lsf, remodelacao-total)."),
   order: z.coerce.number().int(),
-  imageUrl: z.string().trim().url("Indica um URL de imagem válido.").optional().or(z.literal("")),
+  imageUrl: optionalImageUrl,
   ctaKey: z.string().trim().optional().or(z.literal("")),
   isActive: z.boolean(),
   cardLabelPt: z.string().trim().min(1, "Indica o rótulo do cartão em Português."),

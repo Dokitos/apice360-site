@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { imageUrl } from "@/lib/validations/image-url";
 
 // zod's .url() only checks the string is WHATWG-parseable — it accepts
 // javascript:/data: URLs too, which would be a stored-XSS vector once
@@ -7,7 +8,7 @@ const SAFE_HTTP_URL = /^https?:\/\//i;
 
 export const partnerSchema = z.object({
   name: z.string().trim().min(1, "Indica o nome do parceiro."),
-  logoUrl: z.string().trim().url("Indica um URL de imagem válido."),
+  logoUrl: imageUrl,
   websiteUrl: z
     .string()
     .trim()

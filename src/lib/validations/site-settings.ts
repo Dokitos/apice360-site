@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { optionalImageUrl } from "@/lib/validations/image-url";
 
 const optionalUrl = z.string().trim().url("Indica um URL válido.").optional().or(z.literal(""));
 
@@ -33,7 +34,8 @@ export const siteSettingsSchema = z.object({
   socialInstagram: optionalUrl,
   socialLinkedin: optionalUrl,
   socialYoutube: optionalUrl,
-  defaultOgImageUrl: optionalUrl,
+  // Imagem, e não um link: aceita também um caminho para /public.
+  defaultOgImageUrl: optionalImageUrl,
   nif: z.string().trim().optional().or(z.literal("")),
   partnersDisplayMode: z.enum(["GRID", "CAROUSEL"]).default("GRID"),
   architectAreaEnabled: z.boolean(),
