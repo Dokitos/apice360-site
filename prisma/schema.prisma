@@ -153,6 +153,10 @@ model SiteSettingsTranslation {
   locale                Locale
   isAutoTranslated      Boolean      @default(false)
   footerDescription     String?
+  /// Linha legal do fundo do rodapé. "{ano}" é substituído pelo ano corrente.
+  footerLegal           String?
+  /// Frase curta ao centro do fundo do rodapé.
+  footerTagline         String?
   showroomText          String?
   defaultSeoTitle       String?
   defaultSeoDescription String?

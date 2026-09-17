@@ -36,6 +36,7 @@ export default async function PortfolioPage() {
         heading={intro?.heading ?? dict.portfolio.heading}
         body={intro?.body ?? dict.portfolio.body}
         imageUrl={intro?.imageUrl}
+        items={intro?.items}
         cta={introCta}
       />
 

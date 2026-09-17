@@ -5,7 +5,7 @@ import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { Button } from "@/components/ui/Button";
 import { Logo } from "@/components/ui/Logo";
-import { RandomLetterSwap } from "@/components/ui/RandomLetterSwap";
+import { HeaderNavLink } from "@/components/layout/HeaderNavLink";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 
@@ -38,13 +38,7 @@ export async function Header() {
            o primeiro link em vez de o deixar alcançável. */}
         <nav className="hidden min-w-0 flex-1 items-center gap-4 overflow-x-auto [scrollbar-width:none] min-[1360px]:flex 2xl:gap-6 [&>*:first-child]:ml-auto [&>*:last-child]:mr-auto [&::-webkit-scrollbar]:hidden">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="whitespace-nowrap text-[15px] font-medium uppercase tracking-wide text-on-surface-variant transition-colors hover:text-primary"
-            >
-              <RandomLetterSwap key={link.label} label={link.label} />
-            </Link>
+            <HeaderNavLink key={link.href} href={link.href} label={link.label} />
           ))}
         </nav>
 

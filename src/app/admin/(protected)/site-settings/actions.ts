@@ -10,6 +10,8 @@ export type SiteSettingsFormState = { ok: boolean; message: string } | undefined
 
 const SETTINGS_FIELDS = [
   { key: "footerDescription" },
+  { key: "footerLegal" },
+  { key: "footerTagline" },
   { key: "showroomText" },
   { key: "defaultSeoTitle" },
   { key: "defaultSeoDescription" },
@@ -36,6 +38,8 @@ export async function updateSiteSettings(
 
   const {
     footerDescriptionPt, footerDescriptionEn, footerDescriptionEs, footerDescriptionFr,
+    footerLegalPt, footerLegalEn, footerLegalEs, footerLegalFr,
+    footerTaglinePt, footerTaglineEn, footerTaglineEs, footerTaglineFr,
     showroomTextPt, showroomTextEn, showroomTextEs, showroomTextFr,
     defaultSeoTitlePt, defaultSeoTitleEn, defaultSeoTitleEs, defaultSeoTitleFr,
     defaultSeoDescriptionPt, defaultSeoDescriptionEn, defaultSeoDescriptionEs, defaultSeoDescriptionFr,
@@ -52,14 +56,16 @@ export async function updateSiteSettings(
     fields: SETTINGS_FIELDS,
     ptValues: {
       footerDescription: footerDescriptionPt ?? null,
+      footerLegal: footerLegalPt ?? null,
+      footerTagline: footerTaglinePt ?? null,
       showroomText: showroomTextPt ?? null,
       defaultSeoTitle: defaultSeoTitlePt ?? null,
       defaultSeoDescription: defaultSeoDescriptionPt ?? null,
     },
     submittedValues: {
-      EN: { footerDescription: footerDescriptionEn ?? null, showroomText: showroomTextEn ?? null, defaultSeoTitle: defaultSeoTitleEn ?? null, defaultSeoDescription: defaultSeoDescriptionEn ?? null },
-      ES: { footerDescription: footerDescriptionEs ?? null, showroomText: showroomTextEs ?? null, defaultSeoTitle: defaultSeoTitleEs ?? null, defaultSeoDescription: defaultSeoDescriptionEs ?? null },
-      FR: { footerDescription: footerDescriptionFr ?? null, showroomText: showroomTextFr ?? null, defaultSeoTitle: defaultSeoTitleFr ?? null, defaultSeoDescription: defaultSeoDescriptionFr ?? null },
+      EN: { footerDescription: footerDescriptionEn ?? null, footerLegal: footerLegalEn ?? null, footerTagline: footerTaglineEn ?? null, showroomText: showroomTextEn ?? null, defaultSeoTitle: defaultSeoTitleEn ?? null, defaultSeoDescription: defaultSeoDescriptionEn ?? null },
+      ES: { footerDescription: footerDescriptionEs ?? null, footerLegal: footerLegalEs ?? null, footerTagline: footerTaglineEs ?? null, showroomText: showroomTextEs ?? null, defaultSeoTitle: defaultSeoTitleEs ?? null, defaultSeoDescription: defaultSeoDescriptionEs ?? null },
+      FR: { footerDescription: footerDescriptionFr ?? null, footerLegal: footerLegalFr ?? null, footerTagline: footerTaglineFr ?? null, showroomText: showroomTextFr ?? null, defaultSeoTitle: defaultSeoTitleFr ?? null, defaultSeoDescription: defaultSeoDescriptionFr ?? null },
     },
     existingTranslations,
   });
@@ -69,6 +75,8 @@ export async function updateSiteSettings(
       locale: "PT" as const,
       isAutoTranslated: false,
       footerDescription: footerDescriptionPt ?? null,
+      footerLegal: footerLegalPt ?? null,
+      footerTagline: footerTaglinePt ?? null,
       showroomText: showroomTextPt ?? null,
       defaultSeoTitle: defaultSeoTitlePt ?? null,
       defaultSeoDescription: defaultSeoDescriptionPt ?? null,
@@ -77,6 +85,8 @@ export async function updateSiteSettings(
       locale: r.locale,
       isAutoTranslated: r.isAutoTranslated,
       footerDescription: r.fields.footerDescription,
+      footerLegal: r.fields.footerLegal,
+      footerTagline: r.fields.footerTagline,
       showroomText: r.fields.showroomText,
       defaultSeoTitle: r.fields.defaultSeoTitle,
       defaultSeoDescription: r.fields.defaultSeoDescription,

@@ -44,6 +44,7 @@ export default async function QuemSomosPage() {
         heading={intro?.heading ?? dict.quemSomos.headingDefault}
         body={intro?.body ?? intro?.subheading}
         imageUrl={intro?.imageUrl}
+        items={intro?.items}
         cta={introCta}
       />
 
@@ -63,6 +64,8 @@ export default async function QuemSomosPage() {
         <TimelineSection
           eyebrow={dict.quemSomos.metodoEyebrow}
           heading={method.heading ?? dict.quemSomos.metodoHeadingDefault}
+          body={method.body}
+          imageUrl={method.imageUrl}
           items={method.items}
           cta={methodCta}
           locale={locale}

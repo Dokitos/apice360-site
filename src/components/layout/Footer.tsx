@@ -131,10 +131,14 @@ export async function Footer() {
 
         <div className="mt-20 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-10 font-mono text-xs uppercase tracking-widest md:flex-row">
           <span>
-            {dict.footer.direitos(year)}
+            {/* "{ano}" é substituído aqui para o texto do painel não ficar
+                com um ano escrito à mão, que envelhece em silêncio. */}
+            {settings?.t?.footerLegal
+              ? settings.t.footerLegal.replaceAll("{ano}", String(year))
+              : dict.footer.direitos(year)}
             {settings?.nif ? ` · ${dict.footer.nifLabel}: ${settings.nif}` : ""}
           </span>
-          <span>{dict.footer.tagline}</span>
+          <span>{settings?.t?.footerTagline || dict.footer.tagline}</span>
           <a
             href="http://per4mancemd.pt"
             target="_blank"

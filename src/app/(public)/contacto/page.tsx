@@ -50,6 +50,7 @@ export default async function ContactoPage() {
         heading={intro?.heading ?? dict.contacto.heading}
         body={intro?.body ?? dict.contacto.body}
         imageUrl={intro?.imageUrl}
+        items={intro?.items}
         cta={introCta}
       />
 

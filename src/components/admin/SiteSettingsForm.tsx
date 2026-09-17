@@ -34,6 +34,8 @@ type SiteSettings = {
     locale: SiteLocale;
     isAutoTranslated: boolean;
     footerDescription: string | null;
+    footerLegal: string | null;
+    footerTagline: string | null;
     showroomText: string | null;
     defaultSeoTitle: string | null;
     defaultSeoDescription: string | null;
@@ -196,6 +198,19 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
                 label="Descrição do Rodapé (PT)"
                 defaultValue={pt?.footerDescription ?? ""}
               />
+              <TextField
+                id="footerLegalPt"
+                name="footerLegalPt"
+                label="Linha Legal do Rodapé (PT)"
+                defaultValue={pt?.footerLegal ?? ""}
+                hint="Usa {ano} para inserir o ano corrente. Em branco mantém o texto padrão."
+              />
+              <TextField
+                id="footerTaglinePt"
+                name="footerTaglinePt"
+                label="Frase do Rodapé (PT)"
+                defaultValue={pt?.footerTagline ?? ""}
+              />
               <TextAreaField
                 id="showroomTextPt"
                 name="showroomTextPt"
@@ -223,6 +238,19 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
                 name="footerDescriptionEn"
                 label="Footer Description (EN)"
                 defaultValue={en?.footerDescription ?? ""}
+              />
+              <TextField
+                id="footerLegalEn"
+                name="footerLegalEn"
+                label="Footer Legal Line (EN)"
+                defaultValue={en?.footerLegal ?? ""}
+                hint="Usa {ano} para inserir o ano corrente. Em branco mantém o texto padrão."
+              />
+              <TextField
+                id="footerTaglineEn"
+                name="footerTaglineEn"
+                label="Footer Tagline (EN)"
+                defaultValue={en?.footerTagline ?? ""}
               />
               <TextAreaField
                 id="showroomTextEn"
@@ -252,6 +280,19 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
                 label="Descripción del Pie de Página (ES)"
                 defaultValue={es?.footerDescription ?? ""}
               />
+              <TextField
+                id="footerLegalEs"
+                name="footerLegalEs"
+                label="Línea Legal del Pie (ES)"
+                defaultValue={es?.footerLegal ?? ""}
+                hint="Usa {ano} para inserir o ano corrente. Em branco mantém o texto padrão."
+              />
+              <TextField
+                id="footerTaglineEs"
+                name="footerTaglineEs"
+                label="Frase del Pie (ES)"
+                defaultValue={es?.footerTagline ?? ""}
+              />
               <TextAreaField
                 id="showroomTextEs"
                 name="showroomTextEs"
@@ -279,6 +320,19 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
                 name="footerDescriptionFr"
                 label="Description du Pied de Page (FR)"
                 defaultValue={fr?.footerDescription ?? ""}
+              />
+              <TextField
+                id="footerLegalFr"
+                name="footerLegalFr"
+                label="Ligne Légale du Pied (FR)"
+                defaultValue={fr?.footerLegal ?? ""}
+                hint="Usa {ano} para inserir o ano corrente. Em branco mantém o texto padrão."
+              />
+              <TextField
+                id="footerTaglineFr"
+                name="footerTaglineFr"
+                label="Phrase du Pied (FR)"
+                defaultValue={fr?.footerTagline ?? ""}
               />
               <TextAreaField
                 id="showroomTextFr"

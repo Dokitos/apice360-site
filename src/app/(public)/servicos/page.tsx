@@ -40,6 +40,8 @@ export default async function ServicosPage() {
         eyebrow={dict.servicos.eyebrow}
         heading={intro?.heading ?? dict.servicos.headingDefault}
         body={intro?.body}
+        imageUrl={intro?.imageUrl}
+        items={intro?.items}
         cta={introCta}
       />
 
@@ -75,6 +77,8 @@ export default async function ServicosPage() {
         <TimelineSection
           eyebrow={dict.servicos.modeloEyebrow}
           heading={managementModel.heading ?? dict.servicos.modeloHeadingDefault}
+          body={managementModel.body}
+          imageUrl={managementModel.imageUrl}
           items={managementModel.items}
           cta={finalCta}
           locale={locale}

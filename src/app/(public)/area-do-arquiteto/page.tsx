@@ -36,6 +36,7 @@ export default async function AreaDoArquitetoPage() {
         heading={intro?.heading ?? dict.areaArquiteto.headingDefault}
         body={intro?.body ?? dict.areaArquiteto.bodyDefault}
         imageUrl={intro?.imageUrl}
+        items={intro?.items}
         cta={introCta}
       />
 

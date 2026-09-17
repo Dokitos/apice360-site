@@ -45,6 +45,7 @@ export default async function BlogPage({
         heading={intro?.heading ?? dict.blog.heading}
         body={intro?.body ?? dict.blog.body}
         imageUrl={intro?.imageUrl}
+        items={intro?.items}
         cta={introCta}
       />
 

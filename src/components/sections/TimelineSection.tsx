@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
+import { RichText } from "@/components/ui/RichText";
 import { getCta } from "@/lib/content";
 import type { SiteLocale } from "@/lib/locale";
 
@@ -16,13 +17,26 @@ type Item = {
 type TimelineSectionProps = {
   eyebrow?: string | null;
   heading: string;
+  /** Texto de abertura da secção — o campo "Texto" do painel, que antes se perdia. */
+  body?: string | null;
+  /** Imagem da secção, também editável no painel e até aqui ignorada. */
+  imageUrl?: string | null;
   items: Item[];
   cta?: { label: string; url: string; iconName?: string | null } | null;
   className?: string;
   locale?: SiteLocale;
 };
 
-export function TimelineSection({ eyebrow, heading, items, cta, className, locale = "PT" }: TimelineSectionProps) {
+export function TimelineSection({
+  eyebrow,
+  heading,
+  body,
+  imageUrl,
+  items,
+  cta,
+  className,
+  locale = "PT",
+}: TimelineSectionProps) {
   return (
     <Reveal as="section" className={className ?? "bg-surface-container-high py-32"}>
       <div className="mx-auto max-w-site px-5 md:px-20">
@@ -32,7 +46,16 @@ export function TimelineSection({ eyebrow, heading, items, cta, className, local
               {eyebrow}
             </span>
           ) : null}
-          <h2 className="mb-12 text-center font-heading text-headline-lg">{heading}</h2>
+          <h2 className="mb-4 text-center font-heading text-headline-lg">{heading}</h2>
+          {body ? (
+            <RichText html={body} className="mx-auto mb-12 max-w-2xl text-center text-on-surface-variant" />
+          ) : (
+            <div className="mb-12" />
+          )}
+          {imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={imageUrl} alt="" className="mb-12 h-[320px] w-full rounded-lg object-cover" />
+          ) : null}
           <div className="relative space-y-16">
             <div className="absolute bottom-4 left-7 top-4 hidden w-0.5 bg-primary/20 sm:block" />
             {items.map((item, index) => (
