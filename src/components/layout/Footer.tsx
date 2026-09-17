@@ -11,6 +11,10 @@ export async function Footer() {
   const dict = getDictionary(locale);
   const [settings, customPages] = await Promise.all([getSiteSettings(locale), getCustomPages(locale)]);
   const year = new Date().getFullYear();
+  // `?? null` normaliza o undefined de quando ainda não há linha de tradução:
+  // é o mesmo caso que o null — nunca foi definido, logo vale o padrão.
+  const legal = settings?.t?.footerLegal ?? null;
+  const tagline = settings?.t?.footerTagline ?? null;
   const showArchitectArea = settings?.architectAreaEnabled ?? true;
   const showLsfPage = settings?.lsfPageEnabled ?? true;
   const navLinks = getNavLinks(dict, {
@@ -132,13 +136,14 @@ export async function Footer() {
         <div className="mt-20 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-10 font-mono text-xs uppercase tracking-widest md:flex-row">
           <span>
             {/* "{ano}" é substituído aqui para o texto do painel não ficar
-                com um ano escrito à mão, que envelhece em silêncio. */}
-            {settings?.t?.footerLegal
-              ? settings.t.footerLegal.replaceAll("{ano}", String(year))
-              : dict.footer.direitos(year)}
+                com um ano escrito à mão, que envelhece em silêncio.
+                null (nunca definido) usa o texto padrão; "" é uma escolha de
+                quem editou — sem esta distinção, limpar o campo fazia o
+                padrão reaparecer e a linha não havia maneira de remover. */}
+            {legal === null ? dict.footer.direitos(year) : legal.replaceAll("{ano}", String(year))}
             {settings?.nif ? ` · ${dict.footer.nifLabel}: ${settings.nif}` : ""}
           </span>
-          <span>{settings?.t?.footerTagline || dict.footer.tagline}</span>
+          {tagline === null ? <span>{dict.footer.tagline}</span> : tagline ? <span>{tagline}</span> : <span />}
           <a
             href="http://per4mancemd.pt"
             target="_blank"

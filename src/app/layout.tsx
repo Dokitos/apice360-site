@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
+import { getLocale } from "@/lib/locale";
+import { getSiteSettings } from "@/lib/content";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -23,11 +25,27 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Ápice 360 | Construção em Light Steel Frame de Alta Performance",
-  description:
-    "Construímos o futuro com leveza, velocidade e confiança. Estruturas em LSF - Light Steel Frame para transformar o seu espaço com tecnologia, rapidez e excelência.",
-};
+const FALLBACK_TITLE = "Ápice 360 | Construção em Light Steel Frame de Alta Performance";
+const FALLBACK_DESCRIPTION =
+  "Construímos o futuro com leveza, velocidade e confiança. Estruturas em LSF - Light Steel Frame para transformar o seu espaço com tecnologia, rapidez e excelência.";
+
+/**
+ * Título e descrição para páginas que não definem os seus — o que o painel
+ * chama "SEO Padrão", em Definições do Site. Estes dois campos existiam no
+ * formulário mas não eram lidos em lado nenhum: o cliente escrevia, gravava,
+ * e nada mudava.
+ *
+ * Quem tem entrada própria em "SEO por Página" (início, serviços, portefólio,
+ * blog, contactos...) continua a mandar sobre isto.
+ */
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const settings = await getSiteSettings(locale);
+  return {
+    title: settings?.t?.defaultSeoTitle || FALLBACK_TITLE,
+    description: settings?.t?.defaultSeoDescription || FALLBACK_DESCRIPTION,
+  };
+}
 
 export default function RootLayout({
   children,

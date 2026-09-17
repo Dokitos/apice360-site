@@ -203,13 +203,15 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
                 name="footerLegalPt"
                 label="Linha Legal do Rodapé (PT)"
                 defaultValue={pt?.footerLegal ?? ""}
-                hint="Usa {ano} para inserir o ano corrente. Em branco mantém o texto padrão."
+                placeholder="© {ano} Ápice 360 — Construções em LSF."
+                hint="Usa {ano} para inserir o ano corrente. Em branco, a linha fica só com o NIF."
               />
               <TextField
                 id="footerTaglinePt"
                 name="footerTaglinePt"
                 label="Frase do Rodapé (PT)"
                 defaultValue={pt?.footerTagline ?? ""}
+                placeholder="Velocidade · Durabilidade · Qualidade"
               />
               <TextAreaField
                 id="showroomTextPt"
@@ -222,6 +224,7 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
                 name="defaultSeoTitlePt"
                 label="Título SEO Padrão (PT)"
                 defaultValue={pt?.defaultSeoTitle ?? ""}
+                hint="Só se aplica a páginas sem entrada própria. Para mudar o título do Início, Serviços, Portfólio, etc., usa SEO por Página."
               />
               <TextAreaField
                 id="defaultSeoDescriptionPt"
@@ -244,13 +247,15 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
                 name="footerLegalEn"
                 label="Footer Legal Line (EN)"
                 defaultValue={en?.footerLegal ?? ""}
-                hint="Usa {ano} para inserir o ano corrente. Em branco mantém o texto padrão."
+                placeholder="© {ano} Ápice 360 — LSF Construction."
+                hint="Usa {ano} para inserir o ano corrente. Em branco, a linha fica só com o NIF."
               />
               <TextField
                 id="footerTaglineEn"
                 name="footerTaglineEn"
                 label="Footer Tagline (EN)"
                 defaultValue={en?.footerTagline ?? ""}
+                placeholder="Speed · Durability · Quality"
               />
               <TextAreaField
                 id="showroomTextEn"
@@ -285,13 +290,15 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
                 name="footerLegalEs"
                 label="Línea Legal del Pie (ES)"
                 defaultValue={es?.footerLegal ?? ""}
-                hint="Usa {ano} para inserir o ano corrente. Em branco mantém o texto padrão."
+                placeholder="© {ano} Ápice 360 — Construcción en LSF."
+                hint="Usa {ano} para inserir o ano corrente. Em branco, a linha fica só com o NIF."
               />
               <TextField
                 id="footerTaglineEs"
                 name="footerTaglineEs"
                 label="Frase del Pie (ES)"
                 defaultValue={es?.footerTagline ?? ""}
+                placeholder="Velocidad · Durabilidad · Calidad"
               />
               <TextAreaField
                 id="showroomTextEs"
@@ -326,13 +333,15 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
                 name="footerLegalFr"
                 label="Ligne Légale du Pied (FR)"
                 defaultValue={fr?.footerLegal ?? ""}
-                hint="Usa {ano} para inserir o ano corrente. Em branco mantém o texto padrão."
+                placeholder="© {ano} Ápice 360 — Construction LSF."
+                hint="Usa {ano} para inserir o ano corrente. Em branco, a linha fica só com o NIF."
               />
               <TextField
                 id="footerTaglineFr"
                 name="footerTaglineFr"
                 label="Phrase du Pied (FR)"
                 defaultValue={fr?.footerTagline ?? ""}
+                placeholder="Rapidité · Durabilité · Qualité"
               />
               <TextAreaField
                 id="showroomTextFr"
