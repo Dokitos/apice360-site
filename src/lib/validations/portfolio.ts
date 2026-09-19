@@ -46,3 +46,27 @@ export const projectImageSchema = z.object({
   alt: z.string().trim().optional().or(z.literal("")),
   order: z.coerce.number().int(),
 });
+
+/**
+ * A galeria chega do formulário como JSON num campo escondido — é uma lista
+ * ordenada que o editor monta no browser, e mandá-la inteira de uma vez
+ * evita inventar um nome de campo por imagem. A ordem do array é a ordem
+ * com que aparecem no site.
+ */
+export const galleryImagesSchema = z.array(
+  z.object({
+    url: imageUrl,
+    alt: z.string().trim().max(300).optional().default(""),
+  }),
+);
+
+export function parseGalleryImages(raw: FormDataEntryValue | null): { url: string; alt: string }[] | null {
+  if (typeof raw !== "string" || raw.trim() === "") return [];
+  try {
+    const parsed = galleryImagesSchema.safeParse(JSON.parse(raw));
+    if (!parsed.success) return null;
+    return parsed.data.map((img) => ({ url: img.url, alt: img.alt ?? "" }));
+  } catch {
+    return null;
+  }
+}

@@ -52,17 +52,22 @@ export default async function PortfolioDetailPage({
         <h1 className="mb-10 font-heading text-headline-lg">{project.title}</h1>
 
         {images.length > 0 ? (
-          <Carousel className="mb-12" slideClassName="flex-[0_0_100%]">
-            {images.map((img) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={img.id}
-                src={img.url}
-                alt={img.alt ?? project.title}
-                className="h-[420px] w-full rounded-lg object-cover"
-              />
-            ))}
-          </Carousel>
+          // A galeria sai da coluna de texto e ocupa mais largura: fotografia
+          // de arquitetura é deitada, e a 1000px com altura fixa saíam tiras
+          // recortadas. 16:10 é a proporção de uma máquina fotográfica.
+          <div className="mb-12 xl:-mx-[140px]">
+            <Carousel slideClassName="flex-[0_0_100%]">
+              {images.map((img) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={img.id}
+                  src={img.url}
+                  alt={img.alt ?? project.title}
+                  className="aspect-[16/10] w-full rounded-lg object-cover"
+                />
+              ))}
+            </Carousel>
+          </div>
         ) : null}
 
         <dl className="space-y-8">

@@ -43,10 +43,10 @@ export function PortfolioGrid({ heading, projects, variant = "featured" }: Portf
                   <img
                     src={project.coverImageUrl}
                     alt={project.title}
-                    className="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (
-                  <div className="h-56 w-full bg-surface-container" />
+                  <div className="aspect-[16/10] w-full bg-surface-container" />
                 )}
                 {variant === "numbered" ? (
                   <span className="absolute left-4 top-4 font-heading text-headline-lg text-primary drop-shadow">

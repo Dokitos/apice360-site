@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { TextField, TextAreaField, SelectField, CheckboxField, ImageField, SlugField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { GalleryField, type GalleryImage } from "@/components/admin/GalleryField";
 import type { SiteLocale } from "@/lib/locale";
 
 type Project = {
@@ -17,6 +18,7 @@ type Project = {
   order: number;
   isFeatured: boolean;
   isPublished: boolean;
+  images?: { url: string; alt: string | null }[];
   translations: {
     locale: SiteLocale;
     isAutoTranslated: boolean;
@@ -60,6 +62,19 @@ export function PortfolioProjectForm({ project, action }: PortfolioProjectFormPr
       </div>
 
       <ImageField id="coverImageUrl" name="coverImageUrl" label="Imagem de Capa" defaultValue={project?.coverImageUrl} />
+
+      <div>
+        <p className="mb-1 font-mono text-label-mono uppercase tracking-widest text-on-surface-variant">
+          Galeria de Imagens
+        </p>
+        <p className="mb-3 text-xs text-on-surface-variant/70">
+          Fotos exibidas na página de detalhe do projeto. Cada ficheiro até 4 MB.
+        </p>
+        <GalleryField
+          name="galleryImages"
+          defaultValue={(project?.images ?? []).map((img): GalleryImage => ({ url: img.url, alt: img.alt ?? "" }))}
+        />
+      </div>
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
         <TextField id="locationLabel" name="locationLabel" label="Localização" defaultValue={project?.locationLabel ?? ""} />

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/permissions";
-import { portfolioProjectSchema, projectImageSchema } from "@/lib/validations/portfolio";
+import { portfolioProjectSchema, parseGalleryImages } from "@/lib/validations/portfolio";
 import { sanitizeRichText } from "@/lib/sanitize-rich-text";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
@@ -117,6 +117,9 @@ export async function createProject(_prevState: string | undefined, formData: Fo
   const parsed = portfolioProjectSchema.safeParse(readProjectForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
 
+  const gallery = parseGalleryImages(formData.get("galleryImages"));
+  if (!gallery) return "Não foi possível ler a galeria de imagens.";
+
   const {
     titlePt, titleEn, titleEs, titleFr,
     shortDescriptionPt, shortDescriptionEn, shortDescriptionEs, shortDescriptionFr,
@@ -145,6 +148,9 @@ export async function createProject(_prevState: string | undefined, formData: Fo
       ...data,
       publishedAt: data.isPublished ? new Date() : null,
       translations: { create: translations },
+      // A galeria nasce com o projeto: antes era preciso gravar primeiro
+      // para só depois haver onde pendurar as imagens.
+      images: { create: gallery.map((img, order) => ({ url: img.url, alt: img.alt || null, order })) },
     },
   });
 
@@ -161,6 +167,9 @@ export async function updateProject(
   await requirePermission("portfolio", "edit");
   const parsed = portfolioProjectSchema.safeParse(readProjectForm(formData));
   if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
+
+  const gallery = parseGalleryImages(formData.get("galleryImages"));
+  if (!gallery) return "Não foi possível ler a galeria de imagens.";
 
   const {
     titlePt, titleEn, titleEs, titleFr,
@@ -204,6 +213,16 @@ export async function updateProject(
     },
   });
 
+  // A galeria é substituída pela lista que veio do formulário: é ela que
+  // manda na ordem e no que ficou de fora. Apagar e recriar mantém a ordem
+  // fiel ao que o editor vê, em vez de casar linha a linha por URL.
+  await prisma.$transaction([
+    prisma.projectImage.deleteMany({ where: { projectId: id } }),
+    prisma.projectImage.createMany({
+      data: gallery.map((img, order) => ({ projectId: id, url: img.url, alt: img.alt || null, order })),
+    }),
+  ]);
+
   revalidatePath("/admin/portfolio");
   revalidatePath("/");
   redirect(`/admin/portfolio/${id}/edit?saved=1`);
@@ -216,32 +235,3 @@ export async function deleteProject(id: string) {
   revalidatePath("/");
 }
 
-function readImageForm(formData: FormData) {
-  return {
-    url: formData.get("url"),
-    alt: formData.get("alt") || undefined,
-    order: formData.get("order"),
-  };
-}
-
-export async function createProjectImage(
-  projectId: string,
-  _prevState: string | undefined,
-  formData: FormData,
-) {
-  await requirePermission("portfolio", "edit");
-  const parsed = projectImageSchema.safeParse(readImageForm(formData));
-  if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
-
-  await prisma.projectImage.create({ data: { ...parsed.data, projectId } });
-  revalidatePath(`/admin/portfolio/${projectId}/edit`);
-  revalidatePath("/");
-  redirect(`/admin/portfolio/${projectId}/edit?saved=1`);
-}
-
-export async function deleteProjectImage(projectId: string, imageId: string) {
-  await requirePermission("portfolio", "edit");
-  await prisma.projectImage.delete({ where: { id: imageId } });
-  revalidatePath(`/admin/portfolio/${projectId}/edit`);
-  revalidatePath("/");
-}
