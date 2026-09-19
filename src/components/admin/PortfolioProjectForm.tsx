@@ -18,7 +18,7 @@ type Project = {
   order: number;
   isFeatured: boolean;
   isPublished: boolean;
-  images?: { url: string; alt: string | null }[];
+  images?: { url: string; alt: string | null; mediaType: string }[];
   translations: {
     locale: SiteLocale;
     isAutoTranslated: boolean;
@@ -72,7 +72,11 @@ export function PortfolioProjectForm({ project, action }: PortfolioProjectFormPr
         </p>
         <GalleryField
           name="galleryImages"
-          defaultValue={(project?.images ?? []).map((img): GalleryImage => ({ url: img.url, alt: img.alt ?? "" }))}
+          defaultValue={(project?.images ?? []).map((img): GalleryImage => ({
+            url: img.url,
+            alt: img.alt ?? "",
+            mediaType: img.mediaType === "VIDEO" ? "VIDEO" : "IMAGE",
+          }))}
         />
       </div>
 

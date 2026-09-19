@@ -294,7 +294,7 @@ function mapProject<
       result: string | null;
       testimonialQuote: string | null;
     }[];
-    images?: { id: string; url: string; alt: string | null; order: number }[];
+    images?: { id: string; url: string; alt: string | null; order: number; mediaType: string }[];
   },
 >(project: T, locale: Locale) {
   const t = pickTranslation(project.translations, locale);

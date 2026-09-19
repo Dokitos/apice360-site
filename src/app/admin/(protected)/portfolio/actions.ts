@@ -150,7 +150,14 @@ export async function createProject(_prevState: string | undefined, formData: Fo
       translations: { create: translations },
       // A galeria nasce com o projeto: antes era preciso gravar primeiro
       // para só depois haver onde pendurar as imagens.
-      images: { create: gallery.map((img, order) => ({ url: img.url, alt: img.alt || null, order })) },
+      images: {
+        create: gallery.map((img, order) => ({
+          url: img.url,
+          alt: img.alt || null,
+          mediaType: img.mediaType,
+          order,
+        })),
+      },
     },
   });
 
@@ -219,7 +226,13 @@ export async function updateProject(
   await prisma.$transaction([
     prisma.projectImage.deleteMany({ where: { projectId: id } }),
     prisma.projectImage.createMany({
-      data: gallery.map((img, order) => ({ projectId: id, url: img.url, alt: img.alt || null, order })),
+      data: gallery.map((img, order) => ({
+        projectId: id,
+        url: img.url,
+        alt: img.alt || null,
+        mediaType: img.mediaType,
+        order,
+      })),
     }),
   ]);
 

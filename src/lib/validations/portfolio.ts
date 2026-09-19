@@ -57,15 +57,23 @@ export const galleryImagesSchema = z.array(
   z.object({
     url: imageUrl,
     alt: z.string().trim().max(300).optional().default(""),
+    // Antigas entradas não traziam tipo: tudo o que existia era fotografia.
+    mediaType: z.enum(["IMAGE", "VIDEO"]).optional().default("IMAGE"),
   }),
 );
 
-export function parseGalleryImages(raw: FormDataEntryValue | null): { url: string; alt: string }[] | null {
+export type GalleryMedia = { url: string; alt: string; mediaType: "IMAGE" | "VIDEO" };
+
+export function parseGalleryImages(raw: FormDataEntryValue | null): GalleryMedia[] | null {
   if (typeof raw !== "string" || raw.trim() === "") return [];
   try {
     const parsed = galleryImagesSchema.safeParse(JSON.parse(raw));
     if (!parsed.success) return null;
-    return parsed.data.map((img) => ({ url: img.url, alt: img.alt ?? "" }));
+    return parsed.data.map((img) => ({
+      url: img.url,
+      alt: img.alt ?? "",
+      mediaType: img.mediaType ?? "IMAGE",
+    }));
   } catch {
     return null;
   }

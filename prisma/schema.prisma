@@ -448,6 +448,8 @@ model ProjectImage {
   url       String
   alt       String?
   order     Int              @default(0)
+  /// "IMAGE" ou "VIDEO" — a galeria do portefólio aceita ambos.
+  mediaType String           @default("IMAGE")
 }
 
 model BlogCategory {

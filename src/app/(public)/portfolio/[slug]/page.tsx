@@ -5,7 +5,7 @@ import { getProject, getCta } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { Reveal } from "@/components/ui/Reveal";
-import { Carousel } from "@/components/ui/Carousel";
+import { ProjectGallery } from "@/components/sections/ProjectGallery";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { RichText } from "@/components/ui/RichText";
@@ -33,10 +33,10 @@ export default async function PortfolioDetailPage({
   const [project, cta] = await Promise.all([getProject(slug, locale), getCta("project_detail_budget", locale)]);
   if (!project) notFound();
 
-  const images = project.images.length > 0
-    ? project.images
+  const media = project.images.length > 0
+    ? project.images.map((img) => ({ id: img.id, url: img.url, alt: img.alt, mediaType: img.mediaType }))
     : project.coverImageUrl
-      ? [{ id: "cover", url: project.coverImageUrl, alt: project.title }]
+      ? [{ id: "cover", url: project.coverImageUrl, alt: project.title, mediaType: "IMAGE" }]
       : [];
 
   return (
@@ -51,24 +51,10 @@ export default async function PortfolioDetailPage({
 
         <h1 className="mb-10 font-heading text-headline-lg">{project.title}</h1>
 
-        {images.length > 0 ? (
-          // A galeria sai da coluna de texto e ocupa mais largura: fotografia
-          // de arquitetura é deitada, e a 1000px com altura fixa saíam tiras
-          // recortadas. 16:10 é a proporção de uma máquina fotográfica.
-          <div className="mb-12 xl:-mx-[140px]">
-            <Carousel slideClassName="flex-[0_0_100%]">
-              {images.map((img) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={img.id}
-                  src={img.url}
-                  alt={img.alt ?? project.title}
-                  className="aspect-[16/10] w-full rounded-lg object-cover"
-                />
-              ))}
-            </Carousel>
-          </div>
-        ) : null}
+        {/* A galeria sai da coluna de texto e ocupa mais largura: fotografia
+            de arquitetura é deitada, e a 1000px com altura fixa saíam tiras
+            recortadas. 16:10 é a proporção de uma máquina fotográfica. */}
+        <ProjectGallery items={media} title={project.title} />
 
         <dl className="space-y-8">
           <div>

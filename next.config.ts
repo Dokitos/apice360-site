@@ -32,10 +32,17 @@ const nextConfig: NextConfig = {
       [
         "default-src 'self'",
         "img-src 'self' https: data: blob:",
+        // Sem media-src, um <video> alojado no Vercel Blob cairia no
+        // default-src 'self' e não tocava — o ficheiro carrega, o leitor fica
+        // preto e não há erro visível na página.
+        "media-src 'self' https: data: blob:",
         `script-src 'self' 'unsafe-inline' ${analyticsScripts.join(" ")}`,
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' data: https://fonts.gstatic.com",
-        `connect-src 'self' https://services.arcgisonline.com ${analyticsEndpoints.join(" ")}`,
+        // vercel.com e o host do Blob: o painel envia os ficheiros da galeria
+        // do browser directamente para o armazenamento, sem passarem pelo
+        // servidor (ver api/admin/upload/token).
+        `connect-src 'self' https://services.arcgisonline.com https://vercel.com https://*.public.blob.vercel-storage.com ${analyticsEndpoints.join(" ")}`,
         "worker-src 'self' blob:",
         `frame-ancestors ${frameAncestors}`,
         "base-uri 'self'",

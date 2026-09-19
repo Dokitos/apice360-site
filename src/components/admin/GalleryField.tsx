@@ -1,11 +1,12 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { upload } from "@vercel/blob/client";
 import { Icon } from "@/components/ui/Icon";
 
-export type GalleryImage = { url: string; alt: string };
+export type GalleryImage = { url: string; alt: string; mediaType: "IMAGE" | "VIDEO" };
 
-const IMAGE_ACCEPT = "image/png,image/jpeg,image/webp,image/gif";
+const MEDIA_ACCEPT = "image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm";
 
 /**
  * Galeria de imagens de um projeto, dentro do próprio formulário.
@@ -15,10 +16,8 @@ const IMAGE_ACCEPT = "image/png,image/jpeg,image/webp,image/gif";
  * para poder juntar fotografias. Aqui a lista vive no formulário e viaja com
  * ele num campo escondido, por isso funciona igual a criar e a editar.
  *
- * O upload continua a ser um ficheiro por pedido (é o que a rota aceita, e o
- * limite de 4 MB é por pedido), mas o seletor aceita vários de uma vez e os
- * envios seguem em paralelo. Cada ficheiro reporta o seu próprio erro: um
- * falhar não leva os outros atrás.
+ * Aceita fotografias e vídeos, vários de uma vez, enviados em paralelo. Cada
+ * ficheiro reporta o seu próprio erro: um falhar não leva os outros atrás.
  */
 export function GalleryField({
   name,
@@ -33,15 +32,19 @@ export function GalleryField({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function uploadOne(file: File): Promise<GalleryImage | string> {
-    const body = new FormData();
-    body.append("file", file);
+    const isVideo = file.type.startsWith("video/");
     try {
-      const response = await fetch("/api/admin/upload", { method: "POST", body });
-      const data: { url?: string; error?: string } | null = await response.json().catch(() => null);
-      if (!response.ok || !data?.url) return `${file.name}: ${data?.error ?? "falha ao carregar."}`;
-      return { url: data.url, alt: "" };
-    } catch {
-      return `${file.name}: falha de ligação.`;
+      // Vai do browser directo para o Blob: um vídeo nunca caberia no corpo
+      // de um pedido para uma função serverless (ver api/admin/upload/token).
+      const blob = await upload(`portfolio/${file.name}`, file, {
+        access: "public",
+        handleUploadUrl: "/api/admin/upload/token",
+        contentType: file.type,
+      });
+      return { url: blob.url, alt: "", mediaType: isVideo ? "VIDEO" : "IMAGE" };
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : "falha ao carregar.";
+      return `${file.name}: ${detail}`;
     }
   }
 
@@ -83,15 +86,17 @@ export function GalleryField({
           onClick={() => fileInputRef.current?.click()}
           className="rounded-lg border border-outline-variant/40 bg-surface-container-low px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:bg-surface-container-high disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {pending > 0 ? `A enviar ${pending}...` : "Adicionar imagens"}
+          {pending > 0 ? `A enviar ${pending}...` : "Adicionar imagens ou vídeos"}
         </button>
         <span className="text-xs text-on-surface-variant/70">
-          {images.length > 0 ? `${images.length} imagem${images.length === 1 ? "" : "s"}` : "Podes escolher várias de uma vez."}
+          {images.length > 0
+            ? `${images.length} ficheiro${images.length === 1 ? "" : "s"}`
+            : "Podes escolher vários de uma vez. Fotografias e vídeos MP4 ou WebM."}
         </span>
         <input
           ref={fileInputRef}
           type="file"
-          accept={IMAGE_ACCEPT}
+          accept={MEDIA_ACCEPT}
           multiple
           className="hidden"
           disabled={pending > 0}
@@ -120,12 +125,22 @@ export function GalleryField({
               key={`${image.url}-${index}`}
               className="flex items-center gap-4 rounded-lg border border-outline-variant/30 p-3"
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={image.url} alt="" className="h-16 w-24 shrink-0 rounded object-cover" />
+              {image.mediaType === "VIDEO" ? (
+                <video
+                  src={image.url}
+                  muted
+                  playsInline
+                  preload="metadata"
+                  className="h-16 w-24 shrink-0 rounded bg-black object-cover"
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={image.url} alt="" className="h-16 w-24 shrink-0 rounded object-cover" />
+              )}
               <input
                 type="text"
                 value={image.alt}
-                placeholder="Descrição da imagem (opcional)"
+                placeholder="Descrição (opcional)"
                 onChange={(e) =>
                   setImages((current) =>
                     current.map((img, i) => (i === index ? { ...img, alt: e.target.value } : img)),
@@ -154,7 +169,7 @@ export function GalleryField({
                 </button>
                 <button
                   type="button"
-                  aria-label="Remover imagem"
+                  aria-label="Remover"
                   onClick={() => setImages((current) => current.filter((_, i) => i !== index))}
                   className="rounded p-1 text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-primary"
                 >
