@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/permissions";
 import { siteSettingsSchema } from "@/lib/validations/site-settings";
+import { resolveMapLocation } from "@/lib/map-location";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
 export type SiteSettingsFormState = { ok: boolean; message: string } | undefined;
@@ -43,8 +44,23 @@ export async function updateSiteSettings(
     showroomTextPt, showroomTextEn, showroomTextEs, showroomTextFr,
     defaultSeoTitlePt, defaultSeoTitleEn, defaultSeoTitleEs, defaultSeoTitleFr,
     defaultSeoDescriptionPt, defaultSeoDescriptionEn, defaultSeoDescriptionEs, defaultSeoDescriptionFr,
+    mapLocation,
     ...data
   } = parsed.data;
+
+  // O campo aceita um link do Google Maps ou um par de coordenadas; aqui
+  // vira latitude/longitude. Um erro aqui é devolvido ao editor em vez de
+  // gravar o resto e deixar o mapa a apontar para o sítio errado em silêncio.
+  let mapCoordinates: { mapLatitude: number | null; mapLongitude: number | null } | null = null;
+  if (mapLocation !== undefined) {
+    if (!mapLocation) {
+      mapCoordinates = { mapLatitude: null, mapLongitude: null };
+    } else {
+      const resolved = await resolveMapLocation(mapLocation);
+      if (!resolved.ok) return { ok: false, message: resolved.error };
+      mapCoordinates = { mapLatitude: resolved.location.latitude, mapLongitude: resolved.location.longitude };
+    }
+  }
 
   const existing = await prisma.siteSettings.findUnique({
     where: { id: "singleton" },
@@ -97,6 +113,7 @@ export async function updateSiteSettings(
     where: { id: "singleton" },
     update: {
       ...data,
+      ...(mapCoordinates ?? {}),
       translations: {
         upsert: translations.map((t) => {
           const { locale, ...fields } = t;
@@ -111,6 +128,7 @@ export async function updateSiteSettings(
     create: {
       id: "singleton",
       ...data,
+      ...(mapCoordinates ?? {}),
       translations: { create: translations },
     },
   });

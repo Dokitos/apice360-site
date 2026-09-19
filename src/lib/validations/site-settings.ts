@@ -29,7 +29,8 @@ export const siteSettingsSchema = z.object({
   addressCity: z.string().trim().optional().or(z.literal("")),
   addressPostalCode: z.string().trim().optional().or(z.literal("")),
   addressCountry: z.string().trim().optional().or(z.literal("")),
-  mapEmbedUrl: optionalUrl,
+  // Validado na accao, que resolve links do Google Maps em coordenadas.
+  mapLocation: z.string().trim().optional().or(z.literal("")),
   socialFacebook: optionalUrl,
   socialInstagram: optionalUrl,
   socialLinkedin: optionalUrl,

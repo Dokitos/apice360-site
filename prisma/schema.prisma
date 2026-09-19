@@ -126,7 +126,13 @@ model SiteSettings {
   addressCity          String?
   addressPostalCode    String?
   addressCountry       String?                   @default("Portugal")
+  /// Mantido por compatibilidade: nunca foi lido por nada. O mapa dos
+  /// contactos usa mapLatitude/mapLongitude.
   mapEmbedUrl          String?
+  /// Ponto do mapa da página de contactos. Sem valores, cai nas coordenadas
+  /// da sede em Amora, Seixal.
+  mapLatitude          Float?
+  mapLongitude         Float?
   socialFacebook       String?
   socialInstagram      String?
   socialLinkedin       String?

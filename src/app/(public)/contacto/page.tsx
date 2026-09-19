@@ -94,7 +94,12 @@ export default async function ContactoPage() {
           </div>
 
           <div>
-            <ContactMap className="mb-8 h-64 w-full overflow-hidden rounded-lg border border-outline-variant/20" />
+            <ContactMap
+              className="mb-8 h-64 w-full overflow-hidden rounded-lg border border-outline-variant/20"
+              latitude={settings?.mapLatitude}
+              longitude={settings?.mapLongitude}
+              label={[settings?.addressLine, settings?.addressCity].filter(Boolean).join(", ") || null}
+            />
             <h3 className="mb-2 font-heading text-headline-md">{dict.contacto.showroomHeading}</h3>
             <p className="mb-8 text-on-surface-variant">
               {settings?.t?.showroomText ?? dict.contacto.showroomBodyDefault}

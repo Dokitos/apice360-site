@@ -18,6 +18,8 @@ type SiteSettings = {
   addressPostalCode: string | null;
   addressCountry: string | null;
   mapEmbedUrl: string | null;
+  mapLatitude: number | null;
+  mapLongitude: number | null;
   socialFacebook: string | null;
   socialInstagram: string | null;
   socialLinkedin: string | null;
@@ -144,10 +146,16 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
           <TextField id="addressCountry" name="addressCountry" label="País" defaultValue={settings?.addressCountry ?? ""} />
         </div>
         <TextField
-          id="mapEmbedUrl"
-          name="mapEmbedUrl"
-          label="URL de Embed do Google Maps"
-          defaultValue={settings?.mapEmbedUrl ?? ""}
+          id="mapLocation"
+          name="mapLocation"
+          label="Localização no Mapa (página de Contactos)"
+          defaultValue={
+            settings?.mapLatitude != null && settings?.mapLongitude != null
+              ? `${settings.mapLatitude}, ${settings.mapLongitude}`
+              : ""
+          }
+          placeholder="https://maps.app.goo.gl/..."
+          hint="Abre o local no Google Maps → Partilhar → Copiar link, e cola aqui. Também aceita coordenadas (38.63329, -9.14416)."
         />
       </section>
 
