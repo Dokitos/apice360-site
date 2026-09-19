@@ -25,31 +25,54 @@ import {
 import { createPortal } from "react-dom";
 import { cn } from "@/lib/cn";
 
-// Carto's hosted vector styles (the usual free default for this component)
-// don't send CORS headers on their actual tile endpoint — every tile fetch
-// is blocked by the browser, so the map never finishes loading. OSM's
-// raster tiles are CORS-clean and reliable, so they're used for both
-// themes here (this site only ever requests the light theme anyway).
-const osmRasterStyle: StyleSpecification = {
-  version: 8,
-  sources: {
-    osm: {
-      type: "raster",
-      tiles: [
-        "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        "https://b.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        "https://c.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      ],
-      tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors",
+/**
+ * Cartografia de base.
+ *
+ * As styles *vector* do Carto — o costume neste componente — não enviam
+ * cabeçalhos CORS no endereço das tiles, e o mapa nunca chega a carregar.
+ * Já as *raster* do mesmo Carto respondem com Access-Control-Allow-Origin,
+ * incluindo as de retina, por isso são estas que usamos.
+ *
+ * O desenho é o Positron: cinzentos e brancos, sem o amarelo e o verde
+ * saturados do OSM padrão, que é o que fazia o mapa parecer de outra época.
+ * Assim o único ponto de cor é o marcador laranja da marca.
+ *
+ * O sufixo @2x pede tiles ao dobro da resolução: em ecrãs modernos, sem
+ * isso, o mapa aparece esborratado por muito bem desenhado que esteja.
+ */
+/**
+ * Base "Light Gray Canvas" da Esri: cinzentos suaves, estradas finas e pouca
+ * rotulagem. Substitui o OSM padrão, cujos amarelos e verdes saturados são o
+ * que fazia o mapa parecer de outra década.
+ *
+ * O Carto tem um desenho equivalente mas passou a carimbar "API KEY
+ * REQUIRED" por cima das tiles de quem não tem conta, e a Stadia e a
+ * MapTiler respondem 401 sem chave. Esta é a única cartografia limpa que
+ * responde sem registo e com CORS aberto.
+ *
+ * Atenção ao {z}/{y}/{x}: a Esri troca a ordem de linha e coluna em relação
+ * ao esquema habitual do OSM.
+ */
+const ESRI_BASE = "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas";
+
+function esriRasterStyle(service: "World_Light_Gray_Base" | "World_Dark_Gray_Base"): StyleSpecification {
+  return {
+    version: 8,
+    sources: {
+      basemap: {
+        type: "raster",
+        tiles: [`${ESRI_BASE}/${service}/MapServer/tile/{z}/{y}/{x}`],
+        tileSize: 256,
+        attribution: "&copy; Esri &copy; OpenStreetMap contributors",
+      },
     },
-  },
-  layers: [{ id: "osm", type: "raster", source: "osm" }],
-};
+    layers: [{ id: "basemap", type: "raster", source: "basemap" }],
+  };
+}
 
 const defaultStyles = {
-  dark: osmRasterStyle,
-  light: osmRasterStyle,
+  dark: esriRasterStyle("World_Dark_Gray_Base"),
+  light: esriRasterStyle("World_Light_Gray_Base"),
 };
 
 type Theme = "light" | "dark";

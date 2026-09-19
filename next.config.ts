@@ -12,8 +12,9 @@ const nextConfig: NextConfig = {
     // gstatic.com serve the Material Symbols icon font used sitewide (see
     // src/app/layout.tsx); *.tile.openstreetmap.org serves the map tiles
     // used by the contact page map (see src/components/ui/map.tsx) — Carto's
-    // hosted vector tiles don't send CORS headers, so OSM's raster tiles are
-    // used instead; worker-src blob: is required by maplibre-gl's tile worker.
+    // hosted *vector* tiles don't send CORS headers, but their raster ones do,
+    // and the cartography is far less dated than OSM's default;
+    // worker-src blob: is required by maplibre-gl's tile worker.
     //
     // googletagmanager.com / connect.facebook.net serve the Google Analytics
     // and Meta Ads tags (see src/components/layout/Analytics.tsx), with their
@@ -34,7 +35,7 @@ const nextConfig: NextConfig = {
         `script-src 'self' 'unsafe-inline' ${analyticsScripts.join(" ")}`,
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' data: https://fonts.gstatic.com",
-        `connect-src 'self' https://*.tile.openstreetmap.org ${analyticsEndpoints.join(" ")}`,
+        `connect-src 'self' https://services.arcgisonline.com ${analyticsEndpoints.join(" ")}`,
         "worker-src 'self' blob:",
         `frame-ancestors ${frameAncestors}`,
         "base-uri 'self'",
