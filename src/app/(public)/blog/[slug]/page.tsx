@@ -38,7 +38,10 @@ export default async function BlogPostPage({
 
   return (
     <Reveal as="article" className="py-24">
-      <div className="mx-auto max-w-[800px] px-5 md:px-20">
+      {/* 800px de contentor com md:px-20 deixavam apenas 640px de texto.
+          Alargar o contentor e encolher a margem põe a coluna nos ~780px,
+          que é a medida confortável para ler um artigo. */}
+      <div className="mx-auto max-w-[880px] px-5 md:px-12">
         <Link
           href="/blog"
           className="mb-10 inline-flex items-center gap-2 rounded-lg bg-surface-container px-5 py-2.5 text-sm font-bold uppercase text-on-surface transition-colors hover:bg-surface-container-high"
@@ -66,7 +69,7 @@ export default async function BlogPostPage({
 
         {post.featuredImageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={post.featuredImageUrl} alt={post.title} className="mb-10 h-[360px] w-full rounded-lg object-cover" />
+          <img src={post.featuredImageUrl} alt={post.title} className="mb-10 aspect-[16/9] w-full rounded-lg object-cover" />
         ) : null}
 
         {/* bodyHtml is sanitized with DOMPurify before being persisted from the admin rich-text editor. */}

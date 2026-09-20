@@ -306,7 +306,10 @@ function mapProject<
     locationLabel: project.locationLabel,
     clientName: project.clientName,
     clientLocation: project.clientLocation,
-    coverImageUrl: project.coverImageUrl,
+    // Sem capa definida, vale a primeira imagem da galeria: o projeto tem
+    // fotografias, e mostrar um rectângulo cinzento na listagem por causa
+    // de um campo em branco é pior do que escolher uma por ele.
+    coverImageUrl: project.coverImageUrl || project.images?.[0]?.url || null,
     title: t?.title ?? "",
     shortDescription: t?.shortDescription ?? null,
     challenge: t?.challenge ?? null,
@@ -321,7 +324,7 @@ export const getFeaturedProjects = cache(async (locale: Locale = DEFAULT_LOCALE)
   const projects = await prisma.portfolioProject.findMany({
     where: { isPublished: true, isFeatured: true },
     orderBy: { order: "asc" },
-    include: { translations: true },
+    include: { translations: true, images: { orderBy: { order: "asc" }, take: 1 } },
   });
   return projects.map((p) => mapProject(p, locale));
 });
@@ -331,7 +334,7 @@ export const getProjectsByCategory = cache(
     const projects = await prisma.portfolioProject.findMany({
       where: { isPublished: true, category },
       orderBy: { order: "asc" },
-      include: { translations: true },
+      include: { translations: true, images: { orderBy: { order: "asc" }, take: 1 } },
     });
     return projects.map((p) => mapProject(p, locale));
   },

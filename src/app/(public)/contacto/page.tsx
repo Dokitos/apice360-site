@@ -5,6 +5,7 @@ import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { ContactMap } from "@/components/sections/ContactMap";
+import { ContactChannels } from "@/components/sections/ContactChannels";
 import { GenericPageSection } from "@/components/sections/GenericPageSection";
 import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
 import { Reveal } from "@/components/ui/Reveal";
@@ -53,6 +54,8 @@ export default async function ContactoPage() {
         items={intro?.items}
         cta={introCta}
       />
+
+      <ContactChannels settings={settings} locale={locale} />
 
       <Reveal as="section" className="bg-surface py-24">
         <div className="mx-auto max-w-site px-5 text-center md:px-20">
