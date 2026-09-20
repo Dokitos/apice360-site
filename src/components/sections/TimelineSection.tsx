@@ -40,7 +40,10 @@ export function TimelineSection({
   return (
     <Reveal as="section" className={className ?? "bg-surface-container-high py-32"}>
       <div className="mx-auto max-w-site px-5 md:px-20">
-        <div className="mx-auto max-w-3xl">
+        {/* A coluna era de 768px dentro de um contentor de 1760: sobrava meio
+            ecrã de cada lado. O texto de abertura fica mais estreito à mesma,
+            porque linhas muito longas cansam a ler. */}
+        <div className="mx-auto max-w-5xl">
           {eyebrow ? (
             <span className="mb-4 block text-center font-mono text-label-mono uppercase tracking-widest text-primary">
               {eyebrow}
@@ -48,7 +51,7 @@ export function TimelineSection({
           ) : null}
           <h2 className="mb-4 text-center font-heading text-headline-lg">{heading}</h2>
           {body ? (
-            <RichText html={body} className="mx-auto mb-12 max-w-2xl text-center text-on-surface-variant" />
+            <RichText html={body} className="mx-auto mb-12 max-w-3xl text-center text-on-surface-variant" />
           ) : (
             <div className="mb-12" />
           )}

@@ -30,13 +30,13 @@ export function PageIntroSection({ eyebrow, heading, body, imageUrl, items = [],
             {eyebrow}
           </span>
         ) : null}
-        <h1 className="mx-auto mb-6 max-w-3xl font-heading text-headline-lg">{heading}</h1>
+        <h1 className="mx-auto mb-6 max-w-4xl font-heading text-headline-lg">{heading}</h1>
         {body ? (
-          <RichText html={body} className="mx-auto max-w-2xl text-body-lg text-on-surface-variant" />
+          <RichText html={body} className="mx-auto max-w-3xl text-body-lg text-on-surface-variant" />
         ) : null}
         {items.length > 0 ? (
           <div
-            className={`mx-auto mt-12 grid max-w-4xl grid-cols-1 gap-6 text-left ${
+            className={`mx-auto mt-12 grid max-w-6xl grid-cols-1 gap-6 text-left ${
               items.length > 1 ? "md:grid-cols-2" : ""
             }`}
           >
@@ -54,7 +54,7 @@ export function PageIntroSection({ eyebrow, heading, body, imageUrl, items = [],
 
         {imageUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={imageUrl} alt="" className="mx-auto mt-16 h-[360px] w-full max-w-4xl rounded-lg object-cover" />
+          <img src={imageUrl} alt="" className="mx-auto mt-16 h-[420px] w-full max-w-6xl rounded-lg object-cover" />
         ) : null}
         {cta ? (
           <div className="mt-10">
