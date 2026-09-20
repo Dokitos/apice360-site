@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
+import { Icon } from "@/components/ui/Icon";
 
 type Project = {
   id: string;
@@ -61,9 +62,23 @@ export function PortfolioGrid({ heading, projects, variant = "featured" }: Portf
                   </span>
                 ) : null}
                 {variant === "featured" && project.testimonialQuote ? (
-                  <p className="mb-4 flex-1 text-sm italic leading-relaxed text-on-surface">
-                    &ldquo;{project.testimonialQuote}&rdquo;
-                  </p>
+                  <div className="mb-4 flex-1">
+                    {/* Cortado a cinco linhas: um testemunho longo esticava o
+                        cartão e desalinhava a fila toda. O texto completo está
+                        na página do projeto, que é onde este cartão leva. */}
+                    <p className="line-clamp-5 text-sm italic leading-relaxed text-on-surface">
+                      &ldquo;{project.testimonialQuote}&rdquo;
+                    </p>
+                    {/* Um <button> aqui seria inválido — o cartão inteiro já é
+                        um link — por isso a continuação é só a marca visual
+                        desse mesmo link. */}
+                    {project.testimonialQuote.length > 220 ? (
+                      <span className="mt-2 inline-flex items-center gap-1 font-mono text-label-mono uppercase tracking-widest text-primary">
+                        Ver mais
+                        <Icon name="arrow_forward" className="text-sm" />
+                      </span>
+                    ) : null}
+                  </div>
                 ) : (
                   <p className="mb-4 flex-1 text-sm leading-relaxed text-on-surface-variant">{project.title}</p>
                 )}

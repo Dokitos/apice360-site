@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Carousel } from "@/components/ui/Carousel";
 import { Icon } from "@/components/ui/Icon";
 
@@ -14,9 +15,10 @@ export type GalleryMediaItem = {
 /**
  * Galeria de um projeto: carrossel que abre em ecrã inteiro ao clicar.
  *
- * No carrossel as peças são recortadas a 16:10 para a fila ficar alinhada;
- * aberto, passa a object-contain — é lá que se vê a fotografia inteira, que
- * é justamente o que o recorte esconde.
+ * A moldura é sempre 16:10 para a fila ficar alinhada, mas a peça dentro dela
+ * é object-contain e não cover: com cover, uma fotografia ao alto era ampliada
+ * e cortada até encher a moldura, e aparecia esticada. Assim vê-se inteira,
+ * centrada, com o fundo a preencher o que sobra.
  */
 export function ProjectGallery({ items, title }: { items: GalleryMediaItem[]; title: string }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -61,18 +63,24 @@ export function ProjectGallery({ items, title }: { items: GalleryMediaItem[]; ti
               aria-label={`Ampliar ${item.alt ?? title}`}
               className="group relative block w-full cursor-zoom-in overflow-hidden rounded-lg"
             >
-              {item.mediaType === "VIDEO" ? (
-                <video
-                  src={item.url}
-                  muted
-                  playsInline
-                  preload="metadata"
-                  className="aspect-[16/10] w-full bg-black object-cover"
-                />
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={item.url} alt={item.alt ?? title} className="aspect-[16/10] w-full object-cover" />
-              )}
+              <span className="flex aspect-[16/10] w-full items-center justify-center bg-surface-container">
+                {item.mediaType === "VIDEO" ? (
+                  <video
+                    src={item.url}
+                    muted
+                    playsInline
+                    preload="metadata"
+                    className="max-h-full max-w-full object-contain"
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={item.url}
+                    alt={item.alt ?? title}
+                    className="max-h-full max-w-full object-contain"
+                  />
+                )}
+              </span>
               <span className="absolute inset-0 bg-ink/0 transition-colors group-hover:bg-ink/20" />
               <span className="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-ink/70 text-white opacity-0 transition-opacity group-hover:opacity-100">
                 <Icon name={item.mediaType === "VIDEO" ? "play_arrow" : "zoom_in"} />
@@ -82,7 +90,8 @@ export function ProjectGallery({ items, title }: { items: GalleryMediaItem[]; ti
         </Carousel>
       </div>
 
-      {active ? (
+      {active
+        ? createPortal(
         <div
           role="dialog"
           aria-modal="true"
@@ -154,8 +163,10 @@ export function ProjectGallery({ items, title }: { items: GalleryMediaItem[]; ti
           <span className="absolute bottom-5 left-1/2 -translate-x-1/2 font-mono text-xs uppercase tracking-widest text-white/60">
             {(openIndex ?? 0) + 1} / {items.length}
           </span>
-        </div>
-      ) : null}
+        </div>,
+            document.body,
+          )
+        : null}
     </>
   );
 }
