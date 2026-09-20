@@ -38,10 +38,11 @@ export default async function BlogPostPage({
 
   return (
     <Reveal as="article" className="py-24">
-      {/* 800px de contentor com md:px-20 deixavam apenas 640px de texto.
-          Alargar o contentor e encolher a margem põe a coluna nos ~780px,
-          que é a medida confortável para ler um artigo. */}
-      <div className="mx-auto max-w-[880px] px-5 md:px-12">
+      {/* Alargado duas vezes a pedido do cliente: 640px -> 784px -> ~1040px
+          de coluna de texto. Fica acima da medida clássica de leitura
+          (~75 caracteres por linha), mas o vazio nas laterais era o que
+          incomodava, e a decisão é de quem vê a página. */}
+      <div className="mx-auto max-w-[1120px] px-5 md:px-10">
         <Link
           href="/blog"
           className="mb-10 inline-flex items-center gap-2 rounded-lg bg-surface-container px-5 py-2.5 text-sm font-bold uppercase text-on-surface transition-colors hover:bg-surface-container-high"

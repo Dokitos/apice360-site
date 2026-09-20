@@ -10,19 +10,10 @@ type Settings = {
   whatsappGeneral?: string | null;
   addressLine?: string | null;
   addressCity?: string | null;
+  mapLatitude?: number | null;
+  mapLongitude?: number | null;
 } | null;
 
-/**
- * Faixa com os canais de contacto, logo abaixo da introdução.
- *
- * Aquela zona da página era só um título e um parágrafo com um vazio enorme
- * por baixo. Isto preenche-a com o que alguém procura numa página de
- * contactos — telefone, email, WhatsApp e morada — e cada cartão é uma
- * ligação directa, não texto para copiar à mão.
- *
- * Tudo vem das Definições do Site: quem não tiver um dos valores preenchido
- * simplesmente não mostra esse cartão, em vez de ficar com um espaço morto.
- */
 /**
  * "https://wa.me/351924107846?text=..." → "+351 924 107 846"
  *
@@ -41,11 +32,31 @@ function numeroDoWhatsapp(url: string): string | null {
   return `+${digitos}`;
 }
 
+/**
+ * Faixa com os canais de contacto, logo abaixo da introdução.
+ *
+ * Aquela zona da página era só um título e um parágrafo com um vazio enorme
+ * por baixo. Isto preenche-a com o que alguém procura numa página de
+ * contactos — telefone, email, WhatsApp e morada — e cada cartão é uma
+ * ligação directa, não texto para copiar à mão.
+ *
+ * Tudo vem das Definições do Site: quem não tiver um dos valores preenchido
+ * simplesmente não mostra esse cartão, em vez de ficar com um espaço morto.
+ */
 export function ContactChannels({ settings, locale }: { settings: Settings; locale: SiteLocale }) {
   const dict = getDictionary(locale);
   const t = dict.contacto.canais;
   const whatsapp = settings?.whatsappCommercial ?? settings?.whatsappGeneral ?? null;
   const morada = [settings?.addressLine, settings?.addressCity].filter(Boolean).join(", ");
+
+  // O link do mapa é gerado a partir das coordenadas das Definições do Site,
+  // as mesmas que põem o pino na página. Fixar aqui um endereço do Google
+  // deixaria os dois a apontar para sítios diferentes assim que a morada
+  // mudasse, e só se daria por isso por acaso.
+  const mapaHref =
+    settings?.mapLatitude != null && settings?.mapLongitude != null
+      ? `https://www.google.com/maps/search/?api=1&query=${settings.mapLatitude},${settings.mapLongitude}`
+      : null;
 
   const canais = [
     settings?.phone && {
@@ -77,7 +88,8 @@ export function ContactChannels({ settings, locale }: { settings: Settings; loca
       label: t.morada,
       value: morada,
       note: t.moradaNota,
-      href: null,
+      href: mapaHref,
+      externo: true,
     },
   ].filter(Boolean) as {
     icon: string;
