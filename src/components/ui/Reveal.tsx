@@ -41,7 +41,11 @@ export function Reveal({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          // Também revela quando a secção já passou acima do ecrã: com um
+          // scroll rápido o browser pode entregar só um estado em que ela
+          // deixou de intersectar, e sem isto ficava escondida para sempre.
+          const jaPassou = entry.boundingClientRect.bottom < 0;
+          if (entry.isIntersecting || jaPassou) {
             setIsVisible(true);
             if (once) observer.unobserve(entry.target);
           } else if (!once) {
@@ -49,7 +53,16 @@ export function Reveal({
           }
         });
       },
-      { threshold: 0.15 },
+      // threshold 0: revela assim que qualquer pixel entra no ecrã.
+      //
+      // Com 0.15 a secção tinha de mostrar 15% de si mesma ao mesmo tempo,
+      // e uma secção mais de seis vezes mais alta que o ecrã nunca chega lá:
+      // no portefólio em mobile, 25 projetos numa coluna dão ~9700px contra
+      // 844px de ecrã, ou seja 0.087 no máximo. A secção ficava a opacidade
+      // 0 para sempre — invisível, mas ainda clicável, que é o pior dos dois
+      // mundos. Em desktop passava despercebido porque a grelha tem quatro
+      // colunas e a secção é bem mais baixa.
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" },
     );
 
     observer.observe(node);

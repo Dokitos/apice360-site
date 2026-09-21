@@ -39,11 +39,16 @@ export function PortfolioGrid({ heading, projects, variant = "featured" }: Portf
               className="group flex flex-col overflow-hidden rounded-lg border border-outline-variant/20"
             >
               <div className="relative">
+                {/* lazy: a listagem com 25 projetos pedia as 25 capas de uma
+                    vez, e as originais rondam os 600 KB. Assim o browser só
+                    busca as que vão entrar no ecrã. */}
                 {project.coverImageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={project.coverImageUrl}
                     alt={project.title}
+                    loading="lazy"
+                    decoding="async"
                     className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (

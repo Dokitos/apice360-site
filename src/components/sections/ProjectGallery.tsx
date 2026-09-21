@@ -77,6 +77,8 @@ export function ProjectGallery({ items, title }: { items: GalleryMediaItem[]; ti
                   <img
                     src={item.url}
                     alt={item.alt ?? title}
+                    loading="lazy"
+                    decoding="async"
                     className="max-h-full max-w-full object-contain"
                   />
                 )}
