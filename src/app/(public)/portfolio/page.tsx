@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { getPageSeo, getPageSection, getPageSections, getFeaturedProjects, getProjectsByCategory, getCta } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { PortfolioGrid } from "@/components/sections/PortfolioGrid";
-import { GenericPageSection } from "@/components/sections/GenericPageSection";
-import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
+import { OrderedSections } from "@/components/sections/OrderedSections";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 
@@ -26,11 +26,10 @@ export default async function PortfolioPage() {
     getPageSections("PORTFOLIO", locale),
     getPageSection("PORTFOLIO", "intro", locale),
   ]);
-  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.PORTFOLIO.includes(s.key));
   const introCta = intro?.ctaKey ? await getCta(intro.ctaKey, locale) : null;
 
-  return (
-    <>
+  const blocos: Record<string, ReactNode> = {
+    intro: (
       <PageIntroSection
         eyebrow={intro?.eyebrow ?? dict.portfolio.eyebrow}
         heading={intro?.heading ?? dict.portfolio.heading}
@@ -39,21 +38,27 @@ export default async function PortfolioPage() {
         items={intro?.items}
         cta={introCta}
       />
-
+    ),
+    // Os projetos vêm do separador "Portfólio" do painel; a secção só define
+    // onde a grelha aparece na página.
+    projects_featured: (
       <PortfolioGrid heading={dict.portfolio.projetosDestaque} projects={featured} variant="featured" />
+    ),
+    projects_lsf: (
       <PortfolioGrid heading={dict.portfolio.lsfHeading} projects={lsfProjects} variant="numbered" />
-
-      {cta ? (
-        <Reveal as="section" className="bg-surface-container-lowest py-24 text-center">
+    ),
+    cta_final: cta ? (
+      <Reveal as="section" className="bg-surface-container-lowest py-24 text-center">
           <Button href={cta.url} variant="cta" icon={cta.iconName ?? undefined}>
             {cta.label}
-          </Button>
-        </Reveal>
-      ) : null}
+        </Button>
+      </Reveal>
+    ) : null,
+  };
 
-      {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />
-      ))}
+  return (
+    <>
+      <OrderedSections sections={allSections} blocks={blocos} locale={locale} />
     </>
   );
 }

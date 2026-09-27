@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { getBlogPosts, countBlogPosts, getPageSeo, getPageSection, getPageSections, getCta } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
-import { GenericPageSection } from "@/components/sections/GenericPageSection";
-import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
+import { OrderedSections } from "@/components/sections/OrderedSections";
 import { Reveal } from "@/components/ui/Reveal";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -33,13 +33,12 @@ export default async function BlogPage({
     getPageSections("BLOG", locale),
     getPageSection("BLOG", "intro", locale),
   ]);
-  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.BLOG.includes(s.key));
   const introCta = intro?.ctaKey ? await getCta(intro.ctaKey, locale) : null;
 
   const hasNextPage = currentPage * PAGE_SIZE < total;
 
-  return (
-    <>
+  const blocos: Record<string, ReactNode> = {
+    intro: (
       <PageIntroSection
         eyebrow={intro?.eyebrow ?? dict.blog.eyebrow}
         heading={intro?.heading ?? dict.blog.heading}
@@ -48,7 +47,10 @@ export default async function BlogPage({
         items={intro?.items}
         cta={introCta}
       />
-
+    ),
+    // A lista de artigos vem do separador "Artigos"; esta secção define
+    // apenas onde ela aparece na página.
+    posts: (
       <Reveal as="section" className="bg-surface py-24">
         <div className="mx-auto max-w-site px-5 md:px-20">
           {posts.length === 0 ? (
@@ -99,10 +101,12 @@ export default async function BlogPage({
           ) : null}
         </div>
       </Reveal>
+    ),
+  };
 
-      {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />
-      ))}
+  return (
+    <>
+      <OrderedSections sections={allSections} blocks={blocos} locale={locale} />
     </>
   );
 }

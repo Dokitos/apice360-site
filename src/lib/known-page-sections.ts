@@ -7,12 +7,12 @@ import type { PageKeyValue } from "@/lib/content";
  */
 export const KNOWN_PAGE_SECTION_KEYS: Record<PageKeyValue, string[]> = {
   HOME: ["hero", "partners", "testimonials", "why_choose", "results", "blog_preview"],
-  QUEM_SOMOS: ["intro", "history", "method", "values"],
-  SERVICOS: ["intro", "management_model"],
-  PORTFOLIO: ["intro"],
-  BLOG: ["intro"],
-  CONTACTO: ["intro", "triagem"],
-  AREA_ARQUITETO: ["intro"],
+  QUEM_SOMOS: ["intro", "history", "method", "values", "cta_final"],
+  SERVICOS: ["intro", "services_nav", "services_list", "management_model"],
+  PORTFOLIO: ["intro", "projects_featured", "projects_lsf", "cta_final"],
+  BLOG: ["intro", "posts"],
+  CONTACTO: ["intro", "channels", "triagem", "form"],
+  AREA_ARQUITETO: ["intro", "form"],
   LP: ["hero", "benefits", "simulator", "trust", "contact"],
   LSF: ["hero", "what_is", "why_portugal", "benefits", "anatomy", "facts", "process", "fit", "mistakes", "cta"],
 };

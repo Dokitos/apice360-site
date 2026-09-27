@@ -11,7 +11,7 @@ import {
 } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
-import { GenericPageSection } from "@/components/sections/GenericPageSection";
+import { OrderedSections } from "@/components/sections/OrderedSections";
 import { LpHero } from "@/components/lp/LpHero";
 import { LpBenefits } from "@/components/lp/LpBenefits";
 import { LpSimulator } from "@/components/lp/LpSimulator";
@@ -109,13 +109,7 @@ export default async function LandingPage() {
 
   return (
     <>
-      {allSections.map((section, i) => {
-        const bloco = blocos[section.key];
-        if (bloco === undefined) {
-          return <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />;
-        }
-        return bloco ? <div key={section.key}>{bloco}</div> : null;
-      })}
+      <OrderedSections sections={allSections} blocks={blocos} locale={locale} />
 
       <LpFooter
         locale={locale}

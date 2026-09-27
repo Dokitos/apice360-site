@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { getPageSection, getPageSections, getCta, getSiteSettings, getPageSeo } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
@@ -6,8 +7,7 @@ import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { ContactMap } from "@/components/sections/ContactMap";
 import { ContactChannels } from "@/components/sections/ContactChannels";
-import { GenericPageSection } from "@/components/sections/GenericPageSection";
-import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
+import { OrderedSections } from "@/components/sections/OrderedSections";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -30,7 +30,6 @@ export default async function ContactoPage() {
     getCta("contact_whatsapp_commercial", locale),
     getPageSections("CONTACTO", locale),
   ]);
-  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.CONTACTO.includes(s.key));
 
   const triagemItems = triagem?.items ?? [];
   const [triagemItemCtas, introCta] = await Promise.all([
@@ -44,8 +43,8 @@ export default async function ContactoPage() {
     { icon: "verified", label: dict.contacto.qualidade },
   ];
 
-  return (
-    <>
+  const blocos: Record<string, ReactNode> = {
+    intro: (
       <PageIntroSection
         eyebrow={intro?.eyebrow ?? dict.contacto.eyebrow}
         heading={intro?.heading ?? dict.contacto.heading}
@@ -54,9 +53,9 @@ export default async function ContactoPage() {
         items={intro?.items}
         cta={introCta}
       />
-
-      <ContactChannels settings={settings} locale={locale} />
-
+    ),
+    channels: <ContactChannels settings={settings} locale={locale} />,
+    triagem: (
       <Reveal as="section" className="bg-surface py-24">
         <div className="mx-auto max-w-site px-5 text-center md:px-20">
           <h2 className="mb-4 font-heading text-headline-md">
@@ -85,7 +84,10 @@ export default async function ContactoPage() {
           ) : null}
         </div>
       </Reveal>
-
+    ),
+    // Formulário, mapa e showroom: conteúdo próprio da página, mas o lugar
+    // dele na sequência já se pode mudar como o resto.
+    form: (
       <Reveal as="section" className="bg-surface-container-lowest py-24">
         <div className="mx-auto grid max-w-site grid-cols-1 gap-16 px-5 md:px-20 lg:grid-cols-2">
           <div>
@@ -130,10 +132,12 @@ export default async function ContactoPage() {
           </div>
         </div>
       </Reveal>
+    ),
+  };
 
-      {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 0} />
-      ))}
+  return (
+    <>
+      <OrderedSections sections={allSections} blocks={blocos} locale={locale} />
     </>
   );
 }

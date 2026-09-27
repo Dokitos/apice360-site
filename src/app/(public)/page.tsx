@@ -18,7 +18,7 @@ import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { WhyChooseSection } from "@/components/sections/WhyChooseSection";
 import { ResultsStatsSection } from "@/components/sections/ResultsStatsSection";
 import { BlogPreviewSection } from "@/components/sections/BlogPreviewSection";
-import { GenericPageSection } from "@/components/sections/GenericPageSection";
+import { OrderedSections } from "@/components/sections/OrderedSections";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -125,15 +125,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {allSections.map((section, i) => {
-        const bloco = blocos[section.key];
-        // Secção criada no painel sem componente próprio: desenha pelo
-        // apresentador genérico, como nas outras páginas.
-        if (bloco === undefined) {
-          return <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />;
-        }
-        return bloco ? <div key={section.key}>{bloco}</div> : null;
-      })}
+      <OrderedSections sections={allSections} blocks={blocos} locale={locale} />
     </>
   );
 }

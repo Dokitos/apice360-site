@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { getPageSection, getPageSections, getCta, getServices, getPageSeo } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
@@ -6,8 +7,7 @@ import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { ServiceDetailSection } from "@/components/sections/ServiceDetailSection";
 import { TimelineSection } from "@/components/sections/TimelineSection";
-import { GenericPageSection } from "@/components/sections/GenericPageSection";
-import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
+import { OrderedSections } from "@/components/sections/OrderedSections";
 import { Card } from "@/components/ui/Card";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -27,15 +27,14 @@ export default async function ServicosPage() {
     getCta("services_final_cta", locale),
     getPageSections("SERVICOS", locale),
   ]);
-  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.SERVICOS.includes(s.key));
 
   const [ctas, introCta] = await Promise.all([
     Promise.all(services.map((service) => (service.ctaKey ? getCta(service.ctaKey, locale) : Promise.resolve(null)))),
     intro?.ctaKey ? getCta(intro.ctaKey, locale) : Promise.resolve(null),
   ]);
 
-  return (
-    <>
+  const blocos: Record<string, ReactNode> = {
+    intro: (
       <PageIntroSection
         eyebrow={dict.servicos.eyebrow}
         heading={intro?.heading ?? dict.servicos.headingDefault}
@@ -44,8 +43,9 @@ export default async function ServicosPage() {
         items={intro?.items}
         cta={introCta}
       />
-
-      {services.length > 1 ? (
+    ),
+    // Atalhos para cada serviço, quando há mais do que um.
+    services_nav: services.length > 1 ? (
         <section className="bg-surface-container-lowest py-16">
           <div className="mx-auto grid max-w-site grid-cols-1 gap-10 px-5 md:px-20 lg:grid-cols-2">
             {services.map((service) => (
@@ -57,9 +57,12 @@ export default async function ServicosPage() {
             ))}
           </div>
         </section>
-      ) : null}
-
-      {services.map((service, index) => (
+    ) : null,
+    // A lista de serviços vem do separador "Serviços" do painel, não das
+    // secções — aqui é só o lugar dela na página, que já se pode mudar.
+    services_list: (
+      <>
+        {services.map((service, index) => (
         <ServiceDetailSection
           key={service.type}
           id={service.type.toLowerCase()}
@@ -71,23 +74,25 @@ export default async function ServicosPage() {
           reverse={index % 2 === 1}
           className={index % 2 === 0 ? "bg-surface py-32" : "bg-surface-container-lowest py-32"}
         />
-      ))}
-
-      {managementModel ? (
-        <TimelineSection
+        ))}
+      </>
+    ),
+    management_model: managementModel ? (
+      <TimelineSection
           eyebrow={dict.servicos.modeloEyebrow}
           heading={managementModel.heading ?? dict.servicos.modeloHeadingDefault}
           body={managementModel.body}
           imageUrl={managementModel.imageUrl}
           items={managementModel.items}
-          cta={finalCta}
-          locale={locale}
-        />
-      ) : null}
+        cta={finalCta}
+        locale={locale}
+      />
+    ) : null,
+  };
 
-      {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />
-      ))}
+  return (
+    <>
+      <OrderedSections sections={allSections} blocks={blocos} locale={locale} />
     </>
   );
 }

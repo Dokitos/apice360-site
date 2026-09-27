@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { getPageSection, getPageSections, getCta, getPageSeo } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { CardGridSection } from "@/components/sections/CardGridSection";
 import { TimelineSection } from "@/components/sections/TimelineSection";
-import { GenericPageSection } from "@/components/sections/GenericPageSection";
-import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
+import { OrderedSections } from "@/components/sections/OrderedSections";
 import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 
@@ -28,7 +28,6 @@ export default async function QuemSomosPage() {
     getCta("about_talk_to_team", locale),
     getPageSections("QUEM_SOMOS", locale),
   ]);
-  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.QUEM_SOMOS.includes(s.key));
 
   const [introCta, historyCta, methodCta, valuesCta] = await Promise.all([
     intro?.ctaKey ? getCta(intro.ctaKey, locale) : Promise.resolve(null),
@@ -37,8 +36,8 @@ export default async function QuemSomosPage() {
     values?.ctaKey ? getCta(values.ctaKey, locale) : Promise.resolve(null),
   ]);
 
-  return (
-    <>
+  const blocos: Record<string, ReactNode> = {
+    intro: (
       <PageIntroSection
         eyebrow={dict.quemSomos.eyebrow}
         heading={intro?.heading ?? dict.quemSomos.headingDefault}
@@ -47,44 +46,41 @@ export default async function QuemSomosPage() {
         items={intro?.items}
         cta={introCta}
       />
-
-      {history ? (
-        <CardGridSection
+    ),
+    history: history ? (
+      <CardGridSection
           eyebrow={dict.quemSomos.historiaEyebrow}
           heading={history.heading ?? dict.quemSomos.historiaHeadingDefault}
           body={history.body}
           items={history.items}
           columns={3}
-          cta={historyCta}
-          locale={locale}
-        />
-      ) : null}
-
-      {method ? (
-        <TimelineSection
+        cta={historyCta}
+        locale={locale}
+      />
+    ) : null,
+    method: method ? (
+      <TimelineSection
           eyebrow={dict.quemSomos.metodoEyebrow}
           heading={method.heading ?? dict.quemSomos.metodoHeadingDefault}
           body={method.body}
           imageUrl={method.imageUrl}
           items={method.items}
-          cta={methodCta}
-          locale={locale}
-        />
-      ) : null}
-
-      {values ? (
-        <CardGridSection
+        cta={methodCta}
+        locale={locale}
+      />
+    ) : null,
+    values: values ? (
+      <CardGridSection
           eyebrow={dict.quemSomos.valoresEyebrow}
           heading={values.heading ?? dict.quemSomos.valoresHeadingDefault}
           items={values.items}
           columns={4}
-          cta={valuesCta}
-          locale={locale}
-        />
-      ) : null}
-
-      {cta ? (
-        <Reveal as="section" className="bg-primary py-24 text-center text-on-primary">
+        cta={valuesCta}
+        locale={locale}
+      />
+    ) : null,
+    cta_final: cta ? (
+      <Reveal as="section" className="bg-primary py-24 text-center text-on-primary">
           <div className="mx-auto max-w-site px-5 md:px-20">
             <h2 className="mb-10 font-heading text-headline-lg">{dict.quemSomos.ctaHeading}</h2>
             <Button
@@ -95,12 +91,13 @@ export default async function QuemSomosPage() {
               {cta.label}
             </Button>
           </div>
-        </Reveal>
-      ) : null}
+      </Reveal>
+    ) : null,
+  };
 
-      {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />
-      ))}
+  return (
+    <>
+      <OrderedSections sections={allSections} blocks={blocos} locale={locale} />
     </>
   );
 }
