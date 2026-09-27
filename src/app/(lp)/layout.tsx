@@ -10,10 +10,10 @@ import { getSiteSettings } from "@/lib/content";
 import { auth } from "@/auth";
 
 /**
- * Chrome da landing page (/lp). Deliberadamente sem o <Header>/<Footer> do
- * site: uma landing page de campanha não oferece saídas — só o formulário,
- * o simulador e o WhatsApp. O rodapé próprio vive em <LpFooter>, dentro da
- * página, para que o admin o veja como parte da LP e não do site.
+ * Chrome da landing page (/lp). Sem o <Header> do site: uma landing page de
+ * campanha não oferece saídas pelo topo — só o formulário,
+ * o simulador e o WhatsApp. O rodapé é o mesmo do site, desenhado dentro da
+ * própria página.
  *
  * Tudo o resto (scroll suave, consentimento de cookies, analítica, modo de
  * manutenção) é partilhado com o site para não haver dois comportamentos.

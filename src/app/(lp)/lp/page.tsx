@@ -10,14 +10,13 @@ import {
   getStats,
 } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
-import { getDictionary } from "@/lib/dictionary";
 import { OrderedSections } from "@/components/sections/OrderedSections";
 import { LpHero } from "@/components/lp/LpHero";
 import { LpBenefits } from "@/components/lp/LpBenefits";
 import { LpSimulator } from "@/components/lp/LpSimulator";
 import { LpTrust } from "@/components/lp/LpTrust";
 import { LpContactSection } from "@/components/lp/LpContactSection";
-import { LpFooter } from "@/components/lp/LpFooter";
+import { Footer } from "@/components/layout/Footer";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -37,7 +36,6 @@ function whatsappNumberFrom(...candidates: (string | null | undefined)[]): strin
 
 export default async function LandingPage() {
   const locale = await getLocale();
-  const dict = getDictionary(locale);
 
   const [hero, heroCta, benefits, simulator, trust, trustCta, contact, tiers, settings, stats, allSections] =
     await Promise.all([
@@ -55,7 +53,6 @@ export default async function LandingPage() {
     ]);
 
   const whatsappNumber = whatsappNumberFrom(settings?.whatsappCommercial, settings?.whatsappGeneral, settings?.phone);
-  const address = [settings?.addressLine, settings?.addressCity].filter(Boolean).join(", ");
 
   // Mesmo padrão da homepage: a ordem sai da base de dados, que é o que o
   // painel arrasta, em vez de estar fixa nesta sequência de JSX.
@@ -111,15 +108,10 @@ export default async function LandingPage() {
     <>
       <OrderedSections sections={allSections} blocks={blocos} locale={locale} />
 
-      <LpFooter
-        locale={locale}
-        description={settings?.t?.footerDescription ?? dict.footer.descricaoDefault}
-        address={address || null}
-        phone={settings?.phone}
-        nif={settings?.nif}
-        instagramUrl={settings?.socialInstagram}
-        whatsappUrl={settings?.whatsappGeneral ?? settings?.whatsappCommercial}
-      />
+      {/* O mesmo rodapé do site. A LP tinha um próprio, mais curto, pensado
+          para não dar saídas ao visitante de campanha — o cliente preferiu a
+          coerência de ter um rodapé só. */}
+      <Footer />
     </>
   );
 }
