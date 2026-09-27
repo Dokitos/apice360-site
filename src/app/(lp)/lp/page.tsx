@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import {
   getCta,
   getLpPriceTiers,
@@ -10,7 +11,6 @@ import {
 } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
-import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
 import { GenericPageSection } from "@/components/sections/GenericPageSection";
 import { LpHero } from "@/components/lp/LpHero";
 import { LpBenefits } from "@/components/lp/LpBenefits";
@@ -54,12 +54,13 @@ export default async function LandingPage() {
       getPageSections("LP", locale),
     ]);
 
-  const extraSections = allSections.filter((s) => !KNOWN_PAGE_SECTION_KEYS.LP.includes(s.key));
   const whatsappNumber = whatsappNumberFrom(settings?.whatsappCommercial, settings?.whatsappGeneral, settings?.phone);
   const address = [settings?.addressLine, settings?.addressCity].filter(Boolean).join(", ");
 
-  return (
-    <>
+  // Mesmo padrão da homepage: a ordem sai da base de dados, que é o que o
+  // painel arrasta, em vez de estar fixa nesta sequência de JSX.
+  const blocos: Record<string, ReactNode> = {
+    hero: (
       <LpHero
         locale={locale}
         eyebrow={hero?.eyebrow}
@@ -69,48 +70,52 @@ export default async function LandingPage() {
         ctaLabel={hero?.ctaLabel ?? heroCta?.label ?? "Simular a minha estimativa"}
         trustBadges={stats.slice(0, 3)}
       />
-
-      {benefits ? (
-        <LpBenefits
+    ),
+    benefits: benefits ? (
+      <LpBenefits
           locale={locale}
           heading={benefits.heading ?? "Porque o LSF é a Melhor Escolha em Portugal?"}
           subheading={benefits.subheading}
-          items={benefits.items}
-        />
-      ) : null}
-
-      {tiers.length > 0 ? (
-        <LpSimulator
+        items={benefits.items}
+      />
+    ) : null,
+    simulator: tiers.length > 0 ? (
+      <LpSimulator
           locale={locale}
           heading={simulator?.heading ?? "Simule a sua estimativa em 1 minuto"}
           subheading={simulator?.subheading}
           tiers={tiers}
-          whatsappNumber={whatsappNumber}
-        />
-      ) : null}
-
-      {trust ? (
-        <LpTrust
+        whatsappNumber={whatsappNumber}
+      />
+    ) : null,
+    trust: trust ? (
+      <LpTrust
           heading={trust.heading ?? "Porque Escolher a Ápice 360"}
           items={trust.items}
           ctaBody={trust.body}
           ctaLabel={trust.ctaLabel ?? trustCta?.label}
-          ctaHref={trustCta?.url ?? settings?.whatsappCommercial}
-        />
-      ) : null}
-
-      {contact ? (
-        <LpContactSection
+        ctaHref={trustCta?.url ?? settings?.whatsappCommercial}
+      />
+    ) : null,
+    contact: contact ? (
+      <LpContactSection
           locale={locale}
           heading={contact.heading ?? "Construímos o Seu Sonho"}
           body={contact.subheading}
-          highlights={contact.items}
-        />
-      ) : null}
+        highlights={contact.items}
+      />
+    ) : null,
+  };
 
-      {extraSections.map((section, i) => (
-        <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />
-      ))}
+  return (
+    <>
+      {allSections.map((section, i) => {
+        const bloco = blocos[section.key];
+        if (bloco === undefined) {
+          return <GenericPageSection key={section.key} section={section} locale={locale} alt={i % 2 === 1} />;
+        }
+        return bloco ? <div key={section.key}>{bloco}</div> : null;
+      })}
 
       <LpFooter
         locale={locale}

@@ -44,10 +44,16 @@ export function PartnersSection({ heading, subheading, partners, displayMode = "
   return (
     <Reveal as="section" className="bg-surface py-32">
       <div className="mx-auto max-w-site px-5 md:px-20">
-        <SectionHeading
-          title={heading ?? "A confiança constrói-se com parcerias e resultados."}
-          subtitle={subheading ?? undefined}
-        />
+        {/* Sem título definido, mostra só o texto de apresentação: nesta
+            página o título da zona de confiança vive na secção dos
+            depoimentos, logo acima, e repeti-lo aqui era redundante. */}
+        {heading ? (
+          <SectionHeading title={heading} subtitle={subheading ?? undefined} />
+        ) : subheading ? (
+          <p className="mx-auto mb-16 max-w-2xl text-center leading-relaxed text-on-surface-variant">
+            {subheading}
+          </p>
+        ) : null}
         {displayMode === "CAROUSEL" ? (
           <PartnersMarquee partners={partners} />
         ) : (

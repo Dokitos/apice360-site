@@ -6,7 +6,7 @@ import type { PageKeyValue } from "@/lib/content";
  * page are "extra"/admin-created and should go through GenericPageSection.
  */
 export const KNOWN_PAGE_SECTION_KEYS: Record<PageKeyValue, string[]> = {
-  HOME: ["hero", "partners", "why_choose", "results", "blog_preview"],
+  HOME: ["hero", "partners", "testimonials", "why_choose", "results", "blog_preview"],
   QUEM_SOMOS: ["intro", "history", "method", "values"],
   SERVICOS: ["intro", "management_model"],
   PORTFOLIO: ["intro"],

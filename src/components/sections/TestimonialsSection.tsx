@@ -16,9 +16,12 @@ type Testimonial = {
 
 export function TestimonialsSection({
   testimonials,
+  heading,
   locale = "PT",
 }: {
   testimonials: Testimonial[];
+  /** Título vindo da secção "testimonials" do painel. */
+  heading?: string | null;
   locale?: SiteLocale;
 }) {
   if (testimonials.length === 0) return null;
@@ -28,7 +31,7 @@ export function TestimonialsSection({
   return (
     <Reveal as="section" className="overflow-hidden bg-surface py-32">
       <div className="mx-auto max-w-site px-5 md:px-20">
-        <SectionHeading title={dict.testemunhos.heading} />
+        <SectionHeading title={heading ?? dict.testemunhos.heading} />
         <Carousel
           slideClassName="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%]"
           alignSlides="start"
