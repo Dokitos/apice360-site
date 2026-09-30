@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { getBlogPosts, countBlogPosts, getPageSeo, getPageSection, getPageSections, getCta } from "@/lib/content";
+import { getBlogPosts, countBlogPosts, getPageSeo, getPageSection, getSiteSettings, getPageSections, getCta } from "@/lib/content";
+import { notFound } from "next/navigation";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
@@ -27,12 +28,17 @@ export default async function BlogPage({
   const locale = await getLocale();
   const dict = getDictionary(locale);
 
-  const [posts, total, allSections, intro] = await Promise.all([
+  const [posts, total, allSections, intro, settings] = await Promise.all([
     getBlogPosts({ limit: PAGE_SIZE, skip: (currentPage - 1) * PAGE_SIZE }, locale),
     countBlogPosts({}, locale),
     getPageSections("BLOG", locale),
     getPageSection("BLOG", "intro", locale),
+    getSiteSettings(locale),
   ]);
+
+  // Blog desligado nas Definições do Site: a rota deixa de existir, para o
+  // link directo não ser uma porta das traseiras para conteúdo escondido.
+  if (settings?.blogEnabled === false) notFound();
   const introCta = intro?.ctaKey ? await getCta(intro.ctaKey, locale) : null;
 
   const hasNextPage = currentPage * PAGE_SIZE < total;

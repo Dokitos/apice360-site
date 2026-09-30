@@ -19,8 +19,9 @@ export async function Header() {
   ]);
   const showArchitectArea = settings?.architectAreaEnabled ?? true;
   const showLsfPage = settings?.lsfPageEnabled ?? true;
+  const showBlog = settings?.blogEnabled ?? true;
   const menuCustomPages = customPages.filter((p) => p.showInMenu);
-  const navLinks = getNavLinks(dict, { showArchitectArea, showLsfPage, customPages: menuCustomPages });
+  const navLinks = getNavLinks(dict, { showArchitectArea, showLsfPage, showBlog, customPages: menuCustomPages });
 
   return (
     <header className="sticky top-0 z-50 border-b border-black/5 bg-white/80 backdrop-blur-xl">

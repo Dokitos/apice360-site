@@ -17,9 +17,11 @@ export async function Footer() {
   const tagline = settings?.t?.footerTagline ?? null;
   const showArchitectArea = settings?.architectAreaEnabled ?? true;
   const showLsfPage = settings?.lsfPageEnabled ?? true;
+  const showBlog = settings?.blogEnabled ?? true;
   const navLinks = getNavLinks(dict, {
     showArchitectArea,
     showLsfPage,
+    showBlog,
     customPages: customPages.filter((p) => p.showInMenu),
   });
 

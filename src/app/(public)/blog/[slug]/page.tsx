@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getBlogPost, getRelatedPosts, getApprovedComments } from "@/lib/content";
+import { getBlogPost, getRelatedPosts, getApprovedComments, getSiteSettings } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { Reveal } from "@/components/ui/Reveal";
@@ -28,8 +28,9 @@ export default async function BlogPostPage({
   const { slug } = await params;
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const post = await getBlogPost(slug, locale);
-  if (!post) notFound();
+  const [post, settings] = await Promise.all([getBlogPost(slug, locale), getSiteSettings(locale)]);
+  // Com o blog desligado, nem o artigo em si responde por link directo.
+  if (!post || settings?.blogEnabled === false) notFound();
 
   const [related, comments] = await Promise.all([
     getRelatedPosts(post.id, post.categoryId, locale),

@@ -4,7 +4,12 @@ type NavCustomPage = { slug: string; navLabel: string };
 
 export function getNavLinks(
   dict: Dictionary,
-  options: { showArchitectArea?: boolean; showLsfPage?: boolean; customPages?: NavCustomPage[] } = {},
+  options: {
+    showArchitectArea?: boolean;
+    showLsfPage?: boolean;
+    showBlog?: boolean;
+    customPages?: NavCustomPage[];
+  } = {},
 ) {
   const links = [
     { href: "/", label: dict.nav.inicio },
@@ -22,6 +27,7 @@ export function getNavLinks(
   const fixedLinks = links.filter((link) => {
     if (link.href === "/area-do-arquiteto") return options.showArchitectArea !== false;
     if (link.href === "/lsf") return options.showLsfPage !== false;
+    if (link.href === "/blog") return options.showBlog !== false;
     return true;
   });
 

@@ -29,6 +29,7 @@ type SiteSettings = {
   partnersDisplayMode: string;
   architectAreaEnabled: boolean;
   lsfPageEnabled: boolean;
+  blogEnabled: boolean;
   maintenanceMode: boolean;
   gaMeasurementId: string | null;
   metaPixelId: string | null;
@@ -84,6 +85,18 @@ export function SiteSettingsForm({ settings }: { settings: SiteSettings | null }
           Página informativa em /lsf, apresentada como uma sequência de capítulos. Quando desativada, o link
           desaparece do menu e a página deixa de estar acessível. O conteúdo edita-se em Secções de Página →
           LSF.
+        </p>
+
+        <CheckboxField
+          id="blogEnabled"
+          name="blogEnabled"
+          label="Mostrar o blog no site"
+          defaultChecked={settings?.blogEnabled ?? true}
+        />
+        <p className="text-xs text-on-surface-variant">
+          Quando desativado, o link desaparece do menu e do rodapé, a lista de artigos e cada artigo deixam
+          de estar acessíveis mesmo por link direto, e a secção de artigos recentes some da página inicial.
+          Os artigos não são apagados — voltam assim que reativar.
         </p>
 
         <CheckboxField

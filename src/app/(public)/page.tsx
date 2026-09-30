@@ -112,7 +112,9 @@ export default async function HomePage() {
         cta={resultsCta}
       />
     ) : null,
-    blog_preview: (
+    // Com o blog desligado, a secção de artigos recentes desaparece também:
+    // seria uma fila de cartões a apontar para páginas que já não abrem.
+    blog_preview: settings?.blogEnabled === false ? null : (
       <BlogPreviewSection
         heading={blogPreview?.heading}
         subheading={blogPreview?.subheading}

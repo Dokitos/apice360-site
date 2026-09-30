@@ -23,6 +23,7 @@ function readForm(formData: FormData) {
     ...Object.fromEntries(formData.entries()),
     architectAreaEnabled: formData.get("architectAreaEnabled") === "on",
     lsfPageEnabled: formData.get("lsfPageEnabled") === "on",
+    blogEnabled: formData.get("blogEnabled") === "on",
     maintenanceMode: formData.get("maintenanceMode") === "on",
   };
 }

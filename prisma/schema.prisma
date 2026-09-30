@@ -143,6 +143,8 @@ model SiteSettings {
   architectAreaEnabled Boolean                   @default(true)
   /// Liga/desliga a página informativa /lsf (link no menu + acesso à rota).
   lsfPageEnabled       Boolean                   @default(true)
+  /// Liga/desliga o blog: link no menu e no rodapé, e acesso às rotas.
+  blogEnabled          Boolean                   @default(true)
   maintenanceMode      Boolean                   @default(false)
   /// ID de medição do Google Analytics 4 (G-XXXXXXXXXX). Vazio desliga o GA.
   gaMeasurementId      String?

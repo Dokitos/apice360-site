@@ -41,6 +41,7 @@ export const siteSettingsSchema = z.object({
   partnersDisplayMode: z.enum(["GRID", "CAROUSEL"]).default("GRID"),
   architectAreaEnabled: z.boolean(),
   lsfPageEnabled: z.boolean(),
+  blogEnabled: z.boolean(),
   maintenanceMode: z.boolean(),
   gaMeasurementId,
   metaPixelId,
