@@ -20,7 +20,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const seo = await getPageSeo("LSF", locale);
   if (!seo) return {};
-  return { title: seo.title, description: seo.description };
+  return {
+    title: seo.title,
+    description: seo.description,
+    alternates: { canonical: "/lsf" },
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      url: "/lsf",
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : undefined,
+    },
+  };
 }
 
 /** Ordem em que os capítulos conhecidos aparecem, independente do `order` da BD. */

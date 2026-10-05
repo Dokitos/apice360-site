@@ -14,7 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const seo = await getPageSeo("SERVICOS", locale);
   if (!seo) return {};
-  return { title: seo.title, description: seo.description };
+  return {
+    title: seo.title,
+    description: seo.description,
+    alternates: { canonical: "/servicos" },
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      url: "/servicos",
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : undefined,
+    },
+  };
 }
 
 export default async function ServicosPage() {

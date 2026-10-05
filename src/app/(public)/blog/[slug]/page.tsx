@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getBlogPost, getRelatedPosts, getApprovedComments, getSiteSettings } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
+import { ArticleSchema } from "@/components/seo/StructuredData";
 import { getDictionary } from "@/lib/dictionary";
 import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
@@ -17,7 +18,22 @@ export async function generateMetadata({
   const locale = await getLocale();
   const post = await getBlogPost(slug, locale);
   if (!post) return {};
-  return { title: post.seoTitle ?? post.title, description: post.seoDescription ?? post.excerpt ?? undefined };
+  const title = post.seoTitle ?? post.title;
+  const description = post.seoDescription ?? post.excerpt ?? undefined;
+  return {
+    title,
+    description,
+    alternates: { canonical: `/blog/${slug}` },
+    openGraph: {
+      type: "article",
+      title,
+      description,
+      url: `/blog/${slug}`,
+      images: post.featuredImageUrl ? [post.featuredImageUrl] : undefined,
+      publishedTime: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
+      authors: post.authorName ? [post.authorName] : undefined,
+    },
+  };
 }
 
 export default async function BlogPostPage({
@@ -39,6 +55,14 @@ export default async function BlogPostPage({
 
   return (
     <Reveal as="article" className="py-24">
+      <ArticleSchema
+        title={post.title}
+        description={post.excerpt}
+        slug={slug}
+        imageUrl={post.featuredImageUrl}
+        authorName={post.authorName}
+        publishedAt={post.publishedAt}
+      />
       {/* Alargado duas vezes a pedido do cliente: 640px -> 784px -> ~1040px
           de coluna de texto. Fica acima da medida clássica de leitura
           (~75 caracteres por linha), mas o vazio nas laterais era o que

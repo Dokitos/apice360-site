@@ -14,7 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const seo = await getPageSeo("AREA_ARQUITETO", locale);
   if (!seo) return {};
-  return { title: seo.title, description: seo.description };
+  return {
+    title: seo.title,
+    description: seo.description,
+    alternates: { canonical: "/area-do-arquiteto" },
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      url: "/area-do-arquiteto",
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : undefined,
+    },
+  };
 }
 
 export default async function AreaDoArquitetoPage() {

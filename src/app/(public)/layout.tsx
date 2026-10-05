@@ -5,6 +5,7 @@ import { ScrollToTopButton } from "@/components/layout/ScrollToTopButton";
 import { WhatsAppFloatingButton } from "@/components/layout/WhatsAppFloatingButton";
 import { CookieConsent } from "@/components/layout/CookieConsent";
 import { Analytics } from "@/components/layout/Analytics";
+import { OrganizationSchema } from "@/components/seo/StructuredData";
 import { MaintenancePage } from "@/components/layout/MaintenancePage";
 import { getLocale } from "@/lib/locale";
 import { getSiteSettings } from "@/lib/content";
@@ -29,6 +30,7 @@ export default async function PublicLayout({ children }: { children: React.React
 
   return (
     <>
+      <OrganizationSchema settings={settings} />
       <SmoothScroll />
       <Header />
       <main className="flex-1">{children}</main>

@@ -24,7 +24,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const seo = await getPageSeo("HOME", locale);
   if (!seo) return {};
-  return { title: seo.title, description: seo.description };
+  return {
+    title: seo.title,
+    description: seo.description,
+    alternates: { canonical: "/" },
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      url: "/",
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : undefined,
+    },
+  };
 }
 
 export default async function HomePage() {

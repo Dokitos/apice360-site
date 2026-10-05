@@ -14,7 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const seo = await getPageSeo("QUEM_SOMOS", locale);
   if (!seo) return {};
-  return { title: seo.title, description: seo.description };
+  return {
+    title: seo.title,
+    description: seo.description,
+    alternates: { canonical: "/quem-somos" },
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      url: "/quem-somos",
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : undefined,
+    },
+  };
 }
 
 export default async function QuemSomosPage() {

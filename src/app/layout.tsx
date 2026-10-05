@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat, Inter, JetBrains_Mono } from "next/font/google";
 import { getLocale } from "@/lib/locale";
 import { getSiteSettings } from "@/lib/content";
+import { SITE_URL } from "@/lib/site-url";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -25,6 +26,14 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
+/** Códigos que o Open Graph espera, que não são os nossos de duas letras. */
+const OG_LOCALE: Record<string, string> = {
+  PT: "pt_PT",
+  EN: "en_GB",
+  ES: "es_ES",
+  FR: "fr_FR",
+};
+
 const FALLBACK_TITLE = "Ápice 360 | Construção em Light Steel Frame de Alta Performance";
 const FALLBACK_DESCRIPTION =
   "Construímos o futuro com leveza, velocidade e confiança. Estruturas em LSF - Light Steel Frame para transformar o seu espaço com tecnologia, rapidez e excelência.";
@@ -41,9 +50,41 @@ const FALLBACK_DESCRIPTION =
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const settings = await getSiteSettings(locale);
+  const title = settings?.t?.defaultSeoTitle || FALLBACK_TITLE;
+  const description = settings?.t?.defaultSeoDescription || FALLBACK_DESCRIPTION;
+  const imagem = settings?.defaultOgImageUrl || "/images/hero-site.png";
+
   return {
-    title: settings?.t?.defaultSeoTitle || FALLBACK_TITLE,
-    description: settings?.t?.defaultSeoDescription || FALLBACK_DESCRIPTION,
+    title,
+    description,
+    // Sem metadataBase, as imagens e os canónicos das páginas filhas saem
+    // como caminhos relativos, que nem o Google nem as redes sociais sabem
+    // resolver.
+    metadataBase: new URL(SITE_URL),
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      siteName: "Ápice 360",
+      locale: OG_LOCALE[locale] ?? OG_LOCALE.PT,
+      title,
+      description,
+      url: SITE_URL,
+      images: [{ url: imagem, width: 1200, height: 630, alt: title }],
+    },
+    twitter: { card: "summary_large_image", title, description, images: [imagem] },
+    robots: {
+      index: !settings?.maintenanceMode,
+      follow: !settings?.maintenanceMode,
+      googleBot: {
+        index: !settings?.maintenanceMode,
+        follow: !settings?.maintenanceMode,
+        // Sem isto o Google corta a pré-visualização a um par de linhas e
+        // não mostra a imagem nos resultados.
+        "max-snippet": -1,
+        "max-image-preview": "large",
+        "max-video-preview": -1,
+      },
+    },
   };
 }
 

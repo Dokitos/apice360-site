@@ -13,7 +13,17 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const seo = await getPageSeo("PORTFOLIO", locale);
   if (!seo) return {};
-  return { title: seo.title, description: seo.description };
+  return {
+    title: seo.title,
+    description: seo.description,
+    alternates: { canonical: "/portfolio" },
+    openGraph: {
+      title: seo.title,
+      description: seo.description,
+      url: "/portfolio",
+      images: seo.ogImageUrl ? [seo.ogImageUrl] : undefined,
+    },
+  };
 }
 
 export default async function PortfolioPage() {
