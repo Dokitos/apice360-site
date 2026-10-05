@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { optionalImageUrl } from "@/lib/validations/image-url";
+import { SECTION_LAYOUT_VALUES } from "@/lib/section-layouts";
 
 const optionalText = z.string().trim().optional().or(z.literal(""));
 
@@ -13,7 +14,7 @@ export const pageSectionSchema = z.object({
     .trim()
     .min(1, "Indica a chave da secção.")
     .regex(/^[a-z0-9_]+$/, "Usa apenas minúsculas, números e underscore (ex: why_choose)."),
-  layout: z.enum(["standard", "grid", "timeline"]).default("standard"),
+  layout: z.enum(SECTION_LAYOUT_VALUES).default("standard"),
   imageUrl: imageUrlField,
   iconName: z.string().trim().optional().or(z.literal("")),
   ctaKey: z.string().trim().optional().or(z.literal("")),

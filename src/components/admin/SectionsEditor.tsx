@@ -250,6 +250,14 @@ const PREVIEW_FIELD_MAP: Record<string, string> = {
   subheadingPt: "subheading",
 };
 
+// A pré-visualização ocupa meia coluna do painel, uns 400px — largura a que
+// qualquer montagem de duas colunas colapsa para uma. Quem escolhesse "imagem
+// à esquerda" via a imagem por cima do texto e não tinha como saber que no
+// site ia ficar ao lado. A página é desenhada à largura de um ecrã e depois
+// reduzida à escala, como uma miniatura.
+const LARGURA_ECRA = 1280;
+const ALTURA_CAIXA = 520;
+
 function SectionPreview({
   sectionId,
   containerRef,
@@ -258,6 +266,18 @@ function SectionPreview({
   containerRef: RefObject<HTMLDivElement | null>;
 }) {
   const [src, setSrc] = useState(`/admin/preview/section/${sectionId}`);
+  const [escala, setEscala] = useState(1);
+  const caixaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const caixa = caixaRef.current;
+    if (!caixa) return;
+    const observer = new ResizeObserver(([entrada]) => {
+      setEscala(Math.min(1, entrada.contentRect.width / LARGURA_ECRA));
+    });
+    observer.observe(caixa);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -297,8 +317,21 @@ function SectionPreview({
       <span className="font-mono text-label-mono uppercase tracking-widest text-on-surface-variant">
         Pré-visualização
       </span>
-      <div className="overflow-hidden rounded-lg border border-outline-variant/20 bg-surface">
-        <iframe src={src} title="Pré-visualização da secção" className="h-[520px] w-full" />
+      <div
+        ref={caixaRef}
+        className="overflow-hidden rounded-lg border border-outline-variant/20 bg-surface"
+        style={{ height: ALTURA_CAIXA }}
+      >
+        <iframe
+          src={src}
+          title="Pré-visualização da secção"
+          style={{
+            width: LARGURA_ECRA,
+            height: ALTURA_CAIXA / escala,
+            transform: `scale(${escala})`,
+            transformOrigin: "top left",
+          }}
+        />
       </div>
     </div>
   );

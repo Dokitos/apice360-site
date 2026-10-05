@@ -1,10 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { TextField, TextAreaField, CheckboxField, ImageField, IconPickerField, SelectField } from "@/components/admin/form-fields";
 import { LocaleTabs } from "@/components/admin/LocaleTabs";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { sectionLayoutHint, sectionLayoutsByGroup } from "@/lib/section-layouts";
 import type { SiteLocale } from "@/lib/locale";
 
 type PageSection = {
@@ -53,17 +54,7 @@ export function PageSectionForm({ section, ctas = [], action }: PageSectionFormP
         required
         hint={section ? "A chave não pode ser alterada depois de criada." : "minúsculas, números e underscore."}
       />
-      <SelectField
-        id="layout"
-        name="layout"
-        label="Layout"
-        defaultValue={section?.layout ?? "standard"}
-        hint="Como os itens desta secção são apresentados no site."
-      >
-        <option value="standard">Padrão (texto centrado + grelha de itens)</option>
-        <option value="grid">Grelha de cartões</option>
-        <option value="timeline">Linha do tempo</option>
-      </SelectField>
+      <LayoutField defaultValue={section?.layout ?? "standard"} />
       <ImageField id="imageUrl" name="imageUrl" label="Imagem (opcional)" defaultValue={section?.imageUrl} />
       <IconPickerField id="iconName" name="iconName" label="Ícone (opcional)" defaultValue={section?.iconName} />
       <SelectField
@@ -142,5 +133,35 @@ export function PageSectionForm({ section, ctas = [], action }: PageSectionFormP
         {isPending ? "A guardar..." : "Guardar"}
       </Button>
     </form>
+  );
+}
+
+/**
+ * Seletor do modelo da secção. A descrição por baixo muda com a escolha: o
+ * nome do modelo não chega para saber que uma montagem com imagem ao lado
+ * precisa de imagem, ou que a linha do tempo usa o campo "Número" dos itens.
+ */
+function LayoutField({ defaultValue }: { defaultValue: string }) {
+  const [layout, setLayout] = useState(defaultValue);
+
+  return (
+    <SelectField
+      id="layout"
+      name="layout"
+      label="Modelo da secção"
+      value={layout}
+      onChange={(e) => setLayout(e.target.value)}
+      hint={sectionLayoutHint(layout)}
+    >
+      {sectionLayoutsByGroup().map(({ group, layouts }) => (
+        <optgroup key={group} label={group}>
+          {layouts.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </optgroup>
+      ))}
+    </SelectField>
   );
 }

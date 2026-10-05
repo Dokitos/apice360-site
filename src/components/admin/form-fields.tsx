@@ -5,6 +5,7 @@ import { cn } from "@/lib/cn";
 import { slugify } from "@/lib/slugify";
 import { CURATED_ICONS } from "@/lib/material-icons";
 import { Icon } from "@/components/ui/Icon";
+import { MediaPicker } from "@/components/admin/MediaPicker";
 
 const baseFieldClasses =
   "w-full rounded-lg border border-outline-variant/40 bg-surface-container-low px-4 py-2.5 text-on-surface outline-none transition-colors focus:border-primary";
@@ -290,8 +291,22 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
   const [preview, setPreview] = useState(defaultValue ?? "");
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [galeriaAberta, setGaleriaAberta] = useState(false);
   const urlInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // O valor que o formulário envia vive no input de texto (não controlado,
+  // para o `defaultValue` continuar a mandar); a miniatura segue-o à parte.
+  function definirUrl(url: string) {
+    if (urlInputRef.current) {
+      urlInputRef.current.value = url;
+      // O ecrã de pré-visualização das secções ouve os eventos do formulário
+      // para se actualizar. Mudar .value por código não dispara nenhum, por
+      // isso o evento é enviado à mão.
+      urlInputRef.current.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+    setPreview(url);
+  }
 
   async function uploadFile(file: File) {
     setUploading(true);
@@ -307,10 +322,7 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
         return;
       }
 
-      if (urlInputRef.current) {
-        urlInputRef.current.value = data.url;
-      }
-      setPreview(data.url);
+      definirUrl(data.url);
     } catch {
       setUploadError("Falha ao carregar a imagem. Verifica a tua ligação e tenta novamente.");
     } finally {
@@ -325,7 +337,7 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
   }
 
   return (
-    <FieldShell label={label} htmlFor={id} hint={hint ?? "Cola o URL de uma imagem já publicada ou faz upload de um ficheiro."}>
+    <FieldShell label={label} htmlFor={id} hint={hint ?? "Carrega um ficheiro, escolhe uma imagem já enviada ou cola um URL."}>
       <div className="flex items-start gap-4">
         {preview ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -353,7 +365,7 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
             className={baseFieldClasses}
             onChange={(e) => setPreview(e.target.value)}
           />
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
               disabled={uploading}
@@ -362,6 +374,26 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
             >
               {uploading ? "A enviar..." : "Carregar ficheiro"}
             </button>
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => setGaleriaAberta(true)}
+              className="rounded-lg border border-outline-variant/40 bg-surface-container-low px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:bg-surface-container-high disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Escolher da galeria
+            </button>
+            {preview ? (
+              <button
+                type="button"
+                onClick={() => {
+                  definirUrl("");
+                  setUploadError(null);
+                }}
+                className="rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:text-primary"
+              >
+                Remover
+              </button>
+            ) : null}
             <input
               ref={fileInputRef}
               type="file"
@@ -374,6 +406,16 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
           {uploadError ? <p className="text-xs text-primary">{uploadError}</p> : null}
         </div>
       </div>
+      {galeriaAberta ? (
+        <MediaPicker
+          currentUrl={preview}
+          onClose={() => setGaleriaAberta(false)}
+          onSelect={(escolhidos) => {
+            const primeiro = escolhidos[0];
+            if (primeiro) definirUrl(primeiro.url);
+          }}
+        />
+      ) : null}
     </FieldShell>
   );
 }

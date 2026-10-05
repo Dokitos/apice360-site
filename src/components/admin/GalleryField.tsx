@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { upload } from "@vercel/blob/client";
 import { Icon } from "@/components/ui/Icon";
+import { MediaPicker } from "@/components/admin/MediaPicker";
 
 export type GalleryImage = { url: string; alt: string; mediaType: "IMAGE" | "VIDEO" };
 
@@ -29,6 +30,7 @@ export function GalleryField({
   const [images, setImages] = useState<GalleryImage[]>(defaultValue);
   const [pending, setPending] = useState(0);
   const [errors, setErrors] = useState<string[]>([]);
+  const [galeriaAberta, setGaleriaAberta] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function uploadOne(file: File): Promise<GalleryImage | string> {
@@ -79,7 +81,7 @@ export function GalleryField({
       {/* O que o servidor recebe. A ordem do array é a ordem da galeria. */}
       <input type="hidden" name={name} value={JSON.stringify(images)} readOnly />
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
           disabled={pending > 0}
@@ -87,6 +89,14 @@ export function GalleryField({
           className="rounded-lg border border-outline-variant/40 bg-surface-container-low px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:bg-surface-container-high disabled:cursor-not-allowed disabled:opacity-50"
         >
           {pending > 0 ? `A enviar ${pending}...` : "Adicionar imagens ou vídeos"}
+        </button>
+        <button
+          type="button"
+          disabled={pending > 0}
+          onClick={() => setGaleriaAberta(true)}
+          className="rounded-lg border border-outline-variant/40 bg-surface-container-low px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:bg-surface-container-high disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          Escolher da galeria
         </button>
         <span className="text-xs text-on-surface-variant/70">
           {images.length > 0
@@ -110,6 +120,28 @@ export function GalleryField({
         />
       </div>
 
+      {galeriaAberta ? (
+        <MediaPicker
+          multiple
+          kind="media"
+          onClose={() => setGaleriaAberta(false)}
+          onSelect={(escolhidos) => {
+            // Já estão no armazenamento: aqui só entram na lista deste
+            // projeto, sem repetir as que já lá estão.
+            setImages((atuais) => {
+              const jaLa = new Set(atuais.map((imagem) => imagem.url));
+              const novas = escolhidos
+                .filter((item) => !jaLa.has(item.url))
+                .map((item) => ({
+                  url: item.url,
+                  alt: "",
+                  mediaType: item.kind === "video" ? ("VIDEO" as const) : ("IMAGE" as const),
+                }));
+              return [...atuais, ...novas];
+            });
+          }}
+        />
+      ) : null}
       {errors.length > 0 ? (
         <ul className="space-y-1 text-xs text-primary">
           {errors.map((message) => (

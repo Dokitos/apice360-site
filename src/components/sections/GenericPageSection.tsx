@@ -6,6 +6,9 @@ import { getCta } from "@/lib/content";
 import type { SiteLocale } from "@/lib/locale";
 import { CardGridSection } from "@/components/sections/CardGridSection";
 import { TimelineSection } from "@/components/sections/TimelineSection";
+import { WhyChooseSection } from "@/components/sections/WhyChooseSection";
+import { ServiceDetailSection } from "@/components/sections/ServiceDetailSection";
+import { ResultsStatsSection } from "@/components/sections/ResultsStatsSection";
 
 type GenericSectionItem = {
   id: string;
@@ -19,7 +22,7 @@ type GenericSectionItem = {
 
 export type GenericSectionData = {
   key: string;
-  /** "standard" (this file's own layout) | "grid" | "timeline" — see the dispatch below. */
+  /** Uma das montagens de src/lib/section-layouts.ts — ver o despacho abaixo. */
   layout: string;
   imageUrl: string | null;
   iconName: string | null;
@@ -32,12 +35,14 @@ export type GenericSectionData = {
 };
 
 /**
- * Renderer for page sections created in the admin that aren't tied to a
- * page-specific hand-built component. Dispatches on section.layout so an
- * admin-created section isn't permanently stuck looking like every other
- * one — "grid" and "timeline" delegate to the same components the
- * hand-built pages use; "standard" (the default) is this file's own
- * centered-text-then-items layout.
+ * Apresenta as secções criadas no painel que não têm componente próprio.
+ *
+ * Despacha por section.layout para uma secção criada no painel não ficar
+ * presa ao mesmo aspeto de todas as outras: cada montagem delega nos mesmos
+ * componentes que as páginas feitas à mão usam, por isso uma secção nova sai
+ * com a linguagem visual do resto do site. A lista das montagens e o que
+ * cada uma precisa está em src/lib/section-layouts.ts; "standard" (a
+ * predefinição) é a montagem deste ficheiro: texto ao centro, itens por baixo.
  */
 export async function GenericPageSection({
   section,
@@ -55,33 +60,95 @@ export async function GenericPageSection({
 
   const cta = section.ctaKey ? await getCta(section.ctaKey, locale) : null;
 
-  // Both delegated layouts require a heading; without one, fall back to the
-  // standard layout below rather than rendering an empty <h2>.
-  if (section.layout === "grid" && section.heading) {
-    return (
-      <CardGridSection
-        eyebrow={section.eyebrow}
-        heading={section.heading}
-        body={section.body}
-        items={section.items}
-        columns={3}
-        cta={cta}
-        locale={locale}
-      />
-    );
-  }
+  // Todas as montagens delegadas desenham um <h2>: sem título ficariam com um
+  // cabeçalho vazio, por isso caem para a montagem padrão lá em baixo.
+  if (section.heading) {
+    const fundo = alt ? "bg-surface-container-lowest py-32" : "bg-surface py-32";
 
-  if (section.layout === "timeline" && section.heading) {
-    return (
-      <TimelineSection
-        eyebrow={section.eyebrow}
-        heading={section.heading}
-        items={section.items}
-        cta={cta}
-        className={alt ? "bg-surface-container-lowest py-32" : "bg-surface py-32"}
-        locale={locale}
-      />
-    );
+    if (section.layout === "grid") {
+      return (
+        <CardGridSection
+          eyebrow={section.eyebrow}
+          heading={section.heading}
+          body={section.body}
+          items={section.items}
+          columns={3}
+          cta={cta}
+          locale={locale}
+        />
+      );
+    }
+
+    if (section.layout === "timeline") {
+      return (
+        <TimelineSection
+          eyebrow={section.eyebrow}
+          heading={section.heading}
+          items={section.items}
+          cta={cta}
+          className={fundo}
+          locale={locale}
+        />
+      );
+    }
+
+    if (section.layout === "stats") {
+      return (
+        <ResultsStatsSection
+          eyebrow={section.eyebrow}
+          heading={section.heading}
+          body={section.body}
+          stats={section.items.map((item) => ({
+            id: item.id,
+            // O campo "Número" do item é o valor em destaque. Sem ele fica o
+            // título nesse lugar, em vez de um número grande em branco; o
+            // texto do item não entra, porque um parágrafo na legenda de um
+            // número sai espremido e ilegível.
+            value: item.numberLabel || item.title,
+            label: item.numberLabel ? item.title : "",
+            iconName: item.iconName,
+          }))}
+          columns={(Math.min(Math.max(section.items.length, 1), 5) as 1 | 2 | 3 | 4 | 5)}
+          cta={cta}
+        />
+      );
+    }
+
+    if (section.layout === "split" || section.layout === "split_reverse") {
+      return (
+        <WhyChooseSection
+          eyebrow={section.eyebrow}
+          heading={section.heading}
+          body={section.body}
+          imageUrl={section.imageUrl}
+          items={section.items}
+          cta={cta}
+          locale={locale}
+          reverse={section.layout === "split_reverse"}
+          className={fundo}
+        />
+      );
+    }
+
+    if (section.layout === "features" || section.layout === "features_reverse") {
+      return (
+        <ServiceDetailSection
+          id={section.key}
+          eyebrow={section.eyebrow}
+          title={section.heading}
+          intro={section.body}
+          imageUrl={section.imageUrl}
+          features={section.items}
+          cta={cta}
+          reverse={section.layout === "features_reverse"}
+          className={fundo}
+        />
+      );
+    }
+
+    if (section.layout === "banner") {
+      return <BannerLayout section={section} cta={cta} />;
+    }
   }
 
   return (
@@ -125,6 +192,61 @@ export async function GenericPageSection({
         {cta ? (
           <div className="mt-12 text-center">
             <Button href={cta.url} variant="cta" icon={cta.iconName ?? undefined}>
+              {cta.label}
+            </Button>
+          </div>
+        ) : null}
+      </div>
+    </Reveal>
+  );
+}
+
+/**
+ * Faixa de largura total na cor da marca, para uma chamada à ação entre duas
+ * secções de conteúdo. Esta não delega: nenhuma página feita à mão tem igual.
+ */
+function BannerLayout({
+  section,
+  cta,
+}: {
+  section: GenericSectionData;
+  cta: { label: string; url: string; iconName?: string | null } | null;
+}) {
+  return (
+    <Reveal as="section" className="bg-primary py-24 text-on-primary">
+      <div className="mx-auto max-w-site px-5 text-center md:px-20">
+        {section.eyebrow ? (
+          <span className="mb-4 block font-mono text-label-mono uppercase tracking-widest text-on-primary/70">
+            {section.eyebrow}
+          </span>
+        ) : null}
+        <h2 className="mx-auto mb-6 max-w-4xl font-heading text-headline-lg">{section.heading}</h2>
+        {section.subheading ? (
+          <p className="mx-auto mb-6 max-w-2xl text-body-lg text-on-primary/80">{section.subheading}</p>
+        ) : null}
+        {section.body ? (
+          // prose-invert porque as cores do prose são as de um fundo claro:
+          // em cima do laranja o texto sairia quase a desaparecer.
+          <RichText html={section.body} className="prose-invert mx-auto max-w-2xl" />
+        ) : null}
+        {section.items.length > 0 ? (
+          <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
+            {section.items.map((item) => (
+              <li key={item.id} className="flex items-center gap-2 text-sm font-bold uppercase tracking-wide">
+                <Icon name={item.iconName ?? "check"} className="text-xl" />
+                {item.title}
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {cta ? (
+          <div className="mt-10">
+            <Button
+              href={cta.url}
+              variant="ghost"
+              icon={cta.iconName ?? undefined}
+              className="border-on-primary text-on-primary hover:bg-on-primary hover:text-primary"
+            >
               {cta.label}
             </Button>
           </div>

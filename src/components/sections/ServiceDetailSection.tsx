@@ -8,7 +8,9 @@ type Feature = { id: string; title: string; body: string | null; iconName: strin
 type ServiceDetailSectionProps = {
   id: string;
   title: string;
-  intro: string;
+  /** Opcional porque uma secção criada no painel pode ter só título e itens. */
+  intro?: string | null;
+  eyebrow?: string | null;
   imageUrl?: string | null;
   features: Feature[];
   cta?: { label: string; url: string; iconName?: string | null } | null;
@@ -20,6 +22,7 @@ export function ServiceDetailSection({
   id,
   title,
   intro,
+  eyebrow,
   imageUrl,
   features,
   cta,
@@ -36,9 +39,14 @@ export function ServiceDetailSection({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={imageUrl} alt={title} className="h-[420px] w-full rounded-lg object-cover lg:w-1/2" />
           ) : null}
-          <div className="lg:w-1/2">
+          <div className={imageUrl ? "lg:w-1/2" : "w-full"}>
+            {eyebrow ? (
+              <span className="mb-4 block font-mono text-label-mono uppercase tracking-widest text-primary">
+                {eyebrow}
+              </span>
+            ) : null}
             <h2 className="mb-6 font-heading text-headline-lg">{title}</h2>
-            <RichText html={intro} className="mb-10 text-on-surface-variant" />
+            {intro ? <RichText html={intro} className="mb-10 text-on-surface-variant" /> : null}
             <div className="mb-10 space-y-8">
               {features.map((feature) => (
                 <div key={feature.id} className="flex items-start gap-4">

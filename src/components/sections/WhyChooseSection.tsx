@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { RichText } from "@/components/ui/RichText";
 import { getCta } from "@/lib/content";
+import { cn } from "@/lib/cn";
 import type { SiteLocale } from "@/lib/locale";
 
-type Item = { id: string; title: string; iconName: string | null; ctaKey?: string | null };
+type Item = { id: string; title: string; body?: string | null; iconName: string | null; ctaKey?: string | null };
 
 type WhyChooseSectionProps = {
   eyebrow?: string | null;
@@ -16,16 +17,35 @@ type WhyChooseSectionProps = {
   items: Item[];
   cta?: { label: string; url: string; iconName?: string | null } | null;
   locale?: SiteLocale;
+  /** Imagem do lado direito em vez do esquerdo, para alternar secções seguidas. */
+  reverse?: boolean;
+  className?: string;
 };
 
-export function WhyChooseSection({ eyebrow, heading, body, imageUrl, items, cta, locale = "PT" }: WhyChooseSectionProps) {
+export function WhyChooseSection({
+  eyebrow,
+  heading,
+  body,
+  imageUrl,
+  items,
+  cta,
+  locale = "PT",
+  reverse = false,
+  className,
+}: WhyChooseSectionProps) {
   return (
-    <Reveal as="section" className="bg-surface-container-lowest py-32">
+    <Reveal as="section" className={className ?? "bg-surface-container-lowest py-32"}>
       <div className="mx-auto max-w-site px-5 md:px-20">
-        <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+        {/* Sem imagem não há duas colunas para dividir: o texto ocupava
+            metade da largura e deixava a outra metade em branco. */}
+        <div className={cn("grid grid-cols-1 items-center gap-16", imageUrl && "lg:grid-cols-2")}>
           {imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt="" className="h-[420px] w-full rounded-lg object-cover" />
+            <img
+              src={imageUrl}
+              alt=""
+              className={cn("h-[420px] w-full rounded-lg object-cover", reverse && "lg:order-2")}
+            />
           ) : null}
           <div>
             {eyebrow ? (
@@ -55,10 +75,15 @@ export function WhyChooseSection({ eyebrow, heading, body, imageUrl, items, cta,
 async function WhyChooseItem({ item, locale }: { item: Item; locale: SiteLocale }) {
   const cta = item.ctaKey ? await getCta(item.ctaKey, locale) : null;
 
+  // Um item de uma linha fica centrado com o ícone; um com parágrafo por
+  // baixo tem de alinhar pelo topo, senão o ícone desce para o meio do bloco.
   return (
-    <li className="flex items-center gap-3">
-      <Icon name={item.iconName ?? "check_circle"} className="text-primary" />
-      <span>{item.title}</span>
+    <li className={cn("flex gap-3", item.body ? "items-start" : "items-center")}>
+      <Icon name={item.iconName ?? "check_circle"} className={cn("text-primary", item.body && "mt-0.5")} />
+      <span>
+        {item.title}
+        {item.body ? <span className="mt-1 block text-sm text-on-surface-variant">{item.body}</span> : null}
+      </span>
       {cta ? (
         <Link href={cta.url} className="text-sm font-bold text-primary hover:underline">
           {cta.label}
