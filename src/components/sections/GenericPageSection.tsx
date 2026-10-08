@@ -24,6 +24,8 @@ export type GenericSectionData = {
   key: string;
   /** Uma das montagens de src/lib/section-layouts.ts — ver o despacho abaixo. */
   layout: string;
+  /** Falso quando o painel desligou "Ativo (visível no site)". */
+  isActive?: boolean;
   imageUrl: string | null;
   iconName: string | null;
   ctaKey: string | null;

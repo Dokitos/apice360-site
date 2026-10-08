@@ -97,6 +97,11 @@ export function SectionsEditor({
   const byId = new Map(sections.map((s) => [s.id, s]));
   const orderedSections = order.map((id) => byId.get(id)).filter((s): s is SectionData => Boolean(s));
 
+  // Desativar todas as secções deixa a página em branco no site. O site não
+  // tem como avisar, e a lista só mostrava "Inativo" ao lado de cada linha —
+  // ninguém liga as duas coisas a olhar para uma página vazia.
+  const todasInativas = sections.length > 0 && sections.every((s) => !s.isActive);
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
@@ -132,6 +137,16 @@ export function SectionsEditor({
           {isCreating ? "Cancelar" : "Nova Secção"}
         </button>
       </div>
+
+      {todasInativas ? (
+        <div className="flex items-start gap-3 rounded-lg border border-primary/40 bg-primary/5 p-4">
+          <Icon name="warning" className="shrink-0 text-primary" />
+          <p className="text-sm text-on-surface">
+            Todas as secções desta página estão inativas, por isso a página aparece vazia no site. Abre uma
+            secção e liga <strong>Ativo (visível no site)</strong> para a mostrar de novo.
+          </p>
+        </div>
+      ) : null}
 
       {isCreating ? (
         <div className="rounded-lg border border-outline-variant/20 bg-surface-container-low p-6">

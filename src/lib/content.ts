@@ -57,8 +57,11 @@ export const getCta = cache(async (key: string, locale: Locale = DEFAULT_LOCALE)
 
 export const getPageSections = cache(
   async (page: PageKeyValue, locale: Locale = DEFAULT_LOCALE) => {
+    // Inclui as desativadas, com a marca. Quem desenha a página precisa de
+    // distinguir "o painel escondeu esta secção" de "o painel não tem linha
+    // nenhuma para ela" — ver OrderedSections.
     const sections = await prisma.pageSection.findMany({
-      where: { page, isActive: true },
+      where: { page },
       orderBy: { order: "asc" },
       include: {
         translations: true,
@@ -71,6 +74,7 @@ export const getPageSections = cache(
       return {
         key: section.key,
         layout: section.layout,
+        isActive: section.isActive,
         imageUrl: section.imageUrl,
         iconName: section.iconName,
         ctaKey: section.ctaKey,
@@ -98,7 +102,7 @@ export const getPageSections = cache(
 
 export async function getPageSection(page: PageKeyValue, key: string, locale: Locale = DEFAULT_LOCALE) {
   const sections = await getPageSections(page, locale);
-  return sections.find((s) => s.key === key) ?? null;
+  return sections.find((s) => s.key === key && s.isActive) ?? null;
 }
 
 /** Admin-created pages outside the fixed set, shown in the nav when published + showInMenu. */

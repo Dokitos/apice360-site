@@ -38,7 +38,7 @@ const CHAPTER_ORDER = KNOWN_PAGE_SECTION_KEYS.LSF;
 
 export default async function LsfPage() {
   const locale = await getLocale();
-  const [sections, settings, cta] = await Promise.all([
+  const [todasAsSeccoes, settings, cta] = await Promise.all([
     getPageSections("LSF", locale),
     getSiteSettings(locale),
     getCta("lsf_talk_to_us", locale),
@@ -47,6 +47,11 @@ export default async function LsfPage() {
   // Mesmo comportamento da Área do Arquiteto: desligada nas Definições do
   // Site, a rota deixa de existir (e o link já saiu do menu via getNavLinks).
   if (settings?.lsfPageEnabled === false) notFound();
+
+  // getPageSections devolve também as desativadas, marcadas — esta página lê
+  // a lista directamente (não passa pelo OrderedSections), por isso filtra
+  // aqui o que o painel escondeu.
+  const sections = todasAsSeccoes.filter((section) => section.isActive !== false);
   if (sections.length === 0) notFound();
 
   const byKey = new Map(sections.map((section) => [section.key, section as LsfSection]));
