@@ -6,14 +6,21 @@ import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@/components/ui/Icon";
-import { deleteLpPriceTier } from "./actions";
+import { deleteLpPriceTier, deleteLpSimulatorField } from "./actions";
+import { LP_FIELD_TYPE_LABELS, type LpFieldTypeValue } from "@/lib/lp-simulator";
 
 export default async function LandingPageAdminPage() {
   await requirePermission("landing_page", "view");
-  const tiers = await prisma.lpPriceTier.findMany({
-    orderBy: { order: "asc" },
-    include: { translations: true },
-  });
+  const [tiers, fields] = await Promise.all([
+    prisma.lpPriceTier.findMany({
+      orderBy: { order: "asc" },
+      include: { translations: true },
+    }),
+    prisma.lpSimulatorField.findMany({
+      orderBy: [{ step: "asc" }, { order: "asc" }],
+      include: { translations: { where: { locale: "PT" } } },
+    }),
+  ]);
 
   return (
     <div className="space-y-10">
@@ -122,6 +129,71 @@ export default async function LandingPageAdminPage() {
                 <Icon name="edit" className="text-lg" />
               </Link>
               <DeleteButton action={deleteLpPriceTier.bind(null, t.id)} />
+            </div>
+          )}
+        />
+      </div>
+
+      <div>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="font-heading text-headline-md">Campos do Formulário do Simulador</h2>
+            <p className="mt-1 text-sm text-on-surface-variant">
+              As perguntas que o visitante responde antes de ver a estimativa. A resposta de cada campo ativo
+              fica gravada na lead, em Leads.
+            </p>
+          </div>
+          <Link
+            href="/admin/landing-page/campos/new"
+            className="flex shrink-0 items-center gap-2 rounded-lg bg-primary px-5 py-2.5 text-sm font-bold uppercase text-on-primary transition-transform hover:scale-105"
+          >
+            <Icon name="add" />
+            Novo Campo
+          </Link>
+        </div>
+        <DataTable
+          rows={fields}
+          getRowId={(f) => f.id}
+          emptyMessage="Ainda não há campos gravados — o simulador está a usar o formulário de origem. Corre o script de arranque ou cria os campos aqui."
+          columns={[
+            {
+              header: "Pergunta",
+              render: (f) => (
+                <span className="flex items-center gap-2 font-bold">
+                  {f.translations[0]?.label ?? f.key}
+                  {f.isSystem ? (
+                    <span
+                      title="Necessário ao funcionamento do simulador"
+                      className="rounded-full bg-surface-container px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-on-surface-variant"
+                    >
+                      Sistema
+                    </span>
+                  ) : null}
+                </span>
+              ),
+            },
+            { header: "Chave", render: (f) => <code className="text-xs text-on-surface-variant">{f.key}</code> },
+            { header: "Tipo", render: (f) => LP_FIELD_TYPE_LABELS[f.type as LpFieldTypeValue] ?? f.type },
+            { header: "Passo", render: (f) => `${f.step} · ${f.order}` },
+            { header: "Obrigatório", render: (f) => (f.isRequired ? "Sim" : "Não") },
+            {
+              header: "Estado",
+              render: (f) => (
+                <span className={f.isActive ? "text-primary" : "text-on-surface-variant"}>
+                  {f.isActive ? "Ativo" : "Inativo"}
+                </span>
+              ),
+            },
+          ]}
+          renderActions={(f) => (
+            <div className="flex items-center justify-end gap-2">
+              <Link
+                href={`/admin/landing-page/campos/${f.id}/edit`}
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary"
+              >
+                <Icon name="edit" className="text-lg" />
+              </Link>
+              {f.isSystem ? null : <DeleteButton action={deleteLpSimulatorField.bind(null, f.id)} />}
             </div>
           )}
         />

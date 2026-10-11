@@ -4,12 +4,18 @@ import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import {
   leadSchema,
-  lpSimulatorLeadSchema,
+  lpSimulatorIdentitySchema,
   EMAIL_ISSUE_MESSAGES,
 } from "@/lib/validations/public";
 import { domainAcceptsMail } from "@/lib/validations/contactable.server";
 import { clientIpFromHeaders, rateLimit } from "@/lib/rate-limit";
 import { getLocale } from "@/lib/locale";
+import { getLpSimulatorFields } from "@/lib/content";
+import {
+  MIN_SQUARE_METERS,
+  MAX_SQUARE_METERS,
+  isSystemKey,
+} from "@/lib/lp-simulator";
 
 export type LeadFormState = { ok: boolean; message: string } | undefined;
 
@@ -63,7 +69,9 @@ export async function createLead(
 
 export type SimulatorLeadState =
   | { ok: true }
-  | { ok: false; message: string; field?: "name" | "email" | "phone" | "squareMeters" }
+  // `field` é a chave do campo que falhou — uma das do sistema ou qualquer
+  // outra criada no painel —, para o formulário voltar ao passo certo.
+  | { ok: false; message: string; field?: string }
   | undefined;
 
 /**
@@ -75,26 +83,54 @@ export async function createSimulatorLead(
   _prevState: SimulatorLeadState,
   formData: FormData,
 ): Promise<SimulatorLeadState> {
-  const parsed = lpSimulatorLeadSchema.safeParse({
-    name: formData.get("name"),
-    email: formData.get("email"),
-    phone: formData.get("phone"),
-    buildLocation: formData.get("buildLocation") || undefined,
-    hasLand: formData.get("hasLand") || undefined,
-    hasProject: formData.get("hasProject") || undefined,
-    floors: formData.get("floors") || undefined,
-    squareMeters: formData.get("squareMeters"),
-    company: formData.get("company") || undefined,
-  });
+  const locale = await getLocale();
 
-  if (!parsed.success) {
-    const issue = parsed.error.issues[0];
+  // As perguntas vêm da base de dados (painel → Landing Page → Campos do
+  // Simulador), por isso o que é obrigatório e o que é sequer aceite também
+  // vem de lá. As respostas são guardadas pelo rótulo em Português, que é o
+  // idioma em que a equipa lê as leads, mesmo quando quem preencheu estava
+  // noutro idioma.
+  const fields = await getLpSimulatorFields("PT");
+
+  // Honeypot: devolve sucesso para o bot não perceber que foi apanhado.
+  if (String(formData.get("company") ?? "")) return { ok: true };
+
+  const valores = new Map<string, string>();
+  for (const field of fields) {
+    valores.set(field.key, String(formData.get(field.key) ?? "").trim().slice(0, 500));
+  }
+
+  const nome = valores.get("name") ?? "";
+  const email = valores.get("email") ?? "";
+  const telefone = valores.get("phone") ?? "";
+
+  const identidade = lpSimulatorIdentitySchema.safeParse({ name: nome, email, phone: telefone });
+  if (!identidade.success) {
+    const issue = identidade.error.issues[0];
     const field = issue?.path[0];
     return {
       ok: false,
       message: issue?.message ?? "Dados inválidos.",
-      field: typeof field === "string" ? (field as "name" | "email" | "phone" | "squareMeters") : undefined,
+      field: typeof field === "string" ? (field as "name" | "email" | "phone") : undefined,
     };
+  }
+
+  const metros = Number.parseInt(valores.get("squareMeters") ?? "", 10);
+  if (!Number.isFinite(metros) || metros < MIN_SQUARE_METERS || metros > MAX_SQUARE_METERS) {
+    return {
+      ok: false,
+      message: `Indica uma área entre ${MIN_SQUARE_METERS} e ${MAX_SQUARE_METERS} m².`,
+      field: "squareMeters",
+    };
+  }
+
+  // Os campos que o painel marcou como obrigatórios. Os do sistema já foram
+  // verificados acima, com as regras próprias de cada um.
+  for (const field of fields) {
+    if (!field.isRequired || isSystemKey(field.key)) continue;
+    if (!valores.get(field.key)) {
+      return { ok: false, message: `Preenche o campo "${field.label}".`, field: field.key };
+    }
   }
 
   const ip = clientIpFromHeaders(await headers());
@@ -103,29 +139,26 @@ export async function createSimulatorLead(
     return { ok: false, message: "Demasiados pedidos. Tenta novamente dentro de instantes." };
   }
 
-  // Honeypot: devolve sucesso para o bot não perceber que foi apanhado.
-  if (parsed.data.company) return { ok: true };
-
-  if (!(await domainAcceptsMail(parsed.data.email))) {
+  if (!(await domainAcceptsMail(identidade.data.email))) {
     return { ok: false, message: EMAIL_ISSUE_MESSAGES.no_mail_server, field: "email" };
   }
 
-  const d = parsed.data;
   await prisma.leadSubmission.create({
     data: {
       type: "BUDGET",
-      name: d.name,
-      email: d.email,
-      phone: d.phone,
-      message: [
-        `Localização onde pretende construir: ${d.buildLocation || "não informado"}`,
-        `Já tem terreno: ${d.hasLand || "não informado"}`,
-        `Já possui projeto de arquitetura: ${d.hasProject || "não informado"}`,
-        `Nº de pisos: ${d.floors || "não informado"}`,
-        `Metros quadrados pretendidos: ${d.squareMeters} m²`,
-      ].join("\n"),
+      name: identidade.data.name,
+      email: identidade.data.email,
+      phone: identidade.data.phone,
+      // Nome, email e telefone têm colunas próprias; o resto das respostas
+      // vai para a mensagem, uma por linha, com o rótulo da pergunta — é
+      // assim que uma pergunta criada no painel chega à página de Leads sem
+      // ninguém ter de mexer em código.
+      message: fields
+        .filter((field) => !["name", "email", "phone"].includes(field.key))
+        .map((field) => `${field.label}: ${valores.get(field.key) || "não informado"}`)
+        .join("\n"),
       sourcePage: "/lp#simulador",
-      locale: await getLocale(),
+      locale,
     },
   });
 

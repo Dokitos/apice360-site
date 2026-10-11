@@ -2,6 +2,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
 import { RichText } from "@/components/ui/RichText";
 import { Button } from "@/components/ui/Button";
+import { SiteImage } from "@/components/ui/SiteImage";
 import { getCta } from "@/lib/content";
 import type { SiteLocale } from "@/lib/locale";
 import { CardGridSection } from "@/components/sections/CardGridSection";
@@ -175,11 +176,9 @@ export async function GenericPageSection({
         </div>
 
         {section.imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <SiteImage
             src={section.imageUrl}
-            alt=""
-            className="mx-auto mt-12 h-[360px] w-full max-w-4xl rounded-lg object-cover"
+            className="mx-auto mt-12 h-[360px] w-full max-w-4xl rounded-lg"
           />
         ) : null}
 
@@ -264,8 +263,7 @@ async function ItemCard({ item, locale }: { item: GenericSectionItem; locale: Si
   return (
     <div className="rounded-lg border border-outline-variant/20 p-8 text-center">
       {item.imageUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={item.imageUrl} alt="" className="mx-auto mb-4 h-32 w-full rounded-lg object-cover" />
+        <SiteImage src={item.imageUrl} className="mx-auto mb-4 h-32 w-full rounded-lg" />
       ) : item.iconName ? (
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
           <Icon name={item.iconName} className="text-primary" />

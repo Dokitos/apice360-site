@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/permissions";
 import { lpPriceTierSchema } from "@/lib/validations/lp-price-tier";
+import { lpSimulatorFieldSchema, RESERVED_FIELD_KEYS } from "@/lib/validations/lp-simulator-field";
 import { resolveTranslations, type ExistingTranslationRow } from "@/lib/auto-translate";
 
 const TRANSLATABLE_FIELDS = [{ key: "label" }, { key: "description" }, { key: "features" }];
@@ -156,5 +157,177 @@ export async function updateLpPriceTier(id: string, _prevState: string | undefin
 export async function deleteLpPriceTier(id: string) {
   await requirePermission("landing_page", "delete");
   await prisma.lpPriceTier.delete({ where: { id } });
+  revalidateLp();
+}
+
+// ---------------------------------------------------------------------------
+// Campos do formulário do simulador
+// ---------------------------------------------------------------------------
+
+const FIELD_TRANSLATABLE = [{ key: "label" }, { key: "hint" }, { key: "options" }];
+
+function readFieldForm(formData: FormData) {
+  return {
+    key: formData.get("key"),
+    type: formData.get("type"),
+    step: formData.get("step"),
+    order: formData.get("order"),
+    isRequired: formData.get("isRequired") === "on",
+    isActive: formData.get("isActive") === "on",
+    isHalfWidth: formData.get("isHalfWidth") === "on",
+    labelPt: formData.get("labelPt"),
+    labelEn: formData.get("labelEn") || undefined,
+    labelEs: formData.get("labelEs") || undefined,
+    labelFr: formData.get("labelFr") || undefined,
+    hintPt: formData.get("hintPt") || undefined,
+    hintEn: formData.get("hintEn") || undefined,
+    hintEs: formData.get("hintEs") || undefined,
+    hintFr: formData.get("hintFr") || undefined,
+    optionsPt: formData.get("optionsPt") || undefined,
+    optionsEn: formData.get("optionsEn") || undefined,
+    optionsEs: formData.get("optionsEs") || undefined,
+    optionsFr: formData.get("optionsFr") || undefined,
+  };
+}
+
+type FieldTranslatableInput = {
+  labelPt: string;
+  labelEn?: string;
+  labelEs?: string;
+  labelFr?: string;
+  hintPt?: string;
+  hintEn?: string;
+  hintEs?: string;
+  hintFr?: string;
+  optionsPt?: string;
+  optionsEn?: string;
+  optionsEs?: string;
+  optionsFr?: string;
+};
+
+async function buildFieldTranslations(
+  data: FieldTranslatableInput,
+  existingTranslations: ExistingTranslationRow[],
+) {
+  const resolved = await resolveTranslations({
+    fields: FIELD_TRANSLATABLE,
+    ptValues: {
+      label: data.labelPt,
+      hint: data.hintPt ?? null,
+      options: data.optionsPt ?? null,
+    },
+    submittedValues: {
+      EN: { label: data.labelEn ?? null, hint: data.hintEn ?? null, options: data.optionsEn ?? null },
+      ES: { label: data.labelEs ?? null, hint: data.hintEs ?? null, options: data.optionsEs ?? null },
+      FR: { label: data.labelFr ?? null, hint: data.hintFr ?? null, options: data.optionsFr ?? null },
+    },
+    existingTranslations,
+  });
+
+  return [
+    {
+      locale: "PT" as const,
+      isAutoTranslated: false,
+      label: data.labelPt,
+      hint: data.hintPt ?? null,
+      options: data.optionsPt ?? null,
+    },
+    ...resolved.map((r) => ({
+      locale: r.locale,
+      isAutoTranslated: r.isAutoTranslated,
+      // O rótulo é obrigatório na tabela: se a tradução falhar, fica o PT.
+      label: r.fields.label || data.labelPt,
+      hint: r.fields.hint,
+      options: r.fields.options,
+    })),
+  ];
+}
+
+export async function createLpSimulatorField(_prevState: string | undefined, formData: FormData) {
+  await requirePermission("landing_page", "create");
+  const parsed = lpSimulatorFieldSchema.safeParse(readFieldForm(formData));
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
+
+  const { labelPt, labelEn, labelEs, labelFr, hintPt, hintEn, hintEs, hintFr,
+    optionsPt, optionsEn, optionsEs, optionsFr, ...data } = parsed.data;
+
+  if (RESERVED_FIELD_KEYS.includes(data.key)) return "Essa chave está reservada. Escolhe outra.";
+  const existing = await prisma.lpSimulatorField.findUnique({ where: { key: data.key }, select: { id: true } });
+  if (existing) return "Já existe um campo com essa chave.";
+
+  const translations = await buildFieldTranslations(
+    { labelPt, labelEn, labelEs, labelFr, hintPt, hintEn, hintEs, hintFr,
+      optionsPt, optionsEn, optionsEs, optionsFr },
+    [],
+  );
+
+  await prisma.lpSimulatorField.create({
+    data: { ...data, translations: { create: translations } },
+  });
+
+  revalidateLp();
+  redirect("/admin/landing-page?saved=1");
+}
+
+export async function updateLpSimulatorField(id: string, _prevState: string | undefined, formData: FormData) {
+  await requirePermission("landing_page", "edit");
+  const parsed = lpSimulatorFieldSchema.safeParse(readFieldForm(formData));
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? "Dados inválidos.";
+
+  const current = await prisma.lpSimulatorField.findUnique({
+    where: { id },
+    select: { key: true, type: true, isSystem: true, translations: true },
+  });
+  if (!current) return "Esse campo já não existe.";
+
+  const { labelPt, labelEn, labelEs, labelFr, hintPt, hintEn, hintEs, hintFr,
+    optionsPt, optionsEn, optionsEs, optionsFr, ...data } = parsed.data;
+
+  // Num campo do sistema a chave, o tipo e o estado não se mexem: o
+  // formulário mostra-os bloqueados, e um campo bloqueado não é enviado.
+  const base = current.isSystem
+    ? { ...data, key: current.key, type: current.type, isActive: true }
+    : data;
+
+  if (!current.isSystem) {
+    if (RESERVED_FIELD_KEYS.includes(base.key)) return "Essa chave está reservada. Escolhe outra.";
+    const clash = await prisma.lpSimulatorField.findUnique({ where: { key: base.key }, select: { id: true } });
+    if (clash && clash.id !== id) return "Já existe outro campo com essa chave.";
+  }
+
+  const translations = await buildFieldTranslations(
+    { labelPt, labelEn, labelEs, labelFr, hintPt, hintEn, hintEs, hintFr,
+      optionsPt, optionsEn, optionsEs, optionsFr },
+    current.translations,
+  );
+
+  await prisma.lpSimulatorField.update({
+    where: { id },
+    data: {
+      ...base,
+      translations: {
+        upsert: translations.map((t) => {
+          const { locale, ...fields } = t;
+          return {
+            where: { fieldId_locale: { fieldId: id, locale } },
+            update: fields,
+            create: t,
+          };
+        }),
+      },
+    },
+  });
+
+  revalidateLp();
+  redirect("/admin/landing-page?saved=1");
+}
+
+export async function deleteLpSimulatorField(id: string) {
+  await requirePermission("landing_page", "delete");
+  const field = await prisma.lpSimulatorField.findUnique({ where: { id }, select: { isSystem: true } });
+  // Sem nome, email, telefone ou metros quadrados não há lead contactável
+  // nem estimativa para calcular — por isso estes não se apagam.
+  if (!field || field.isSystem) return;
+  await prisma.lpSimulatorField.delete({ where: { id } });
   revalidateLp();
 }

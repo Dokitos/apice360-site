@@ -6,6 +6,7 @@ import { getLocale } from "@/lib/locale";
 import { ArticleSchema } from "@/components/seo/StructuredData";
 import { getDictionary } from "@/lib/dictionary";
 import { Reveal } from "@/components/ui/Reveal";
+import { SiteImage } from "@/components/ui/SiteImage";
 import { Icon } from "@/components/ui/Icon";
 import { CommentsSection } from "@/components/sections/CommentsSection";
 
@@ -94,8 +95,7 @@ export default async function BlogPostPage({
         </div>
 
         {post.featuredImageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={post.featuredImageUrl} alt={post.title} className="mb-10 aspect-[16/9] w-full rounded-lg object-cover" />
+          <SiteImage src={post.featuredImageUrl} alt={post.title} className="mb-10 aspect-[16/9] w-full rounded-lg" />
         ) : null}
 
         {/* bodyHtml is sanitized with DOMPurify before being persisted from the admin rich-text editor. */}
@@ -113,11 +113,10 @@ export default async function BlogPostPage({
               {related.map((r) => (
                 <Link key={r.id} href={`/blog/${r.slug}`} className="group">
                   {r.featuredImageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <SiteImage
                       src={r.featuredImageUrl}
                       alt={r.title}
-                      className="mb-3 h-32 w-full rounded-lg object-cover transition-transform group-hover:scale-105"
+                      className="mb-3 h-32 w-full rounded-lg transition-transform group-hover:scale-105"
                     />
                   ) : null}
                   {r.categoryName ? (

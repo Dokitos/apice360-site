@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import {
   getCta,
   getLpPriceTiers,
+  getLpSimulatorFields,
   getPageSection,
   getPageSections,
   getPageSeo,
@@ -37,7 +38,7 @@ function whatsappNumberFrom(...candidates: (string | null | undefined)[]): strin
 export default async function LandingPage() {
   const locale = await getLocale();
 
-  const [hero, heroCta, benefits, simulator, trust, trustCta, contact, tiers, settings, stats, allSections] =
+  const [hero, heroCta, benefits, simulator, trust, trustCta, contact, tiers, simulatorFields, settings, stats, allSections] =
     await Promise.all([
       getPageSection("LP", "hero", locale),
       getCta("lp_hero", locale),
@@ -47,6 +48,7 @@ export default async function LandingPage() {
       getCta("lp_trust_visit", locale),
       getPageSection("LP", "contact", locale),
       getLpPriceTiers(locale),
+      getLpSimulatorFields(locale),
       getSiteSettings(locale),
       getStats(locale),
       getPageSections("LP", locale),
@@ -82,6 +84,7 @@ export default async function LandingPage() {
           heading={simulator?.heading ?? "Simule a sua estimativa em 1 minuto"}
           subheading={simulator?.subheading}
           tiers={tiers}
+          fields={simulatorFields}
         whatsappNumber={whatsappNumber}
       />
     ) : null,

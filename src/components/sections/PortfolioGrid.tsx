@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
 import { Icon } from "@/components/ui/Icon";
+import { SiteImage } from "@/components/ui/SiteImage";
 
 type Project = {
   id: string;
@@ -43,13 +44,11 @@ export function PortfolioGrid({ heading, projects, variant = "featured" }: Portf
                     vez, e as originais rondam os 600 KB. Assim o browser só
                     busca as que vão entrar no ecrã. */}
                 {project.coverImageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
+                  <SiteImage
                     src={project.coverImageUrl}
                     alt={project.title}
                     loading="lazy"
-                    decoding="async"
-                    className="aspect-[16/10] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="aspect-[16/10] w-full transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (
                   <div className="aspect-[16/10] w-full bg-surface-container" />

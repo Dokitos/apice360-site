@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/ui/Reveal";
+import { SiteImage } from "@/components/ui/SiteImage";
 import { RichText } from "@/components/ui/RichText";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -53,8 +54,7 @@ export function PageIntroSection({ eyebrow, heading, body, imageUrl, items = [],
         ) : null}
 
         {imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={imageUrl} alt="" className="mx-auto mt-16 h-[420px] w-full max-w-6xl rounded-lg object-cover" />
+          <SiteImage src={imageUrl} className="mx-auto mt-16 h-[420px] w-full max-w-6xl rounded-lg" />
         ) : null}
         {cta ? (
           <div className="mt-10">

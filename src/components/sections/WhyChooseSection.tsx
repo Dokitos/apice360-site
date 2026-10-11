@@ -3,6 +3,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { RichText } from "@/components/ui/RichText";
+import { SiteImage } from "@/components/ui/SiteImage";
 import { getCta } from "@/lib/content";
 import { cn } from "@/lib/cn";
 import type { SiteLocale } from "@/lib/locale";
@@ -40,11 +41,9 @@ export function WhyChooseSection({
             metade da largura e deixava a outra metade em branco. */}
         <div className={cn("grid grid-cols-1 items-center gap-16", imageUrl && "lg:grid-cols-2")}>
           {imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <SiteImage
               src={imageUrl}
-              alt=""
-              className={cn("h-[420px] w-full rounded-lg object-cover", reverse && "lg:order-2")}
+              className={cn("h-[420px] w-full rounded-lg", reverse && "lg:order-2")}
             />
           ) : null}
           <div>

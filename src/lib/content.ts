@@ -1,6 +1,12 @@
 import { cache } from "react";
 import { prisma } from "@/lib/prisma";
 import type { SiteLocale } from "@/lib/locale";
+import {
+  defaultSimulatorFields,
+  splitOptions,
+  type SimulatorField,
+  type LpFieldTypeValue,
+} from "@/lib/lp-simulator";
 
 type Locale = SiteLocale;
 
@@ -499,5 +505,45 @@ export const getLpPriceTiers = cache(async (locale: Locale = DEFAULT_LOCALE) => 
         .map((line) => line.trim())
         .filter(Boolean),
     };
+  });
+});
+
+/**
+ * Campos do formulário do simulador da landing page, pela ordem em que
+ * aparecem. Sem nenhum na base de dados devolve o formulário de origem (ver
+ * src/lib/lp-simulator.ts), para a landing page nunca ficar sem simulador.
+ */
+export const getLpSimulatorFields = cache(async (locale: Locale = DEFAULT_LOCALE) => {
+  let rows;
+  try {
+    rows = await prisma.lpSimulatorField.findMany({
+      where: { isActive: true },
+      orderBy: [{ step: "asc" }, { order: "asc" }],
+      include: { translations: true },
+    });
+  } catch (error) {
+    // A tabela só existe depois de a migração correr. Entre o código subir e
+    // a migração ser aplicada, a landing page fica de pé com o formulário de
+    // origem em vez de responder com um erro.
+    console.error("[lp-simulator] não foi possível ler os campos:", error);
+    return defaultSimulatorFields(locale);
+  }
+
+  if (rows.length === 0) return defaultSimulatorFields(locale);
+
+  return rows.map((row) => {
+    const t = pickTranslation(row.translations, locale);
+    return {
+      id: row.id,
+      key: row.key,
+      type: row.type as LpFieldTypeValue,
+      step: row.step,
+      isRequired: row.isRequired,
+      isSystem: row.isSystem,
+      isHalfWidth: row.isHalfWidth,
+      label: t?.label ?? row.key,
+      hint: t?.hint ?? null,
+      options: splitOptions(t?.options),
+    } satisfies SimulatorField;
   });
 });

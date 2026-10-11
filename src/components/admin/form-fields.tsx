@@ -6,6 +6,14 @@ import { slugify } from "@/lib/slugify";
 import { CURATED_ICONS } from "@/lib/material-icons";
 import { Icon } from "@/components/ui/Icon";
 import { MediaPicker } from "@/components/admin/MediaPicker";
+import {
+  parseImageDisplay,
+  buildImageValue,
+  imageDisplayStyle,
+  IMAGE_POSITIONS,
+  type ImageFit,
+  type ImagePosition,
+} from "@/lib/image-display";
 
 const baseFieldClasses =
   "w-full rounded-lg border border-outline-variant/40 bg-surface-container-low px-4 py-2.5 text-on-surface outline-none transition-colors focus:border-primary";
@@ -288,25 +296,27 @@ type ImageFieldProps = {
 const IMAGE_ACCEPT = "image/png,image/jpeg,image/webp,image/gif";
 
 export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldProps) {
-  const [preview, setPreview] = useState(defaultValue ?? "");
+  const inicial = parseImageDisplay(defaultValue);
+  const [src, setSrc] = useState(inicial.src);
+  const [fit, setFit] = useState<ImageFit>(inicial.fit);
+  const [position, setPosition] = useState<ImagePosition>(inicial.position);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [galeriaAberta, setGaleriaAberta] = useState(false);
-  const urlInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const valorRef = useRef<HTMLInputElement>(null);
 
-  // O valor que o formulário envia vive no input de texto (não controlado,
-  // para o `defaultValue` continuar a mandar); a miniatura segue-o à parte.
-  function definirUrl(url: string) {
-    if (urlInputRef.current) {
-      urlInputRef.current.value = url;
-      // O ecrã de pré-visualização das secções ouve os eventos do formulário
-      // para se actualizar. Mudar .value por código não dispara nenhum, por
-      // isso o evento é enviado à mão.
-      urlInputRef.current.dispatchEvent(new Event("input", { bubbles: true }));
-    }
-    setPreview(url);
-  }
+  // O que o formulário envia é o endereço com o enquadramento colado ao fim
+  // (ver src/lib/image-display.ts). Fica num campo escondido para a caixa de
+  // texto continuar a mostrar só o endereço, que é o que quem edita cola e lê.
+  const valor = src ? buildImageValue(src, fit, position) : "";
+
+  // A pré-visualização ao lado do formulário das secções ouve os eventos do
+  // próprio formulário. Um campo escondido controlado pelo React não dispara
+  // nenhum quando o valor muda, por isso o evento é enviado à mão.
+  useEffect(() => {
+    valorRef.current?.dispatchEvent(new Event("input", { bubbles: true }));
+  }, [valor]);
 
   async function uploadFile(file: File) {
     setUploading(true);
@@ -322,7 +332,7 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
         return;
       }
 
-      definirUrl(data.url);
+      setSrc(data.url);
     } catch {
       setUploadError("Falha ao carregar a imagem. Verifica a tua ligação e tenta novamente.");
     } finally {
@@ -337,14 +347,20 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
   }
 
   return (
-    <FieldShell label={label} htmlFor={id} hint={hint ?? "Carrega um ficheiro, escolhe uma imagem já enviada ou cola um URL."}>
+    <FieldShell
+      label={label}
+      htmlFor={id}
+      hint={hint ?? "Carrega um ficheiro, escolhe uma imagem já enviada ou cola um URL."}
+    >
+      <input ref={valorRef} type="hidden" name={name} value={valor} readOnly />
       <div className="flex items-start gap-4">
-        {preview ? (
+        {src ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={preview}
+            src={src}
             alt=""
-            className="h-16 w-16 shrink-0 rounded-lg border border-outline-variant/30 object-cover"
+            style={imageDisplayStyle({ fit, position })}
+            className="h-16 w-16 shrink-0 rounded-lg border border-outline-variant/30 bg-surface-container-low"
             onError={(e) => {
               e.currentTarget.style.visibility = "hidden";
             }}
@@ -357,13 +373,11 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
         <div className="flex flex-1 flex-col gap-2">
           <input
             id={id}
-            name={name}
             type="text"
-            ref={urlInputRef}
-            defaultValue={defaultValue ?? ""}
+            value={src}
             placeholder="https://..."
             className={baseFieldClasses}
-            onChange={(e) => setPreview(e.target.value)}
+            onChange={(e) => setSrc(e.target.value)}
           />
           <div className="flex flex-wrap items-center gap-2">
             <button
@@ -382,11 +396,11 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
             >
               Escolher da galeria
             </button>
-            {preview ? (
+            {src ? (
               <button
                 type="button"
                 onClick={() => {
-                  definirUrl("");
+                  setSrc("");
                   setUploadError(null);
                 }}
                 className="rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:text-primary"
@@ -404,18 +418,95 @@ export function ImageField({ label, id, name, defaultValue, hint }: ImageFieldPr
             />
           </div>
           {uploadError ? <p className="text-xs text-primary">{uploadError}</p> : null}
+          {src ? <FramingControls fit={fit} position={position} onFit={setFit} onPosition={setPosition} /> : null}
         </div>
       </div>
       {galeriaAberta ? (
         <MediaPicker
-          currentUrl={preview}
+          currentUrl={src}
           onClose={() => setGaleriaAberta(false)}
           onSelect={(escolhidos) => {
             const primeiro = escolhidos[0];
-            if (primeiro) definirUrl(primeiro.url);
+            if (primeiro) setSrc(primeiro.url);
           }}
         />
       ) : null}
     </FieldShell>
+  );
+}
+
+/**
+ * Como a imagem ocupa o espaço que lhe é reservado na página.
+ *
+ * "Preencher" é o que sempre aconteceu e corta o que não cabe; a grelha diz
+ * por onde cortar, que é o que faltava quando a parte importante da imagem
+ * ficava de fora. "Mostrar inteira" não corta nada e deixa margem à volta.
+ */
+function FramingControls({
+  fit,
+  position,
+  onFit,
+  onPosition,
+}: {
+  fit: ImageFit;
+  position: ImagePosition;
+  onFit: (fit: ImageFit) => void;
+  onPosition: (position: ImagePosition) => void;
+}) {
+  return (
+    <div className="mt-2 flex flex-col gap-3 rounded-lg border border-outline-variant/30 bg-surface-container-low p-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
+          Enquadramento
+        </span>
+        {(
+          [
+            ["cover", "Preencher (corta o que sobra)"],
+            ["contain", "Mostrar inteira (sem cortar)"],
+          ] as const
+        ).map(([valor, rotulo]) => (
+          <button
+            key={valor}
+            type="button"
+            onClick={() => onFit(valor)}
+            aria-pressed={fit === valor}
+            className={cn(
+              "rounded-lg border px-3 py-1.5 text-xs transition-colors",
+              fit === valor
+                ? "border-primary bg-primary/10 font-bold text-primary"
+                : "border-outline-variant/40 text-on-surface-variant hover:border-primary",
+            )}
+          >
+            {rotulo}
+          </button>
+        ))}
+      </div>
+
+      {fit === "cover" ? (
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
+            Parte visível
+          </span>
+          <div className="grid grid-cols-3 gap-0.5">
+            {IMAGE_POSITIONS.map((valor) => (
+              <button
+                key={valor}
+                type="button"
+                title={valor}
+                aria-label={`Enquadrar: ${valor}`}
+                aria-pressed={position === valor}
+                onClick={() => onPosition(valor)}
+                className={cn(
+                  "h-5 w-5 rounded-sm border transition-colors",
+                  position === valor
+                    ? "border-primary bg-primary"
+                    : "border-outline-variant/40 bg-surface hover:border-primary",
+                )}
+              />
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 }

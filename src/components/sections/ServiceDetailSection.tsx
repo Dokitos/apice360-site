@@ -2,6 +2,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { RichText } from "@/components/ui/RichText";
+import { SiteImage } from "@/components/ui/SiteImage";
 
 type Feature = { id: string; title: string; body: string | null; iconName: string | null };
 
@@ -36,8 +37,7 @@ export function ServiceDetailSection({
           className={`flex flex-col items-center gap-16 lg:flex-row ${reverse ? "lg:flex-row-reverse" : ""}`}
         >
           {imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt={title} className="h-[420px] w-full rounded-lg object-cover lg:w-1/2" />
+            <SiteImage src={imageUrl} alt={title} className="h-[420px] w-full rounded-lg lg:w-1/2" />
           ) : null}
           <div className={imageUrl ? "lg:w-1/2" : "w-full"}>
             {eyebrow ? (

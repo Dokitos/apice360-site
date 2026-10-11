@@ -1,4 +1,5 @@
 import { Reveal } from "@/components/ui/Reveal";
+import { SiteImage } from "@/components/ui/SiteImage";
 import { Icon } from "@/components/ui/Icon";
 import { Button } from "@/components/ui/Button";
 import { RichText } from "@/components/ui/RichText";
@@ -56,8 +57,7 @@ export function TimelineSection({
             <div className="mb-12" />
           )}
           {imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={imageUrl} alt="" className="mb-12 h-[320px] w-full rounded-lg object-cover" />
+            <SiteImage src={imageUrl} className="mb-12 h-[320px] w-full rounded-lg" />
           ) : null}
           <div className="relative space-y-16">
             <div className="absolute bottom-4 left-7 top-4 hidden w-0.5 bg-primary/20 sm:block" />

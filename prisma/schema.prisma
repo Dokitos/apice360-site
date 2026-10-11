@@ -586,3 +586,54 @@ model LpPriceTierTranslation {
 
   @@unique([tierId, locale])
 }
+
+/// Tipo de campo do formulário do simulador da landing page.
+enum LpFieldType {
+  TEXT
+  EMAIL
+  TEL
+  NUMBER
+  TEXTAREA
+  SELECT
+  CHOICE
+}
+
+/// Campos do formulário do simulador (/lp#simulador), geridos no painel.
+/// A resposta de cada campo ativo é gravada na lead, por isso acrescentar um
+/// campo aqui é acrescentar uma pergunta ao formulário e uma linha à lead.
+model LpSimulatorField {
+  id           String                        @id @default(cuid())
+  /// Nome técnico com que a resposta viaja e fica identificada na lead.
+  key          String                        @unique
+  type         LpFieldType                   @default(TEXT)
+  /// Passo do assistente onde o campo aparece (1 a 3).
+  step         Int                           @default(1)
+  order        Int                           @default(0)
+  isRequired   Boolean                       @default(false)
+  isActive     Boolean                       @default(true)
+  /// Ocupa meia linha, para dois campos curtos ficarem lado a lado.
+  isHalfWidth  Boolean                       @default(false)
+  /// Campos de que o simulador depende: identificam a lead (nome, email,
+  /// telefone) ou entram na conta da estimativa (metros quadrados). O painel
+  /// deixa mudar o rótulo, o passo e a ordem; não deixa apagar nem desligar.
+  isSystem     Boolean                       @default(false)
+  updatedAt    DateTime                      @updatedAt
+  translations LpSimulatorFieldTranslation[]
+
+  @@index([step, order])
+}
+
+model LpSimulatorFieldTranslation {
+  id               String           @id @default(cuid())
+  fieldId          String
+  field            LpSimulatorField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  locale           Locale
+  isAutoTranslated Boolean          @default(false)
+  label            String
+  /// Texto de ajuda por baixo do campo.
+  hint             String?
+  /// Opções de escolha, uma por linha — só para SELECT e CHOICE.
+  options          String?
+
+  @@unique([fieldId, locale])
+}

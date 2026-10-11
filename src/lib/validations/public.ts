@@ -65,20 +65,16 @@ export const leadSchema = z.object({
 });
 
 /** Simulador da landing page: nome, email e telefone são todos obrigatórios e verificados. */
-export const lpSimulatorLeadSchema = z.object({
+/**
+ * Quem preencheu o simulador. As perguntas do formulário deixaram de estar
+ * escritas aqui — são linhas de uma tabela que o painel edita (ver
+ * src/lib/lp-simulator.ts) —, mas o nome, o email e o telefone continuam a
+ * ter regras próprias: são o que torna a lead contactável.
+ */
+export const lpSimulatorIdentitySchema = z.object({
   name: z.string().trim().min(2, "Indica o teu nome completo.").max(200),
   email: contactableEmail,
   phone: contactablePhone,
-  buildLocation: z.string().trim().max(200).optional().or(z.literal("")),
-  hasLand: z.string().trim().max(40).optional().or(z.literal("")),
-  hasProject: z.string().trim().max(40).optional().or(z.literal("")),
-  floors: z.string().trim().max(60).optional().or(z.literal("")),
-  squareMeters: z.coerce
-    .number({ error: "Indica os metros quadrados pretendidos." })
-    .int("Indica os metros quadrados em número inteiro.")
-    .min(20, "A área mínima considerada é de 20 m².")
-    .max(2000, "Para áreas acima de 2000 m² fala diretamente com a nossa equipa."),
-  company: z.string().max(0, "Falha na validação.").optional().or(z.literal("")),
 });
 
 export const commentSchema = z.object({

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
+import { SiteImage } from "@/components/ui/SiteImage";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { getDictionary } from "@/lib/dictionary";
@@ -39,11 +40,10 @@ export function BlogPreviewSection({ heading, subheading, posts, cta, locale = "
           {posts.map((post) => (
             <article key={post.id} className="group flex flex-col overflow-hidden rounded-lg border border-outline-variant/20">
               {post.featuredImageUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
+                <SiteImage
                   src={post.featuredImageUrl}
                   alt={post.title}
-                  className="h-48 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="h-48 w-full transition-transform duration-700 group-hover:scale-105"
                 />
               ) : null}
               <div className="flex flex-1 flex-col p-6">

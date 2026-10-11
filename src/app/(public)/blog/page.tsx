@@ -8,6 +8,7 @@ import { getDictionary } from "@/lib/dictionary";
 import { PageIntroSection } from "@/components/sections/PageIntroSection";
 import { OrderedSections } from "@/components/sections/OrderedSections";
 import { Reveal } from "@/components/ui/Reveal";
+import { SiteImage } from "@/components/ui/SiteImage";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -76,11 +77,10 @@ export default async function BlogPage({
               {posts.map((post) => (
                 <article key={post.id} className="group flex flex-col overflow-hidden rounded-lg border border-outline-variant/20">
                   {post.featuredImageUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <SiteImage
                       src={post.featuredImageUrl}
                       alt={post.title}
-                      className="h-48 w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="h-48 w-full transition-transform duration-700 group-hover:scale-105"
                     />
                   ) : null}
                   <div className="flex flex-1 flex-col p-6">
