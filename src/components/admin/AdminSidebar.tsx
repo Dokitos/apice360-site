@@ -55,6 +55,7 @@ const navGroups: NavGroup[] = [
   {
     title: "Operação",
     items: [
+      { href: "/admin/email", label: "Caixa de Correio", icon: "mail", resource: "email" },
       { href: "/admin/leads", label: "Leads", icon: "contact_mail", resource: "leads" },
       { href: "/admin/users", label: "Utilizadores", icon: "manage_accounts", adminOnly: true },
       { href: "/admin/groups", label: "Grupos", icon: "shield_person", adminOnly: true },

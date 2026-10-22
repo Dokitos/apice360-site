@@ -88,6 +88,7 @@ model User {
   blogPosts      BlogPost[]       @relation("PostAuthor")
   assignedLeads  LeadSubmission[] @relation("LeadAssignee")
   leadActivities LeadActivity[]
+  sentEmails     EmailMessage[]   @relation("EmailSender")
 }
 
 /// Optional, granular permission tier layered on top of Role — only applies
@@ -636,4 +637,148 @@ model LpSimulatorFieldTranslation {
   options          String?
 
   @@unique([fieldId, locale])
+}
+
+// ---------------------------------------------------------------------------
+// Caixa de correio do painel (integrada com o Resend)
+// ---------------------------------------------------------------------------
+
+enum EmailDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum EmailFolder {
+  INBOX
+  SENT
+  ARCHIVE
+  TRASH
+  SPAM
+}
+
+/// Último estado conhecido de uma mensagem. Para as enviadas vem dos webhooks
+/// do Resend, que chegam minutos depois do envio.
+enum EmailStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  COMPLAINED
+  FAILED
+  RECEIVED
+}
+
+/// Endereços que o painel usa para enviar e onde recebe. O domínio tem de
+/// estar verificado no Resend para o envio passar.
+model EmailAccount {
+  id            String         @id @default(cuid())
+  address       String         @unique
+  displayName   String
+  /// Assinatura acrescentada ao fim de cada mensagem escrita neste endereço.
+  signatureHtml String?
+  isDefault     Boolean        @default(false)
+  isActive      Boolean        @default(true)
+  /// Estado do domínio no Resend, atualizado quando se abre a lista de contas.
+  domainStatus  String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  messages      EmailMessage[]
+
+  @@index([isActive])
+}
+
+model EmailMessage {
+  id           String            @id @default(cuid())
+  direction    EmailDirection
+  folder       EmailFolder       @default(INBOX)
+  status       EmailStatus
+  /// Identificador da mensagem no Resend.
+  resendId     String?           @unique
+  /// Message-ID do cabeçalho (RFC 5322), usado para ligar respostas.
+  messageId    String?
+  inReplyTo    String?
+  /// Agrupa a conversa: uma resposta herda o fio da mensagem a que responde.
+  threadId     String
+  accountId    String?
+  account      EmailAccount?     @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  fromAddress  String
+  fromName     String?
+  toAddresses  String[]
+  ccAddresses  String[]
+  bccAddresses String[]
+  replyTo      String?
+  subject      String
+  bodyHtml     String?
+  bodyText     String?
+  /// Primeiras linhas em texto simples, para a lista não carregar o corpo todo.
+  snippet      String?
+  isRead       Boolean           @default(false)
+  isStarred    Boolean           @default(false)
+  errorMessage String?
+  /// Resultado das verificações de autenticação do remetente (só nas recebidas).
+  spfResult    String?
+  dkimResult   String?
+  dmarcResult  String?
+  sentById     String?
+  sentBy       User?             @relation("EmailSender", fields: [sentById], references: [id], onDelete: SetNull)
+  sentAt       DateTime?
+  receivedAt   DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  attachments  EmailAttachment[]
+  events       EmailEvent[]
+
+  @@index([folder, createdAt])
+  @@index([direction, createdAt])
+  @@index([threadId])
+  @@index([isRead])
+}
+
+model EmailAttachment {
+  id                 String       @id @default(cuid())
+  messageId          String
+  message            EmailMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  filename           String
+  contentType        String?
+  size               Int?
+  /// Nos anexos recebidos: o id no Resend, com que se pede um link de
+  /// descarga temporário. Nos enviados fica vazio e o ficheiro vive no `url`.
+  resendAttachmentId String?
+  url                String?
+  isInline           Boolean      @default(false)
+
+  @@index([messageId])
+}
+
+/// Acontecimentos de entrega vindos dos webhooks, para a linha do tempo de
+/// uma mensagem enviada (entregue, aberta, devolvida).
+model EmailEvent {
+  id         String       @id @default(cuid())
+  messageId  String
+  message    EmailMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  type       String
+  detail     String?
+  occurredAt DateTime
+  createdAt  DateTime     @default(now())
+
+  @@index([messageId, occurredAt])
+}
+
+/// Mensagens-tipo, para não reescrever o mesmo email de raiz. O corpo pode
+/// ter marcadores {{nome}} substituídos no momento de escrever.
+model EmailTemplate {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  description String?
+  locale      Locale   @default(PT)
+  subject     String
+  bodyHtml    String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
 }

@@ -26,6 +26,18 @@ const ALLOWED_CONTENT_TYPES = [
   "image/gif",
   "video/mp4",
   "video/webm",
+  // Anexos da caixa de correio do painel. Documentos, e só estes: os
+  // ficheiros ficam num endereço público, e um executável aqui era um sítio
+  // conveniente para alojar o que não se quer alojar.
+  "application/pdf",
+  "text/plain",
+  "text/csv",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
 ];
 
 const MAX_SIZE_BYTES = 100 * 1024 * 1024;

@@ -17,6 +17,7 @@ export const RESOURCES = [
   "testimonials",
   "custom_pages",
   "landing_page",
+  "email",
 ] as const;
 
 export type Resource = (typeof RESOURCES)[number];
@@ -37,6 +38,7 @@ export const RESOURCE_LABELS: Record<Resource, string> = {
   testimonials: "Testemunhos",
   custom_pages: "Páginas Personalizadas",
   landing_page: "Landing Page (/lp)",
+  email: "Caixa de Correio",
 };
 
 export const PERMISSION_ACTIONS = ["view", "create", "edit", "delete"] as const;
