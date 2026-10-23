@@ -5,12 +5,11 @@ import { LsfChapter } from "@/components/lsf/LsfChapter";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 import {
-  LAYER_COLORS,
   LSF_ADVANTAGES,
   LSF_FAMILIES,
   LSF_HIGHLIGHTS,
+  LSF_STRUCTURE_IMAGE,
   LSF_WHAT_IS,
-  type Layer,
   type System,
   type SystemFamily,
 } from "@/lib/lsf-systems";
@@ -138,7 +137,13 @@ function PaginaDeAbertura() {
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
       <div>
         <h3 className="mb-4 font-heading text-headline-md">O que é o LSF?</h3>
-        <p className="mb-8 leading-relaxed text-on-surface-variant">{LSF_WHAT_IS}</p>
+        <p className="mb-6 leading-relaxed text-on-surface-variant">{LSF_WHAT_IS}</p>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={LSF_STRUCTURE_IMAGE}
+          alt="Estrutura em Light Steel Frame de uma moradia de dois pisos"
+          className="mb-8 w-full rounded-lg border border-outline-variant/20"
+        />
         <div className="flex flex-wrap gap-3">
           {LSF_HIGHLIGHTS.map((destaque) => (
             <span
@@ -173,34 +178,23 @@ function PaginaDaFamilia({ familia }: { familia: SystemFamily }) {
         <h3 className="font-heading text-headline-md">{familia.title}</h3>
         <p className="mt-1 text-sm uppercase tracking-wide text-on-surface-variant">{familia.subtitle}</p>
       </div>
+      {/* Uma coluna por solução: com duas soluções numa grelha de quatro
+          sobrava meia página em branco à direita. */}
       <div
         className={cn(
-          "grid grid-cols-1 gap-6",
-          familia.systems.length >= 4 ? "md:grid-cols-2 xl:grid-cols-4" : "md:grid-cols-2 xl:grid-cols-3",
+          "grid grid-cols-1 gap-6 md:grid-cols-2",
+          familia.systems.length >= 4 ? "xl:grid-cols-4" : familia.systems.length === 3 ? "xl:grid-cols-3" : "xl:max-w-3xl",
         )}
       >
         {familia.systems.map((sistema) => (
-          <CartaoDoSistema
-            key={sistema.title}
-            sistema={sistema}
-            direction={familia.direction}
-            faces={familia.faces}
-          />
+          <CartaoDoSistema key={sistema.title} sistema={sistema} />
         ))}
       </div>
     </div>
   );
 }
 
-function CartaoDoSistema({
-  sistema,
-  direction,
-  faces,
-}: {
-  sistema: System;
-  direction: "horizontal" | "vertical";
-  faces: [string, string];
-}) {
+function CartaoDoSistema({ sistema }: { sistema: System }) {
   return (
     <article className="flex flex-col overflow-hidden rounded-xl border border-outline-variant/30 bg-surface-container-lowest">
       <header className="border-b border-outline-variant/20 bg-surface p-4">
@@ -220,15 +214,21 @@ function CartaoDoSistema({
       </header>
 
       <div className="p-4">
-        <Corte layers={sistema.layers} direction={direction} faces={faces} />
+        {/* O corte da solução, recortado do infográfico da empresa. Os números
+            desenhados na imagem são os mesmos da lista por baixo.
+            eslint-disable-next-line @next/next/no-img-element */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={sistema.image}
+          alt={`Corte de ${sistema.title.toLowerCase()}, camada a camada`}
+          loading="lazy"
+          className="w-full rounded-lg border border-outline-variant/20 bg-white"
+        />
 
         <ol className="mt-4 space-y-1.5">
           {sistema.layers.map((camada, i) => (
             <li key={camada.name} className="flex items-baseline gap-2 text-xs">
-              <span
-                className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full font-mono text-[9px] font-bold text-white"
-                style={{ backgroundColor: LAYER_COLORS[i % LAYER_COLORS.length] }}
-              >
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary font-mono text-[9px] font-bold text-on-primary">
                 {i + 1}
               </span>
               <span className="flex-1 leading-snug">{camada.name}</span>
@@ -248,53 +248,5 @@ function CartaoDoSistema({
         </footer>
       ) : null}
     </article>
-  );
-}
-
-/** O corte do sistema: uma faixa por camada, proporcional à espessura. */
-function Corte({
-  layers,
-  direction,
-  faces,
-}: {
-  layers: Layer[];
-  direction: "horizontal" | "vertical";
-  faces: [string, string];
-}) {
-  const horizontal = direction === "horizontal";
-
-  return (
-    <div>
-      <div
-        className={cn(
-          "flex overflow-hidden rounded-lg border border-outline-variant/30",
-          horizontal ? "h-24 flex-row" : "h-56 flex-col",
-        )}
-        aria-hidden="true"
-      >
-        {layers.map((camada, i) => (
-          <div
-            key={camada.name}
-            title={`${i + 1}. ${camada.name}${camada.thickness ? ` — ${camada.thickness}` : ""}`}
-            className="flex items-center justify-center"
-            style={{
-              // Raiz quadrada: comprime a escala o suficiente para a camada
-              // de 1 mm continuar visível ao lado da de 200 mm.
-              flexGrow: Math.sqrt(camada.mm),
-              flexBasis: 0,
-              minWidth: horizontal ? 10 : undefined,
-              minHeight: horizontal ? undefined : 10,
-              backgroundColor: LAYER_COLORS[i % LAYER_COLORS.length],
-            }}
-          >
-            <span className="font-mono text-[9px] font-bold text-white/90">{i + 1}</span>
-          </div>
-        ))}
-      </div>
-      <div className="mt-1 flex justify-between font-mono text-[9px] uppercase tracking-widest text-on-surface-variant/70">
-        <span>{faces[0]}</span>
-        <span>{faces[1]}</span>
-      </div>
-    </div>
   );
 }

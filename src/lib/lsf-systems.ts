@@ -21,6 +21,8 @@ export type System = {
   code: string | null;
   title: string;
   subtitle: string | null;
+  /** O corte desta solução, recortado do infográfico da empresa. */
+  image: string;
   layers: Layer[];
   /** A frase de fecho do cartão, em maiúsculas no original. */
   bestFor: string | null;
@@ -30,10 +32,6 @@ export type SystemFamily = {
   key: string;
   title: string;
   subtitle: string;
-  /** Paredes leem-se de lado (corte horizontal); o resto empilha-se. */
-  direction: "horizontal" | "vertical";
-  /** Como se chamam as duas faces do corte. Num pavimento não são "exterior" e "interior". */
-  faces: [string, string];
   systems: System[];
 };
 
@@ -65,12 +63,11 @@ export const LSF_FAMILIES: SystemFamily[] = [
     key: "paredes",
     title: "Paredes em LSF",
     subtitle: "Quatro soluções conforme a sua necessidade",
-    direction: "horizontal",
-    faces: ["Interior", "Exterior"],
     systems: [
       {
         code: null,
         title: "Parede com Glasroc",
+        image: "/images/lsf/parede-glasroc.webp",
         subtitle: "Placa de gesso especial",
         layers: [
           l("Pintura interior", "1 mm", 1),
@@ -89,6 +86,7 @@ export const LSF_FAMILIES: SystemFamily[] = [
       {
         code: null,
         title: "Parede com MGO",
+        image: "/images/lsf/parede-mgo.webp",
         subtitle: "Placa cimentícia",
         layers: [
           l("Pintura interior", "1 mm", 1),
@@ -105,6 +103,7 @@ export const LSF_FAMILIES: SystemFamily[] = [
       {
         code: null,
         title: "Parede com Thermochip",
+        image: "/images/lsf/parede-thermochip.webp",
         subtitle: "Viroc + XPS + Viroc",
         layers: [
           l("Pintura interior", "1 mm", 1),
@@ -121,6 +120,7 @@ export const LSF_FAMILIES: SystemFamily[] = [
       {
         code: null,
         title: "Parede com Coretech",
+        image: "/images/lsf/parede-coretech.webp",
         subtitle: "Placa cimentícia de alta resistência",
         layers: [
           l("Pintura interior", "1 mm", 1),
@@ -140,12 +140,11 @@ export const LSF_FAMILIES: SystemFamily[] = [
     key: "pavimentos",
     title: "Pavimentos em LSF — 200 mm",
     subtitle: "Quatro soluções para diferentes acabamentos",
-    direction: "vertical",
-    faces: ["Acabamento", "Estrutura"],
     systems: [
       {
         code: "P1",
         title: "Duas placas OSB + piso flutuante",
+        image: "/images/lsf/pavimento-p1.webp",
         subtitle: null,
         layers: [
           l("Piso flutuante (madeira, vinílico)", "8–12 mm", 10),
@@ -159,6 +158,7 @@ export const LSF_FAMILIES: SystemFamily[] = [
       {
         code: "P2",
         title: "Duas placas OSB + pavimento cerâmico",
+        image: "/images/lsf/pavimento-p2.webp",
         subtitle: null,
         layers: [
           l("Pavimento cerâmico", "8–12 mm", 10),
@@ -172,6 +172,7 @@ export const LSF_FAMILIES: SystemFamily[] = [
       {
         code: "P3",
         title: "Placa colaborante + betonilha + cerâmico",
+        image: "/images/lsf/pavimento-p3.webp",
         subtitle: null,
         layers: [
           l("Pavimento cerâmico", "8–12 mm", 10),
@@ -185,6 +186,7 @@ export const LSF_FAMILIES: SystemFamily[] = [
       {
         code: "P4",
         title: "Thermochip 84 mm + acabamento",
+        image: "/images/lsf/pavimento-p4.webp",
         subtitle: null,
         layers: [
           l("Pavimento final (cerâmico ou flutuante)", "8–12 mm", 10),
@@ -202,12 +204,11 @@ export const LSF_FAMILIES: SystemFamily[] = [
     key: "cobertura-plana",
     title: "Cobertura plana em LSF",
     subtitle: "Três soluções de impermeabilização",
-    direction: "vertical",
-    faces: ["Exterior", "Interior"],
     systems: [
       {
         code: "CP1",
         title: "Dupla manta betuminosa com seixos",
+        image: "/images/lsf/cobertura-plana-cp1.webp",
         subtitle: null,
         layers: [
           l("Seixos (proteção)", "40–60 mm", 50),
@@ -223,6 +224,7 @@ export const LSF_FAMILIES: SystemFamily[] = [
       {
         code: "CP2",
         title: "Manta sintética (PVC/TPO/EPDM) com lastro",
+        image: "/images/lsf/cobertura-plana-cp2.webp",
         subtitle: null,
         layers: [
           l("Lajetas / seixos", "40–60 mm", 50),
@@ -238,6 +240,7 @@ export const LSF_FAMILIES: SystemFamily[] = [
       {
         code: "CP3",
         title: "Cobertura verde (ajardinada)",
+        image: "/images/lsf/cobertura-plana-cp3.webp",
         subtitle: null,
         layers: [
           l("Vegetação e substrato", "60–120 mm", 90),
@@ -257,12 +260,11 @@ export const LSF_FAMILIES: SystemFamily[] = [
     key: "cobertura-inclinada",
     title: "Cobertura inclinada em LSF",
     subtitle: "Duas opções de revestimento",
-    direction: "vertical",
-    faces: ["Exterior", "Interior"],
     systems: [
       {
         code: "CI1",
         title: "Telha cerâmica",
+        image: "/images/lsf/cobertura-inclinada-ci1.webp",
         subtitle: null,
         // A folha do cliente não indica espessuras nesta família; as
         // proporções aqui servem só para o desenho ficar legível.
@@ -280,6 +282,7 @@ export const LSF_FAMILIES: SystemFamily[] = [
       {
         code: "CI2",
         title: "Telha sanduíche",
+        image: "/images/lsf/cobertura-inclinada-ci2.webp",
         subtitle: null,
         layers: [
           l("Telha sanduíche (painel metálico com isolamento)", null, 40),
@@ -296,18 +299,5 @@ export const LSF_FAMILIES: SystemFamily[] = [
   },
 ];
 
-/**
- * Cores das camadas. Repetem-se de propósito dentro de um sistema: servem
- * para ligar o número do desenho ao número da lista, não para codificar
- * material nenhum.
- */
-export const LAYER_COLORS = [
-  "#E11D48",
-  "#F59E0B",
-  "#10B981",
-  "#3B82F6",
-  "#8B5CF6",
-  "#EC4899",
-  "#14B8A6",
-  "#F97316",
-];
+/** O render da estrutura, para a página de abertura do livro. */
+export const LSF_STRUCTURE_IMAGE = "/images/lsf/estrutura.webp";
