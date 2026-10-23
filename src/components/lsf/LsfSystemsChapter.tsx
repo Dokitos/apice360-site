@@ -141,6 +141,7 @@ function PaginaDeAbertura() {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={LSF_STRUCTURE_IMAGE}
+          srcSet={`${LSF_STRUCTURE_IMAGE} 1x, ${emDobro(LSF_STRUCTURE_IMAGE)} 2x`}
           alt="Estrutura em Light Steel Frame de uma moradia de dois pisos"
           className="mb-8 w-full rounded-lg border border-outline-variant/20"
         />
@@ -220,6 +221,7 @@ function CartaoDoSistema({ sistema }: { sistema: System }) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={sistema.image}
+          srcSet={`${sistema.image} 1x, ${emDobro(sistema.image)} 2x`}
           alt={`Corte de ${sistema.title.toLowerCase()}, camada a camada`}
           loading="lazy"
           className="w-full rounded-lg border border-outline-variant/20 bg-white"
@@ -249,4 +251,16 @@ function CartaoDoSistema({ sistema }: { sistema: System }) {
       ) : null}
     </article>
   );
+}
+
+/**
+ * O mesmo recorte ao dobro do tamanho, para ecrãs de alta densidade.
+ *
+ * Não tem mais detalhe — o infográfico de origem tem 1024px de largura e o
+ * detalhe não existe no ficheiro. O que evita é a ampliação do browser, que
+ * é bicúbica e sai visivelmente mais lavada do que a reamostragem com que
+ * estes ficheiros foram feitos.
+ */
+function emDobro(caminho: string): string {
+  return caminho.replace(/\.webp$/, "@2x.webp");
 }
