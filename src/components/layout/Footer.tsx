@@ -5,6 +5,7 @@ import { getLocale } from "@/lib/locale";
 import { getDictionary } from "@/lib/dictionary";
 import { Icon } from "@/components/ui/Icon";
 import { Logo } from "@/components/ui/Logo";
+import { NewsletterForm } from "@/components/layout/NewsletterForm";
 
 export async function Footer() {
   const locale = await getLocale();
@@ -72,6 +73,19 @@ export async function Footer() {
                   {settings.phone}
                 </a>
               ) : null}
+            </div>
+            <div className="mb-8 border-t border-white/10 pt-8">
+              <NewsletterForm
+                labels={{
+                  heading: dict.footer.newsletterHeading,
+                  body: dict.footer.newsletterBody,
+                  placeholder: dict.footer.newsletterPlaceholder,
+                  button: dict.footer.newsletterButton,
+                  success: dict.footer.newsletterSuccess,
+                  error: dict.footer.newsletterError,
+                  consent: dict.footer.newsletterConsent,
+                }}
+              />
             </div>
             {socials.length > 0 ? (
               <div className="flex gap-4">

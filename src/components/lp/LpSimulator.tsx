@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { Icon } from "@/components/ui/Icon";
 import { Reveal } from "@/components/ui/Reveal";
@@ -34,7 +34,16 @@ type LpSimulatorProps = {
   /** As perguntas, pela ordem do painel — ver src/lib/lp-simulator.ts. */
   fields: SimulatorField[];
   whatsappNumber: string;
+  /**
+   * Modo quiosque: o simulador está num tablet à disposição de quem entra na
+   * loja. Volta sozinho ao princípio depois de um tempo parado, para o
+   * cliente seguinte não encontrar os dados do anterior no ecrã.
+   */
+  kiosk?: boolean;
 };
+
+/** Tempo parado no resultado antes de o quiosque recomeçar, em milissegundos. */
+const QUIOSQUE_REINICIA_APOS = 90_000;
 
 type Stage = "form" | "loading" | "result";
 
@@ -60,7 +69,15 @@ const BACK_BUTTON_CLASSES =
 /** Linha "Voltar + avançar": empilha em ecrãs estreitos, onde não há largura para os dois. */
 const STEP_ACTIONS_ROW = "mt-10 flex flex-col gap-4 sm:flex-row";
 
-export function LpSimulator({ locale, heading, subheading, tiers, fields, whatsappNumber }: LpSimulatorProps) {
+export function LpSimulator({
+  locale,
+  heading,
+  subheading,
+  tiers,
+  fields,
+  whatsappNumber,
+  kiosk = false,
+}: LpSimulatorProps) {
   const dict = getDictionary(locale);
   const t = dict.lp.simulator;
 
@@ -79,6 +96,7 @@ export function LpSimulator({ locale, heading, subheading, tiers, fields, whatsa
   const wizardRef = useRef<HTMLDivElement>(null);
 
   const [form, setForm] = useState<Record<string, string>>(() => valoresIniciais(fields));
+  const [marketingConsent, setMarketingConsent] = useState(false);
   // Honeypot: fica sempre vazio para pessoas; se vier preenchido, o servidor
   // finge sucesso e não grava nada.
   const [company, setCompany] = useState("");
@@ -167,6 +185,7 @@ export function LpSimulator({ locale, heading, subheading, tiers, fields, whatsa
     const data = new FormData();
     for (const field of fields) data.set(field.key, form[field.key] ?? "");
     data.set("company", company);
+    data.set("marketingConsent", marketingConsent ? "on" : "");
 
     // A estimativa é a contrapartida pelos dados: só a mostramos depois de a
     // lead ficar mesmo gravada (e o email/telefone passarem no servidor).
@@ -195,8 +214,19 @@ export function LpSimulator({ locale, heading, subheading, tiers, fields, whatsa
     setStepIndex(0);
     setErrors({});
     setServerError(null);
+    setForm(valoresIniciais(fields));
+    setMarketingConsent(false);
     wizardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  // Num tablet deixado à entrada da loja, o resultado de uma pessoa não pode
+  // ficar no ecrã à espera da seguinte.
+  useEffect(() => {
+    if (!kiosk || stage !== "result") return;
+    const temporizador = setTimeout(restart, QUIOSQUE_REINICIA_APOS);
+    return () => clearTimeout(temporizador);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [kiosk, stage]);
 
   function whatsappHref(tier: PriceTier) {
     const message = [
@@ -222,6 +252,17 @@ export function LpSimulator({ locale, heading, subheading, tiers, fields, whatsa
           {subheading ? (
             <p className="text-sm leading-relaxed text-on-surface-variant md:text-base">{subheading}</p>
           ) : null}
+          {kiosk ? null : (
+            // Abre o simulador sozinho, sem menu nem rodapé — o ecrã que
+            // fica no tablet da loja.
+            <a
+              href="/simulador"
+              className="mt-5 inline-flex items-center gap-2 rounded-full border border-outline-variant/40 px-4 py-2 text-xs font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:border-primary hover:text-primary"
+            >
+              <Icon name="fullscreen" className="text-base" />
+              {t.fullscreen}
+            </a>
+          )}
         </div>
 
         <div ref={wizardRef} className="neon-border relative rounded-2xl bg-surface p-8 text-left md:p-12">
@@ -256,6 +297,21 @@ export function LpSimulator({ locale, heading, subheading, tiers, fields, whatsa
                   </div>
                 ))}
               </div>
+
+              {ultimoPasso ? (
+                <label className="mt-8 flex cursor-pointer items-start gap-3 rounded-xl border border-outline-variant/40 bg-surface-container-low p-4">
+                  <input
+                    type="checkbox"
+                    checked={marketingConsent}
+                    onChange={(e) => setMarketingConsent(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+                  />
+                  <span>
+                    <span className="block text-sm leading-snug">{t.marketingConsent}</span>
+                    <span className="mt-1 block text-xs text-on-surface-variant">{t.marketingConsentHint}</span>
+                  </span>
+                </label>
+              ) : null}
 
               {serverError ? <p className="mt-6 text-sm text-red-600">{serverError}</p> : null}
 

@@ -22,6 +22,7 @@ export function EmailTabs({ unread }: { unread: number }) {
     { href: "/admin/email?pasta=enviados", label: "Enviados", icon: "send" },
     { href: "/admin/email?pasta=arquivo", label: "Arquivo", icon: "archive" },
     { href: "/admin/email/modelos", label: "Modelos", icon: "description" },
+    { href: "/admin/email/newsletter", label: "Newsletter", icon: "mark_email_read" },
     { href: "/admin/email/contas", label: "Contas", icon: "alternate_email" },
   ];
 

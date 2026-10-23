@@ -15,6 +15,7 @@ import {
   LsfStatementChapter,
   type LsfSection,
 } from "@/components/lsf/LsfChapters";
+import { LsfSystemsChapter } from "@/components/lsf/LsfSystemsChapter";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -36,6 +37,23 @@ export async function generateMetadata(): Promise<Metadata> {
 /** Ordem em que os capítulos conhecidos aparecem, independente do `order` da BD. */
 const CHAPTER_ORDER = KNOWN_PAGE_SECTION_KEYS.LSF;
 
+/** Textos de origem do capítulo das soluções, enquanto o painel não tiver os seus. */
+const SECCAO_DE_SISTEMAS = {
+  key: "systems",
+  layout: "standard",
+  isActive: true,
+  imageUrl: null,
+  iconName: null,
+  ctaKey: null,
+  eyebrow: "Soluções construtivas",
+  heading: "Como se constrói, camada a camada.",
+  subheading:
+    "As soluções que usamos em paredes, pavimentos e coberturas, com a espessura real de cada camada. Escolha um separador para ver o corte de cada uma.",
+  body: null,
+  ctaLabel: null,
+  items: [],
+};
+
 export default async function LsfPage() {
   const locale = await getLocale();
   const [todasAsSeccoes, settings, cta] = await Promise.all([
@@ -54,9 +72,18 @@ export default async function LsfPage() {
   const sections = todasAsSeccoes.filter((section) => section.isActive !== false);
   if (sections.length === 0) notFound();
 
-  const byKey = new Map(sections.map((section) => [section.key, section as LsfSection]));
+  // O capítulo das soluções construtivas é desenhado a partir do ficheiro
+  // src/lib/lsf-systems.ts, não da base de dados. Se o painel ainda não tem
+  // linha para ele, entra na mesma com os textos de origem; se tem e está
+  // desligada, não entra — desligar é uma escolha de quem edita.
+  const temLinhaDeSistemas = todasAsSeccoes.some((s) => s.key === "systems");
+  const comSistemas: LsfSection[] = temLinhaDeSistemas
+    ? (sections as LsfSection[])
+    : ([...sections, SECCAO_DE_SISTEMAS] as LsfSection[]);
+
+  const byKey = new Map(comSistemas.map((section) => [section.key, section as LsfSection]));
   const known = CHAPTER_ORDER.map((key) => byKey.get(key)).filter((s): s is LsfSection => Boolean(s));
-  const extras = sections.filter((s) => !CHAPTER_ORDER.includes(s.key)) as LsfSection[];
+  const extras = comSistemas.filter((s) => !CHAPTER_ORDER.includes(s.key)) as LsfSection[];
   const ordered = [...known, ...extras];
 
   const chapters: DeckChapter[] = ordered.map((section) => ({
@@ -82,6 +109,17 @@ export default async function LsfPage() {
             return <LsfHeroChapter key={section.key} section={section} locale={locale} total={total} />;
           case "what_is":
             return <LsfStatementChapter key={section.key} section={section} position={position} tone="light" />;
+          case "systems":
+            return (
+              <LsfSystemsChapter
+                key={section.key}
+                id={`lsf-${section.key}`}
+                eyebrow={section.eyebrow}
+                heading={section.heading ?? SECCAO_DE_SISTEMAS.heading!}
+                subheading={section.subheading}
+                position={position}
+              />
+            );
           case "why_portugal":
             return (
               <LsfStatementChapter key={section.key} section={section} position={position} tone="muted" reverse />

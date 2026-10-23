@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
@@ -20,6 +20,42 @@ type NavGroup = {
   title: string;
   items: NavItem[];
 };
+
+const COLLAPSE_KEY = "apice-admin-menu-recolhido";
+
+/**
+ * O estado do menu vive no armazenamento do browser, não no React.
+ *
+ * Lido com useSyncExternalStore e não com um efeito: no servidor não há
+ * localStorage, e ler num efeito significava desenhar sempre o menu aberto
+ * e corrigi-lo a seguir — um salto visível a cada navegação.
+ */
+const ouvintes = new Set<() => void>();
+
+function subscreverRecolhido(aoMudar: () => void) {
+  ouvintes.add(aoMudar);
+  return () => {
+    ouvintes.delete(aoMudar);
+  };
+}
+
+function lerRecolhido() {
+  try {
+    return window.localStorage.getItem(COLLAPSE_KEY) === "1";
+  } catch {
+    // Modo privado ou armazenamento bloqueado: fica aberto, como sempre esteve.
+    return false;
+  }
+}
+
+function guardarRecolhido(valor: boolean) {
+  try {
+    window.localStorage.setItem(COLLAPSE_KEY, valor ? "1" : "0");
+  } catch {
+    // Sem armazenamento a escolha não sobrevive ao recarregar.
+  }
+  for (const aoMudar of ouvintes) aoMudar();
+}
 
 const navGroups: NavGroup[] = [
   {
@@ -73,6 +109,9 @@ export function AdminSidebar({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  // Em ecrã largo o menu pode encolher para só ícones, para o conteúdo ficar
+  // com a largura toda. A escolha é de quem usa e fica guardada no browser.
+  const collapsed = useSyncExternalStore(subscreverRecolhido, lerRecolhido, () => false);
 
   // Auto-close the mobile drawer whenever navigation happens.
   useEffect(() => {
@@ -81,6 +120,10 @@ export function AdminSidebar({
     }
     closeDrawer();
   }, [pathname]);
+
+  function toggleCollapsed() {
+    guardarRecolhido(!collapsed);
+  }
 
   return (
     <>
@@ -103,13 +146,25 @@ export function AdminSidebar({
 
       <nav
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex h-full w-72 shrink-0 flex-col gap-8 overflow-y-auto border-r border-outline-variant/20 bg-surface-container-lowest p-6 transition-transform duration-300 lg:sticky lg:top-0 lg:z-auto lg:w-64 lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex h-full w-72 shrink-0 flex-col gap-8 overflow-y-auto border-r border-outline-variant/20 bg-surface-container-lowest p-6 transition-all duration-300 lg:sticky lg:top-0 lg:z-auto lg:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full",
+          collapsed ? "lg:w-20 lg:px-3" : "lg:w-64",
         )}
       >
-        <Link href="/admin" className="mb-2 flex items-center gap-2 pl-12 lg:pl-0">
-          <Logo className="h-10" />
-        </Link>
+        <div className="mb-2 flex items-center justify-between gap-2 pl-12 lg:pl-0">
+          <Link href="/admin" className={cn("flex items-center gap-2", collapsed && "lg:hidden")}>
+            <Logo className="h-10" />
+          </Link>
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            aria-label={collapsed ? "Mostrar o menu" : "Esconder o menu"}
+            title={collapsed ? "Mostrar o menu" : "Esconder o menu"}
+            className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-surface-container hover:text-primary lg:flex"
+          >
+            <Icon name={collapsed ? "chevron_right" : "chevron_left"} className="text-xl" />
+          </button>
+        </div>
 
         {navGroups.map((group) => {
           const visibleItems = group.items.filter((item) => {
@@ -121,7 +176,12 @@ export function AdminSidebar({
 
           return (
             <div key={group.title} className="flex flex-col gap-1">
-              <span className="mb-2 px-3 font-mono text-label-mono uppercase tracking-widest text-on-surface-variant/70">
+              <span
+                className={cn(
+                  "mb-2 px-3 font-mono text-label-mono uppercase tracking-widest text-on-surface-variant/70",
+                  collapsed && "lg:hidden",
+                )}
+              >
                 {group.title}
               </span>
               {visibleItems.map((item) => {
@@ -131,15 +191,19 @@ export function AdminSidebar({
                   <Link
                     key={item.href}
                     href={item.href}
+                    // O título só serve de rótulo quando o menu está
+                    // encolhido e o nome deixou de estar à vista.
+                    title={collapsed ? item.label : undefined}
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                      collapsed && "lg:justify-center lg:px-0",
                       isActive
                         ? "bg-primary/10 text-primary"
                         : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface",
                     )}
                   >
                     <Icon name={item.icon} className="text-xl" />
-                    {item.label}
+                    <span className={cn(collapsed && "lg:hidden")}>{item.label}</span>
                   </Link>
                 );
               })}

@@ -530,6 +530,8 @@ model LeadSubmission {
   message      String?
   sourcePage   String?
   locale       Locale
+  /// Aceitou receber comunicações de marketing no formulário que preencheu.
+  marketingConsent Boolean    @default(false)
   status       LeadStatus     @default(NEW)
   notes        String?
   assignedToId String?
@@ -779,6 +781,24 @@ model EmailTemplate {
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+/// Quem pediu para receber novidades, pelo rodapé ou por ter aceitado no
+/// simulador. Guardado à parte das leads: uma inscrição não é um pedido de
+/// orçamento, e tem de poder ser cancelada sem mexer no histórico comercial.
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  name           String?
+  locale         Locale    @default(PT)
+  /// Onde a pessoa se inscreveu (rodapé, simulador da landing page...).
+  source         String?
+  isActive       Boolean   @default(true)
+  unsubscribedAt DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@index([isActive])
 }

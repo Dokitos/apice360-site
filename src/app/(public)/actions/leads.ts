@@ -11,6 +11,7 @@ import { domainAcceptsMail } from "@/lib/validations/contactable.server";
 import { clientIpFromHeaders, rateLimit } from "@/lib/rate-limit";
 import { getLocale } from "@/lib/locale";
 import { getLpSimulatorFields } from "@/lib/content";
+import { subscribeFromConsent } from "@/app/(public)/actions/newsletter";
 import {
   MIN_SQUARE_METERS,
   MAX_SQUARE_METERS,
@@ -143,12 +144,15 @@ export async function createSimulatorLead(
     return { ok: false, message: EMAIL_ISSUE_MESSAGES.no_mail_server, field: "email" };
   }
 
+  const aceitaMarketing = String(formData.get("marketingConsent") ?? "") === "on";
+
   await prisma.leadSubmission.create({
     data: {
       type: "BUDGET",
       name: identidade.data.name,
       email: identidade.data.email,
       phone: identidade.data.phone,
+      marketingConsent: aceitaMarketing,
       // Nome, email e telefone têm colunas próprias; o resto das respostas
       // vai para a mensagem, uma por linha, com o rótulo da pergunta — é
       // assim que uma pergunta criada no painel chega à página de Leads sem
@@ -161,6 +165,12 @@ export async function createSimulatorLead(
       locale,
     },
   });
+
+  // A inscrição vive à parte da lead: cancelar a newsletter não pode
+  // depender de mexer no histórico comercial.
+  if (aceitaMarketing) {
+    await subscribeFromConsent(identidade.data.email, identidade.data.name, "simulador");
+  }
 
   return { ok: true };
 }
