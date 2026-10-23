@@ -243,16 +243,9 @@ export default async function AdminDashboardPage() {
           {gaId ? (
             <>
               <p className="text-sm text-on-surface-variant">
-                O site está a enviar visitas para a propriedade{" "}
-                <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs">{gaId}</code> desde que o
-                visitante aceita os cookies.
-              </p>
-              <p className="text-sm text-on-surface-variant">
-                Os números de visitas não aparecem aqui porque o identificador só serve para{" "}
-                <strong>enviar</strong> dados. Para os <strong>ler</strong> e desenhar neste painel é preciso
-                ligar a Google Analytics Data API: uma conta de serviço no Google Cloud, com acesso de leitura
-                à propriedade, e o respetivo ficheiro de credenciais. Diz-me quando tiveres isso e ligo os
-                gráficos de visitas, origens de tráfego e páginas mais vistas aqui ao lado dos contactos.
+                Propriedade{" "}
+                <code className="rounded bg-surface-container px-1.5 py-0.5 text-xs">{gaId}</code> a registar
+                visitas. Para mostrar os números aqui é preciso ligar a Google Analytics Data API.
               </p>
               <a
                 href="https://analytics.google.com/"
