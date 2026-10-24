@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { getAttachmentUrl } from "@/app/admin/(protected)/email/actions";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 
 /**
  * Anexo de uma mensagem.

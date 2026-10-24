@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/permissions";
 import { isEmailConfigured, isWebhookConfigured } from "@/lib/email/resend";
 import { EmailTabs } from "@/components/admin/email/EmailTabs";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 
 export default async function EmailLayout({ children }: { children: React.ReactNode }) {
   await requirePermission("email", "view");

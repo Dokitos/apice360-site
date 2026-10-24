@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 
 type SecondaryLocale = "EN" | "ES" | "FR";
 

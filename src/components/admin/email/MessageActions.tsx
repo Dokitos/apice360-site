@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { markRead, moveToFolder, toggleStar, deleteMessage } from "@/app/admin/(protected)/email/actions";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { cn } from "@/lib/cn";
 import type { EmailFolder } from "@/generated/prisma/client";
 

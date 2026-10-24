@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/permissions";
 import { DataTable } from "@/components/admin/DataTable";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 
 const ORIGENS: Record<string, string> = {
   rodape: "Rodapé do site",

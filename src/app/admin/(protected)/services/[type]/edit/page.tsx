@@ -5,7 +5,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { ServiceForm } from "@/components/admin/ServiceForm";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { updateService, deleteServiceFeature } from "../../actions";
 
 export default async function EditServicePage({

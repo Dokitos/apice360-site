@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 
 type Status = { value: string; label: string };
 

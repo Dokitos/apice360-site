@@ -1,4 +1,4 @@
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 
 const FORMATS: { format: string; label: string; icon: string }[] = [
   { format: "csv", label: "CSV", icon: "csv" },

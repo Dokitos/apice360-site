@@ -31,13 +31,14 @@ export function DataTable<T>({
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-outline-variant/20">
+    <div className="admin-data-table overflow-x-auto rounded-xl border border-slate-200">
       <table className="w-full text-left text-sm">
         <thead className="bg-surface-container-low text-on-surface-variant">
           <tr>
             {columns.map((col) => (
               <th
                 key={col.header}
+                scope="col"
                 className={cn(
                   "px-4 py-3 font-mono text-label-mono uppercase tracking-widest",
                   col.className,
@@ -46,7 +47,7 @@ export function DataTable<T>({
                 {col.header}
               </th>
             ))}
-            {renderActions ? <th className="px-4 py-3" /> : null}
+            {renderActions ? <th scope="col" className="px-4 py-3"><span className="sr-only">Ações</span></th> : null}
           </tr>
         </thead>
         <tbody className="divide-y divide-outline-variant/10 bg-surface-container-lowest">

@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/cn";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { Logo } from "@/components/ui/Logo";
 import type { Resource } from "@/lib/resources";
 
@@ -59,25 +59,29 @@ function guardarRecolhido(valor: boolean) {
 
 const navGroups: NavGroup[] = [
   {
-    title: "Geral",
+    title: "Visão geral",
     items: [
-      { href: "/admin", label: "Dashboard", icon: "dashboard" },
-      { href: "/admin/site-settings", label: "Definições do Site", icon: "settings", resource: "site_settings" },
-      { href: "/admin/ctas", label: "CTAs", icon: "bolt", resource: "ctas" },
-      { href: "/admin/seo", label: "SEO por Página", icon: "search", resource: "seo" },
+      { href: "/admin", label: "Resumo", icon: "dashboard" },
     ],
   },
   {
-    title: "Conteúdo",
+    title: "Operação",
+    items: [
+      { href: "/admin/leads", label: "Contactos", icon: "contact_mail", resource: "leads" },
+      { href: "/admin/email", label: "Caixa de Correio", icon: "mail", resource: "email" },
+    ],
+  },
+  {
+    title: "Conteúdos",
     items: [
       { href: "/admin/page-sections", label: "Secções de Página", icon: "dashboard_customize", resource: "page_sections" },
       { href: "/admin/pages", label: "Páginas Personalizadas", icon: "note_add", resource: "custom_pages" },
       { href: "/admin/landing-page", label: "Landing Page (/lp)", icon: "ads_click", resource: "landing_page" },
+      { href: "/admin/services", label: "Serviços", icon: "engineering", resource: "services" },
+      { href: "/admin/portfolio", label: "Portfólio", icon: "photo_library", resource: "portfolio" },
       { href: "/admin/partners", label: "Parceiros", icon: "handshake", resource: "partners" },
       { href: "/admin/testimonials", label: "Testemunhos", icon: "format_quote", resource: "testimonials" },
       { href: "/admin/stats", label: "Estatísticas", icon: "monitoring", resource: "stats" },
-      { href: "/admin/services", label: "Serviços", icon: "engineering", resource: "services" },
-      { href: "/admin/portfolio", label: "Portfólio", icon: "photo_library", resource: "portfolio" },
     ],
   },
   {
@@ -89,10 +93,11 @@ const navGroups: NavGroup[] = [
     ],
   },
   {
-    title: "Operação",
+    title: "Gestão",
     items: [
-      { href: "/admin/email", label: "Caixa de Correio", icon: "mail", resource: "email" },
-      { href: "/admin/leads", label: "Leads", icon: "contact_mail", resource: "leads" },
+      { href: "/admin/ctas", label: "CTAs", icon: "bolt", resource: "ctas" },
+      { href: "/admin/seo", label: "SEO por Página", icon: "search", resource: "seo" },
+      { href: "/admin/site-settings", label: "Definições do Site", icon: "settings", resource: "site_settings" },
       { href: "/admin/users", label: "Utilizadores", icon: "manage_accounts", adminOnly: true },
       { href: "/admin/groups", label: "Grupos", icon: "shield_person", adminOnly: true },
     ],
@@ -109,6 +114,8 @@ export function AdminSidebar({
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   // Em ecrã largo o menu pode encolher para só ícones, para o conteúdo ficar
   // com a largura toda. A escolha é de quem usa e fica guardada no browser.
   const collapsed = useSyncExternalStore(subscreverRecolhido, lerRecolhido, () => false);
@@ -130,6 +137,9 @@ export function AdminSidebar({
       <button
         type="button"
         aria-label={open ? "Fechar menu" : "Abrir menu"}
+        aria-expanded={open}
+        aria-controls="admin-navigation"
+        ref={menuButtonRef}
         onClick={() => setOpen((v) => !v)}
         className="fixed left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-lg border border-outline-variant/40 bg-surface-container-lowest text-on-surface shadow-lg lg:hidden"
       >
@@ -145,15 +155,19 @@ export function AdminSidebar({
       ) : null}
 
       <nav
+        id="admin-navigation"
+        aria-label="Menu de administração"
+        onKeyDown={(event) => { if (event.key === "Escape") { setOpen(false); menuButtonRef.current?.focus(); } }}
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex h-full w-72 shrink-0 flex-col gap-8 overflow-y-auto border-r border-outline-variant/20 bg-surface-container-lowest p-6 transition-all duration-300 lg:sticky lg:top-0 lg:z-auto lg:translate-x-0",
-          open ? "translate-x-0" : "-translate-x-full",
+          "fixed inset-y-0 left-0 z-40 flex h-full w-72 shrink-0 flex-col gap-5 overflow-y-auto border-r border-outline-variant/20 bg-surface-container-lowest p-6 transition-all duration-300 lg:visible lg:sticky lg:top-0 lg:h-screen lg:z-auto lg:translate-x-0",
+          open ? "visible translate-x-0" : "invisible -translate-x-full",
           collapsed ? "lg:w-20 lg:px-3" : "lg:w-64",
         )}
       >
         <div className="mb-2 flex items-center justify-between gap-2 pl-12 lg:pl-0">
           <Link href="/admin" className={cn("flex items-center gap-2", collapsed && "lg:hidden")}>
-            <Logo className="h-10" />
+            <Logo className="h-11" />
+            <span className="ml-2 border-l border-slate-200 pl-3 text-[10px] font-medium uppercase tracking-[0.16em] text-slate-400">Admin</span>
           </Link>
           <button
             type="button"
@@ -174,16 +188,24 @@ export function AdminSidebar({
           });
           if (visibleItems.length === 0) return null;
 
+          const expandable = group.title !== "Visão geral" && group.title !== "Operação";
+          const hasActivePage = visibleItems.some((item) => pathname.startsWith(item.href));
+          const expanded = !expandable || collapsed || (expandedGroups[`${group.title}:${pathname}`] ?? (hasActivePage || group.title === "Conteúdos"));
+          const groupId = `admin-group-${navGroups.indexOf(group)}`;
+
           return (
             <div key={group.title} className="flex flex-col gap-1">
-              <span
-                className={cn(
-                  "mb-2 px-3 font-mono text-label-mono uppercase tracking-widest text-on-surface-variant/70",
-                  collapsed && "lg:hidden",
-                )}
-              >
-                {group.title}
-              </span>
+              {expandable ? (
+                <button type="button" aria-expanded={expanded} aria-controls={groupId}
+                  onClick={() => setExpandedGroups((current) => ({ ...current, [`${group.title}:${pathname}`]: !expanded }))}
+                  className={cn("mb-1 flex items-center justify-between rounded-lg px-3 py-2 text-xs font-semibold text-on-surface-variant hover:bg-surface-container", collapsed && "lg:hidden")}>
+                  {group.title}
+                  <Icon name={expanded ? "expand_less" : "expand_more"} className="text-lg" />
+                </button>
+              ) : (
+                <span className={cn("mb-2 px-3 text-xs font-semibold text-on-surface-variant", collapsed && "lg:hidden")}>{group.title}</span>
+              )}
+              <div id={groupId} hidden={!expanded}>
               {visibleItems.map((item) => {
                 const isActive =
                   item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href);
@@ -191,6 +213,8 @@ export function AdminSidebar({
                   <Link
                     key={item.href}
                     href={item.href}
+                    aria-label={item.label}
+                    aria-current={isActive ? "page" : undefined}
                     // O título só serve de rótulo quando o menu está
                     // encolhido e o nome deixou de estar à vista.
                     title={collapsed ? item.label : undefined}
@@ -207,6 +231,7 @@ export function AdminSidebar({
                   </Link>
                 );
               })}
+              </div>
             </div>
           );
         })}

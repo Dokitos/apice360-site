@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { upload } from "@vercel/blob/client";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { MediaPicker } from "@/components/admin/MediaPicker";
 
 export type GalleryImage = { url: string; alt: string; mediaType: "IMAGE" | "VIDEO" };

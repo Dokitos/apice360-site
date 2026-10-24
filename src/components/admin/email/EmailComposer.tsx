@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { upload } from "@vercel/blob/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { TextField, SelectField } from "@/components/admin/form-fields";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { sendEmail, type ComposeState } from "@/app/admin/(protected)/email/actions";

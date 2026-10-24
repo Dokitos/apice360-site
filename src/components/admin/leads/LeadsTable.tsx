@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { cn } from "@/lib/cn";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { bulkDeleteLeads, bulkSetStatus, deleteLead, setLeadStatus } from "@/app/admin/(protected)/leads/actions";
 import type { SiteLocale } from "@/lib/locale";
 

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/permissions";
 import { displayNameFor } from "@/lib/email/addresses";
 import { EmailStatusBadge } from "@/components/admin/email/EmailStatusBadge";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { cn } from "@/lib/cn";
 import type { EmailFolder, Prisma } from "@/generated/prisma/client";
 

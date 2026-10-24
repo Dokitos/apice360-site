@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { LeadDetailPanel } from "@/components/admin/leads/LeadDetailPanel";
 
 export const dynamic = "force-dynamic";

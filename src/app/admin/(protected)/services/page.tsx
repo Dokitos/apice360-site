@@ -3,7 +3,7 @@ import { requirePermission } from "@/lib/permissions";
 import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import Link from "next/link";
 import { deleteService } from "./actions";
 

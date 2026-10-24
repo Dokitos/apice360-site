@@ -20,7 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { toast } from "sonner";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { PageSectionForm } from "@/components/admin/PageSectionForm";
 import { PageSectionItemForm } from "@/components/admin/PageSectionItemForm";

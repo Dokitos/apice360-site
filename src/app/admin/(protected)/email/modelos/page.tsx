@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { requirePermission } from "@/lib/permissions";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { deleteEmailTemplate } from "../actions";
 
 const IDIOMAS: Record<string, string> = { PT: "Português", EN: "Inglês", ES: "Espanhol", FR: "Francês" };

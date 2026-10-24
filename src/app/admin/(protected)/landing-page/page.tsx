@@ -5,7 +5,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { DataTable } from "@/components/admin/DataTable";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { Card } from "@/components/ui/Card";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { deleteLpPriceTier, deleteLpSimulatorField } from "./actions";
 import { LP_FIELD_TYPE_LABELS, type LpFieldTypeValue } from "@/lib/lp-simulator";
 

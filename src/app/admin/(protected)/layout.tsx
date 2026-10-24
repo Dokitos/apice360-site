@@ -23,11 +23,12 @@ export default async function AdminProtectedLayout({
   const viewableResources = await getViewableResources(session.user);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="admin-shell flex min-h-screen">
+      <a href="#admin-content" className="admin-skip-link">Saltar para o conteúdo</a>
       <AdminSidebar role={session.user.role} viewableResources={viewableResources} />
       <div className="flex min-w-0 flex-1 flex-col">
         <AdminHeader name={session.user.name ?? session.user.email ?? ""} role={session.user.role} />
-        <main className="min-w-0 flex-1 overflow-x-hidden bg-background p-4 md:p-8">{children}</main>
+        <main id="admin-content" tabIndex={-1} className="min-w-0 flex-1 overflow-x-hidden p-4 md:p-8"><div className="mx-auto w-full max-w-[1600px]">{children}</div></main>
       </div>
       <Suspense fallback={null}>
         <SavedToast />

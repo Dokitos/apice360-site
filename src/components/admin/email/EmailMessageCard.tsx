@@ -2,7 +2,7 @@ import { displayNameFor } from "@/lib/email/addresses";
 import { sanitizeEmailHtml } from "@/lib/email/html";
 import { EmailStatusBadge } from "@/components/admin/email/EmailStatusBadge";
 import { AttachmentLink } from "@/components/admin/email/AttachmentLink";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 import { cn } from "@/lib/cn";
 import type { EmailStatus, EmailDirection } from "@/generated/prisma/client";
 

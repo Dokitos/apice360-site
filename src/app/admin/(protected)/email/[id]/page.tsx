@@ -7,7 +7,7 @@ import { EmailMessageCard } from "@/components/admin/email/EmailMessageCard";
 import { EmailComposer } from "@/components/admin/email/EmailComposer";
 import { MarkReadOnOpen } from "@/components/admin/email/MarkReadOnOpen";
 import { MessageActions } from "@/components/admin/email/MessageActions";
-import { Icon } from "@/components/ui/Icon";
+import { AdminIcon as Icon } from "@/components/admin/AdminIcon";
 
 export default async function EmailMessagePage({ params }: { params: Promise<{ id: string }> }) {
   await requirePermission("email", "view");
