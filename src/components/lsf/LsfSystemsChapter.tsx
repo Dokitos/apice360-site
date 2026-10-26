@@ -40,7 +40,6 @@ export function LsfSystemsChapter({ id, eyebrow, heading, subheading, position }
   const familia = pagina === 0 ? null : LSF_FAMILIES[pagina - 1];
 
   const bookRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
   const wheelState = useRef({ distance: 0, lastTurn: -Infinity, lastEvent: -Infinity });
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
@@ -57,10 +56,6 @@ export function LsfSystemsChapter({ id, eyebrow, heading, subheading, position }
     setPagina(next);
     chapter?.scrollIntoView({ behavior, block: "start" });
   }, [id, paginas.length]);
-
-  useEffect(() => {
-    contentRef.current?.scrollTo({ top: 0, behavior: "instant" });
-  }, [pagina]);
 
   useEffect(() => {
     const book = bookRef.current;
@@ -146,7 +141,7 @@ export function LsfSystemsChapter({ id, eyebrow, heading, subheading, position }
         className={`${styles.book} overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface shadow-[0_20px_60px_rgba(0,0,0,0.06)]`}
 
       >
-        <div ref={contentRef} tabIndex={0} aria-label="Conteúdo da página do livro" className={`${styles.content} p-6 md:p-10`}>
+        <div tabIndex={0} aria-label="Conteúdo da página do livro" className={`${styles.content} p-6 md:p-10`}>
           {familia ? <PaginaDaFamilia familia={familia} /> : <PaginaDeAbertura />}
         </div>
 

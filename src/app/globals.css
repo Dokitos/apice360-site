@@ -392,4 +392,22 @@ html {
 .admin-shell .admin-data-table th { padding: 14px 20px; background: #f9fafb; }
 .admin-shell .admin-data-table td { padding: 15px 20px; border-top: 1px solid #eef0f4; }
 .admin-shell label.font-mono { font-size: 12px; font-weight: 500; text-transform: none; letter-spacing: normal; color: #475569; }
-.admin-shell button[type="submit"] { border-radius: 8px; text-transform: none; font-weight: 500; letter-spacing: normal; }
+.admin-shell button[type="submit"] { border-radius: 8px; font-weight: 500; letter-spacing: normal; }
+
+/* Keep action labels and menu links consistent across public and admin pages. */
+button,
+[role="button"],
+input:is([type="submit"], [type="button"], [type="reset"]),
+.site-button,
+a.bg-primary,
+a.bg-gradient-to-r,
+.admin-secondary-button,
+.admin-quick-action,
+nav a,
+.public-site footer ul a,
+#admin-navigation a {
+  text-transform: uppercase !important;
+}
+
+/* Material Symbols use lowercase ligatures rather than ordinary text. */
+.material-symbols-outlined { text-transform: none !important; }

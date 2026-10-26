@@ -1,12 +1,11 @@
 .chapter {
-  height: calc(100svh - 76px);
-  min-height: 440px;
+  min-height: max(440px, calc(100svh - 76px));
   padding-block: 24px !important;
   scroll-margin-top: 0 !important;
   scroll-snap-align: start;
   scroll-snap-stop: always;
 }
-.chapter > div { display: flex; height: 100%; min-height: 0; flex-direction: column; padding-inline: 0 !important; }
+.chapter > div { display: flex; min-height: 0; flex-direction: column; padding-inline: 0 !important; }
 .heading { flex-shrink: 0; margin-bottom: 16px; gap: 8px; }
 .heading h2 { font-size: clamp(22px, 2.5vw, 34px); line-height: 1.15; }
 .heading p { margin-top: 8px; font-size: 13px; line-height: 1.45; }
@@ -14,10 +13,10 @@
 .tabs { flex-shrink: 0; flex-wrap: nowrap; overflow-x: auto; margin-bottom: 16px; padding-bottom: 3px; scrollbar-width: thin; }
 .tabs button { flex-shrink: 0; min-height: 42px; border-radius: 6px; }
 .book { display: flex; min-height: 0; flex: 1; flex-direction: column; border-radius: 12px; touch-action: pan-y pinch-zoom; }
-.content { min-height: 0; flex: 1; overflow-y: auto; scrollbar-width: thin; scroll-behavior: auto; scroll-snap-type: none; }
+.content { min-height: 0; flex: auto; overflow: visible; }
 .content:focus-visible { outline: 2px solid #d45009; outline-offset: -3px; }
 .controls { flex-shrink: 0; padding: 10px 16px; gap: 8px; }
-.controls button { font-size: 12px; min-height: 40px; padding-inline: 8px; text-transform: none; }
+.controls button { font-size: 12px; min-height: 40px; padding-inline: 8px; }
 .hint { flex-shrink: 0; margin-top: 8px; color: #687078; font-size: 11px; text-align: center; }
 @media (max-width: 767px) {
   .chapter { padding-block: 16px !important; padding-inline: 16px; }
@@ -33,5 +32,4 @@
 @media (max-height: 560px) {
   .chapter { height: auto; min-height: 0; }
   .book { flex: auto; }
-  .content { max-height: 60svh; flex: auto; }
 }

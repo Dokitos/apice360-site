@@ -39,13 +39,13 @@
   font-size: 14px;
   font-weight: 550;
   line-height: 1.4;
-  text-transform: none;
+  text-transform: uppercase;
   letter-spacing: 0;
   padding: 14px 24px;
   animation: none;
   transition: background-color .18s, border-color .18s, box-shadow .18s;
 }
-.public-site .site-button.bg-gradient-to-r { background-image: none; background-color: var(--color-primary); color: #24180f; box-shadow: none; }
+.public-site .site-button.bg-gradient-to-r { background-image: none; background-color: var(--color-primary); color: #ffffff; box-shadow: none; }
 .public-site .site-button.bg-gradient-to-r:hover { background-color: var(--color-primary-deep); box-shadow: 0 3px 10px #20252a12; transform: none; }
 .public-site .site-button:hover { transform: none; }
 .public-site .site-button .material-symbols-outlined { font-size: 20px; }
@@ -53,7 +53,7 @@
 .public-site .neon-border:hover { transform: none; box-shadow: 0 6px 24px #20252a08; border-color: #d3d5d1; }
 .public-site .glass-effect { border: 1px solid #e3e3df; background: #fff; box-shadow: none; backdrop-filter: none; border-radius: 8px; }
 .public-site > header { background: #fffffff5; border-color: #e9e9e5; backdrop-filter: blur(12px); }
-.public-site > header nav a { font-size: 16px; font-weight: 450; text-transform: none; letter-spacing: 0; padding-block: 8px; color: #363b40; }
+.public-site > header nav a { font-size: 16px; font-weight: 450; text-transform: uppercase; letter-spacing: 0; padding-block: 8px; color: #363b40; }
 .public-site > header nav a[aria-current="page"] { color: #363b40; text-decoration: underline; text-decoration-color: var(--color-primary); text-underline-offset: 9px; text-decoration-thickness: 2px; }
 .public-site > header .site-button { font-size: 12px; padding: 11px 18px; }
 .public-site .site-page-intro { padding-block: clamp(56px, 7vw, 96px) 48px !important; }

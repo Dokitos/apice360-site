@@ -10,9 +10,9 @@
 .body { max-width: 400px; font-size: 16px; line-height: 1.8; color: #697169; }
 .contacts { margin-top: 40px; padding-top: 28px; border-top: 1px solid #e7e6e0; }
 .contacts > p { margin-bottom: 16px; font-size: 13px; color: #697169; }
-.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; text-transform: uppercase; }
 .actions a { display: inline-flex; min-height: 46px; align-items: center; justify-content: center; gap: 10px; padding: 12px 18px; border-radius: 6px; font-size: 13px; font-weight: 550; transition: background-color .2s, border-color .2s; }
-.primary { background: #ff6a13; color: #251b12; border: 1px solid #ff6a13; }
+.primary { background: #ff6a13; color: #ffffff; border: 1px solid #ff6a13; }
 .primary:hover { background: #ef5800; border-color: #ef5800; }
 .secondary { border: 1px solid #d8dcd3; background: transparent; color: #3e4940; }
 .secondary:hover { border-color: #9ba897; background: #f1f2ed; }

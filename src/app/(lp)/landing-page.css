@@ -2,7 +2,7 @@
 .public-lp .site-hero { min-height: 100svh; }
 .public-lp .site-hero-copy > div:first-child { justify-content: flex-start; }
 .public-lp .site-hero .gradient-text { color: var(--color-primary); background: none; -webkit-text-fill-color: currentColor; }
-.public-lp .site-hero a.site-button { white-space: normal; text-align: center; color: #24180f; background: #ff6a13; }
+.public-lp .site-hero a.site-button { white-space: normal; text-align: center; color: #ffffff; background: #ff6a13; }
 .public-lp .site-hero a.site-button:hover { background: #ef5800; box-shadow: none; }
 .public-lp #benefits { padding-block: clamp(56px, 7vw, 96px); }
 .public-lp #benefits .h-1 { height: 2px; width: 40px; }
@@ -12,11 +12,11 @@
 .public-lp #simulador { scroll-margin-top: 24px; }
 .public-lp #simulador h2 { text-wrap: balance; }
 .public-lp #simulador .neon-border { border-radius: 12px; box-shadow: 0 8px 40px #20252a06; }
-.public-lp #simulador :is(button, a).bg-primary { border-radius: 6px; text-transform: none; font-weight: 600; background: #ff6a13; color: #24180f; box-shadow: none; }
+.public-lp #simulador :is(button, a).bg-primary { border-radius: 6px; text-transform: uppercase; font-weight: 600; background: #ff6a13; color: #ffffff; box-shadow: none; }
 .public-lp #simulador input:not([type='checkbox']):not([type='radio']), .public-lp #simulador select { border: 1px solid #d7d9d7; background-color: white; padding: 13px 14px; }
 .public-lp #simulador label { text-transform: none; letter-spacing: normal; }
 .public-lp #simulador :is(input, select):focus-visible { outline: 2px solid #b94407; outline-offset: 3px; }
-.public-lp #confianca a.bg-primary { border-radius: 6px; text-transform: none; background: #ff6a13; color: #24180f; }
+.public-lp #confianca a.bg-primary { border-radius: 6px; text-transform: uppercase; background: #ff6a13; color: #ffffff; }
 .public-lp #contact .shadow-2xl { border-radius: 10px; border-color: #e3e3df; box-shadow: 0 8px 40px #20252a06; }
 .public-lp #contact .blur-\[100px\] { opacity: .25; }
 .public-lp #contact h3 { font-size: 24px; }
