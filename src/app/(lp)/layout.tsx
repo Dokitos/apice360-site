@@ -1,3 +1,5 @@
+import "../public-site.css";
+import "./landing-page.css";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { LanguageSwitcher } from "@/components/layout/LanguageSwitcher";
 import { ScrollToTopButton } from "@/components/layout/ScrollToTopButton";
@@ -36,7 +38,7 @@ export default async function LpLayout({ children }: { children: React.ReactNode
   }
 
   return (
-    <>
+    <div className="public-site public-lp flex min-h-screen flex-col">
       <SmoothScroll />
 
       {/* A LP não tem cabeçalho, por isso o seletor de idiomas vive solto no
@@ -51,6 +53,6 @@ export default async function LpLayout({ children }: { children: React.ReactNode
       <WhatsAppFloatingButton />
       <CookieConsent locale={locale} />
       <Analytics gaMeasurementId={settings?.gaMeasurementId} metaPixelId={settings?.metaPixelId} />
-    </>
+    </div>
   );
 }

@@ -12,7 +12,7 @@ const labels: Record<string, string> = {
   services: "Serviços", partners: "Parceiros", testimonials: "Testemunhos",
   stats: "Estatísticas", pages: "Páginas", "page-sections": "Secções",
   "landing-page": "Landing page", "site-settings": "Definições", seo: "SEO",
-  ctas: "Chamadas para ação", users: "Utilizadores", groups: "Grupos",
+  ctas: "Chamadas para ação", users: "Utilizadores", groups: "Grupos", logs: "Registo de atividade",
   new: "Novo", novo: "Novo", edit: "Editar", editar: "Editar", contas: "Contas",
   modelos: "Modelos", newsletter: "Newsletter", campos: "Campos", features: "Características",
 };

@@ -1,14 +1,7 @@
-import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaPg } from "@prisma/adapter-pg";
+import { Prisma } from "@/generated/prisma/client";
+import { prisma as base } from "@/lib/prisma-base";
+import { createAuditedClient } from "@/lib/audit/client";
+import { requestAuditContext } from "@/lib/audit/context";
 
-const globalForPrisma = globalThis as unknown as {
-  prisma?: PrismaClient;
-};
-
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForPrisma.prisma = prisma;
-}
+export const prisma = createAuditedClient(base,
+  Object.values(Prisma.ModelName).map((name) => name[0].toLowerCase() + name.slice(1)), requestAuditContext);

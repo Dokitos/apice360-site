@@ -49,24 +49,24 @@ export function LpHero({
   const dict = getDictionary(locale);
 
   return (
-    <section className="relative flex min-h-screen items-start overflow-hidden" id="hero">
+    <section className="site-hero relative flex min-h-screen items-start overflow-hidden" id="hero">
       <div
         className="absolute inset-0 z-0 h-full w-full bg-cover bg-center bg-no-repeat"
         style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
       >
         {/* Escurecido de propósito para o texto branco ser legível sobre a fotografia. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/45 to-ink/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink/75 via-ink/25 to-transparent lg:via-ink/10" />
+        <div className="site-hero-shade-bottom absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/45 to-ink/20" />
+        <div className="site-hero-shade-left absolute inset-0 bg-gradient-to-r from-ink/75 via-ink/25 to-transparent lg:via-ink/10" />
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-site px-5 pb-24 pt-8 text-center md:px-20 md:pb-24 md:pt-10 lg:text-left">
-        <div className="max-w-4xl">
+        <div className="site-hero-copy max-w-4xl">
           <div className="mb-6 flex items-center justify-center md:mb-10 lg:justify-start">
             <Logo variant="light" className="h-11 drop-shadow-[0_0_10px_rgba(0,0,0,0.3)] md:h-14" />
           </div>
 
           {eyebrow ? (
-            <span className="mb-5 inline-block bg-primary px-3 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-on-primary shadow-lg shadow-primary/30 md:mb-6 md:px-3.5 md:text-[10px] md:tracking-[0.2em]">
+            <span className="site-eyebrow mb-5 inline-block bg-primary px-3 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-on-primary shadow-lg shadow-primary/30 md:mb-6 md:px-3.5 md:text-[10px] md:tracking-[0.2em]">
               {eyebrow}
             </span>
           ) : null}
@@ -89,14 +89,14 @@ export function LpHero({
                 ao tamanho de campanha a partir de md. */}
             <a
               href={ctaHref}
-              className="group flex animate-pulse-glow cursor-pointer items-center justify-center gap-3 whitespace-nowrap rounded-lg bg-primary px-6 py-3.5 text-sm font-bold uppercase text-white transition-all hover:scale-105 md:gap-3 md:px-8 md:py-4 md:text-base"
+              className="site-button group flex animate-pulse-glow cursor-pointer items-center justify-center gap-3 whitespace-nowrap rounded-lg bg-primary px-6 py-3.5 text-sm font-bold uppercase text-white transition-all hover:scale-105 md:gap-3 md:px-8 md:py-4 md:text-base"
             >
               {ctaLabel}
               <Icon name="bolt" className="transition-transform group-hover:translate-x-1" />
             </a>
 
             {trustBadges.length > 0 ? (
-              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/10 pt-4 md:gap-6 lg:justify-start">
+              <div className="site-trust-row flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/10 pt-4 md:gap-6 lg:justify-start">
                 {trustBadges.map((badge) => (
                   <div key={badge.id} className="flex items-center gap-2 font-mono text-xs text-white/85 md:text-[13px]">
                     <Icon name={badge.iconName ?? "verified"} className="text-sm text-primary" />
@@ -109,7 +109,7 @@ export function LpHero({
         </div>
       </div>
 
-      <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 md:bottom-12 md:gap-3">
+      <div className="site-hero-scroll absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 md:bottom-12 md:gap-3">
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/80 md:text-[13px] md:tracking-[0.25em]">
           {dict.lp.scrollHint}
         </span>

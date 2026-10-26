@@ -7,6 +7,7 @@ import {
   BlobStoreSuspendedError,
 } from "@vercel/blob";
 import { requireEditorOrAdmin, UnauthorizedError } from "@/lib/permissions";
+import { recordAuditEvent } from "@/lib/audit/events";
 
 const ALLOWED_TYPES = new Set(["image/png", "image/jpeg", "image/webp", "image/gif"]);
 // 4 MB e não mais: uma função serverless na Vercel recebe no máximo 4,5 MB de
@@ -98,6 +99,7 @@ export async function POST(request: NextRequest) {
       addRandomSuffix: true,
       contentType: detected.type,
     });
+    await recordAuditEvent("UPLOAD", await requireEditorOrAdmin(), "Media", blob.pathname);
     return NextResponse.json({ url: blob.url });
   } catch (error) {
     // Sem isto o motivo real perde-se e a única pista é um 500 genérico —

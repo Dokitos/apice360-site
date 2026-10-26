@@ -29,7 +29,7 @@ export function TestimonialsSection({
   const dict = getDictionary(locale);
 
   return (
-    <Reveal as="section" className="overflow-hidden bg-surface py-32">
+    <Reveal as="section" className="site-testimonials overflow-hidden bg-surface py-32">
       <div className="mx-auto max-w-site px-5 md:px-20">
         <SectionHeading title={heading ?? dict.testemunhos.heading} />
         <Carousel

@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { prisma } from "@/lib/prisma";
+import { recordAuditEvent } from "@/lib/audit/events";
 
 if (!process.env.AUTH_SECRET) {
   // Fail loudly at startup rather than depending on next-auth's own
@@ -28,10 +29,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || !user.isActive) return null;
+        if (!user || !user.isActive) {
+          await recordAuditEvent("LOGIN_FAILURE", { email });
+          return null;
+        }
 
         const isValidPassword = await bcrypt.compare(password, user.passwordHash);
-        if (!isValidPassword) return null;
+        if (!isValidPassword) {
+          await recordAuditEvent("LOGIN_FAILURE", { email });
+          return null;
+        }
 
         return {
           id: user.id,
@@ -43,6 +50,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  events: {
+    async signIn({ user }) { await recordAuditEvent("LOGIN_SUCCESS", user); },
+    async signOut(message) {
+      if ("token" in message && message.token) {
+        const token = message.token;
+        await recordAuditEvent("LOGOUT", { id: token.id as string, name: token.name, email: token.email });
+      }
+    },
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {

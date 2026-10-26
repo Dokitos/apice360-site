@@ -24,7 +24,7 @@ type PageIntroSectionProps = {
 
 export function PageIntroSection({ eyebrow, heading, body, imageUrl, items = [], cta }: PageIntroSectionProps) {
   return (
-    <Reveal as="section" className="bg-surface-container-lowest py-32">
+    <Reveal as="section" className="site-page-intro bg-surface-container-lowest py-32">
       <div className="mx-auto max-w-site px-5 text-center md:px-20">
         {eyebrow ? (
           <span className="mb-4 block font-mono text-label-mono uppercase tracking-widest text-primary">

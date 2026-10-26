@@ -39,7 +39,7 @@ export function TimelineSection({
   locale = "PT",
 }: TimelineSectionProps) {
   return (
-    <Reveal as="section" className={className ?? "bg-surface-container-high py-32"}>
+    <Reveal as="section" className={`site-timeline ${className ?? "bg-surface-container-high py-32"}`}>
       <div className="mx-auto max-w-site px-5 md:px-20">
         {/* A coluna era de 768px dentro de um contentor de 1760: sobrava meio
             ecrã de cada lado. O texto de abertura fica mais estreito à mesma,

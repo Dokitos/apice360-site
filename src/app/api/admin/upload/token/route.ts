@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { requireEditorOrAdmin, UnauthorizedError } from "@/lib/permissions";
+import { recordAuditEvent } from "@/lib/audit/events";
 
 /**
  * Emite um token para o browser enviar o ficheiro directamente para o Vercel
@@ -54,19 +55,22 @@ export async function POST(request: NextRequest) {
     const result = await handleUpload({
       body,
       request,
-      onBeforeGenerateToken: async () => {
+      onBeforeGenerateToken: async (pathname) => {
         // Corre duas vezes por upload (pedido do token e conclusão), por isso
         // a sessão é verificada aqui e não à entrada da rota.
-        await requireEditorOrAdmin();
+        const actor = await requireEditorOrAdmin();
+        await recordAuditEvent("UPLOAD_AUTHORIZED", actor, "Media", pathname);
         return {
           allowedContentTypes: ALLOWED_CONTENT_TYPES,
           maximumSizeInBytes: MAX_SIZE_BYTES,
           addRandomSuffix: true,
         };
       },
-      // Sem efeitos: o ficheiro só entra na galeria quando o formulário for
-      // gravado, para um upload abandonado não deixar lixo na página.
-      onUploadCompleted: async () => {},
+      // Completion callbacks are authenticated by the Blob SDK; no personal
+      // data is sent to storage. Attribution is in the authorization event.
+      onUploadCompleted: async ({ blob }) => {
+        await recordAuditEvent("UPLOAD", undefined, "Media", blob.pathname);
+      },
     });
     return NextResponse.json(result);
   } catch (error) {

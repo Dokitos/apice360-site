@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { getResend } from "@/lib/email/resend";
 import { ingestReceivedEmail, type ReceivedEventData } from "@/lib/email/inbound";
 import type { EmailStatus } from "@/generated/prisma/client";
+import { auditScope } from "@/lib/audit/scope";
+import { randomUUID } from "node:crypto";
 
 /**
  * Entrada dos acontecimentos do Resend.
@@ -43,6 +45,10 @@ const ORDEM: EmailStatus[] = [
 ];
 
 export async function POST(request: NextRequest) {
+  return auditScope.run({ source: "WEBHOOK", correlationId: randomUUID() }, () => handlePost(request));
+}
+
+async function handlePost(request: NextRequest) {
   const segredo = process.env.RESEND_WEBHOOK_SECRET;
   const resend = getResend();
 

@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { AuthError } from "next-auth";
 import { signIn } from "@/auth";
 import { clientIpFromHeaders, rateLimit } from "@/lib/rate-limit";
+import { recordAuditEvent } from "@/lib/audit/events";
 
 export async function loginAction(_prevState: string | undefined, formData: FormData) {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
@@ -14,6 +15,7 @@ export async function loginAction(_prevState: string | undefined, formData: Form
   const { ok: withinAccountLimit } = rateLimit(`login:${ip}:${email}`, 5, 15 * 60_000);
   const { ok: withinIpLimit } = rateLimit(`login-ip:${ip}`, 20, 15 * 60_000);
   if (!withinAccountLimit || !withinIpLimit) {
+    await recordAuditEvent("LOGIN_BLOCKED", { email });
     return "Demasiadas tentativas. Tenta novamente dentro de alguns minutos.";
   }
 

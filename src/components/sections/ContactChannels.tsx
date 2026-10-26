@@ -103,7 +103,7 @@ export function ContactChannels({ settings, locale }: { settings: Settings; loca
   if (canais.length === 0) return null;
 
   return (
-    <Reveal as="section" className="bg-surface-container-lowest pb-24">
+    <Reveal as="section" className="site-contact-channels bg-surface-container-lowest pb-24">
       <div className="mx-auto max-w-site px-5 md:px-20">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {canais.map((canal) => {

@@ -74,6 +74,30 @@ enum LeadActivityType {
   ASSIGNMENT
 }
 
+/// Histórico independente das contas e dos conteúdos, preservado após eliminações.
+model AuditLog {
+  id            String   @id @default(dbgenerated("gen_random_uuid()::text"))
+  createdAt     DateTime @default(now())
+  action        String
+  entity        String
+  entityId      String?
+  actorId       String?
+  actorName     String?
+  actorEmail    String?
+  source        String   @default("SYSTEM")
+  ipAddress     String?
+  correlationId String?
+  changedFields String[] @default([])
+  before        Json?
+  after         Json?
+  metadata      Json?
+
+  @@index([createdAt, id])
+  @@index([entity, createdAt])
+  @@index([actorId, createdAt])
+  @@index([action, createdAt])
+}
+
 model User {
   id             String           @id @default(cuid())
   name           String

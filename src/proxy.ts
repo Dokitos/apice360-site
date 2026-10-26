@@ -15,7 +15,7 @@ export const proxy = auth((req) => {
   }
 
   if (
-    (pathname.startsWith("/admin/users") || pathname.startsWith("/admin/groups")) &&
+    (pathname.startsWith("/admin/users") || pathname.startsWith("/admin/groups") || pathname.startsWith("/admin/logs")) &&
     req.auth?.user.role !== "ADMIN"
   ) {
     return NextResponse.redirect(new URL("/admin", req.nextUrl.origin));

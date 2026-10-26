@@ -32,7 +32,7 @@ function renderHeadingWithEmphasis(heading: string) {
 
 export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trustBadges = [] }: HeroSectionProps) {
   return (
-    <section className="relative flex min-h-screen items-start overflow-hidden" id="hero">
+    <section className="site-hero relative flex min-h-screen items-start overflow-hidden" id="hero">
       <div
         // bg-fixed (parallax) is desktop-only: mobile Safari/Chrome render
         // fixed-attachment backgrounds incorrectly (clipped/blurry), so it
@@ -41,13 +41,13 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
         style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : undefined}
       >
         {/* Kept dark for legibility over the photo, independent of the site's light theme. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/45 to-ink/20" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink/75 via-ink/25 to-transparent lg:via-ink/10" />
+        <div className="site-hero-shade-bottom absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/45 to-ink/20" />
+        <div className="site-hero-shade-left absolute inset-0 bg-gradient-to-r from-ink/75 via-ink/25 to-transparent lg:via-ink/10" />
       </div>
       <div className="relative z-10 mx-auto w-full max-w-site px-5 pb-24 pt-10 text-center md:px-20 md:pb-24 md:pt-12 lg:text-left">
-        <div className="max-w-4xl lg:mx-0 mx-auto">
+        <div className="site-hero-copy max-w-4xl lg:mx-0 mx-auto">
           {eyebrow ? (
-            <span className="mb-5 inline-block bg-gradient-to-r from-primary to-primary-deep px-3 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-white shadow-[0_4px_20px_rgba(255,106,19,0.35)] md:mb-6 md:px-3.5 md:text-[10px] md:tracking-[0.2em]">
+            <span className="site-eyebrow mb-5 inline-block bg-gradient-to-r from-primary to-primary-deep px-3 py-1 font-mono text-[9px] uppercase tracking-[0.08em] text-white shadow-[0_4px_20px_rgba(255,106,19,0.35)] md:mb-6 md:px-3.5 md:text-[10px] md:tracking-[0.2em]">
               {eyebrow}
             </span>
           ) : null}
@@ -74,7 +74,7 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
                 {cta.label}
               </Button>
               {trustBadges.length > 0 ? (
-                <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/10 pt-4 md:gap-6 lg:justify-start">
+                <div className="site-trust-row flex flex-wrap items-center justify-center gap-x-5 gap-y-2 border-t border-white/10 pt-4 md:gap-6 lg:justify-start">
                   {trustBadges.map((badge) => (
                     <div key={badge.id} className="flex items-center gap-2 font-mono text-xs text-white/85 md:text-[13px]">
                       <Icon name={badge.iconName ?? "verified"} className="text-sm text-primary" />
@@ -87,7 +87,7 @@ export function HeroSection({ eyebrow, heading, subheading, imageUrl, cta, trust
           ) : null}
         </div>
       </div>
-      <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 md:bottom-12 md:gap-3">
+      <div className="site-hero-scroll absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 md:bottom-12 md:gap-3">
         <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/80 md:text-[13px] md:tracking-[0.25em]">
           Descubra o LSF
         </span>

@@ -23,7 +23,7 @@ export function PortfolioGrid({ heading, projects, variant = "featured" }: Portf
   if (projects.length === 0) return null;
 
   return (
-    <Reveal as="section" className="py-16">
+    <Reveal as="section" className={`site-portfolio site-portfolio-${variant} py-16`}>
       <div className="mx-auto max-w-site px-5 md:px-20">
         {heading ? <h2 className="mb-10 font-heading text-headline-md">{heading}</h2> : null}
         <div

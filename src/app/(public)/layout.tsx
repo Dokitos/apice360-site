@@ -1,3 +1,4 @@
+import "../public-site.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
@@ -29,7 +30,7 @@ export default async function PublicLayout({ children }: { children: React.React
   }
 
   return (
-    <>
+    <div className="public-site flex min-h-screen flex-col">
       <OrganizationSchema settings={settings} />
       <SmoothScroll />
       <Header />
@@ -39,6 +40,6 @@ export default async function PublicLayout({ children }: { children: React.React
       <WhatsAppFloatingButton />
       <CookieConsent locale={locale} />
       <Analytics gaMeasurementId={settings?.gaMeasurementId} metaPixelId={settings?.metaPixelId} />
-    </>
+    </div>
   );
 }

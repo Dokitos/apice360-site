@@ -62,7 +62,7 @@ export function Button({
   const classes = cn(
     buttonStyles({ variant, size }),
     pulse && "animate-pulse-glow",
-    "group",
+    "group site-button",
     className,
   );
 

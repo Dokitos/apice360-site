@@ -31,7 +31,7 @@ export function ServiceDetailSection({
   className,
 }: ServiceDetailSectionProps) {
   return (
-    <Reveal as="section" id={id} className={className ?? "bg-surface py-32"}>
+    <Reveal as="section" id={id} className={`site-service-detail ${className ?? "bg-surface py-32"}`}>
       <div className="mx-auto max-w-site px-5 md:px-20">
         <div
           className={`flex flex-col items-center gap-16 lg:flex-row ${reverse ? "lg:flex-row-reverse" : ""}`}

@@ -1,0 +1,34 @@
+.page { min-height: 100svh; display: flex; flex-direction: column; padding: 36px clamp(24px, 5vw, 80px) 24px; background: #faf9f6; color: #20272b; font-family: var(--font-inter), Arial, sans-serif; }
+.header, .footer { display: flex; width: 100%; max-width: 1360px; margin-inline: auto; align-items: center; justify-content: space-between; gap: 20px; }
+.header { padding-bottom: 28px; border-bottom: 1px solid #e7e6e0; }
+.status { display: inline-flex; align-items: center; gap: 9px; border: 1px solid #e7ddd2; background: #fff7ef; padding: 8px 14px; border-radius: 100px; color: #84502d; font-size: 11px; letter-spacing: .06em; }
+.status > span { width: 6px; height: 6px; border-radius: 50%; background: #ff6a13; }
+.layout { display: grid; width: 100%; max-width: 1360px; flex: 1; grid-template-columns: 1fr 1.12fr; align-items: center; gap: clamp(32px, 5vw, 80px); margin: 56px auto; }
+.eyebrow { display: block; font-size: 10px; font-weight: 600; letter-spacing: .16em; color: #777e77; }
+.copy h1 { margin-top: 24px; max-width: 540px; font-size: clamp(36px, 4.2vw, 64px); font-weight: 600; line-height: 1.08; letter-spacing: -.055em; text-wrap: balance; }
+.rule { display: block; width: 44px; height: 3px; margin: 28px 0; background: #ff6a13; }
+.body { max-width: 400px; font-size: 16px; line-height: 1.8; color: #697169; }
+.contacts { margin-top: 40px; padding-top: 28px; border-top: 1px solid #e7e6e0; }
+.contacts > p { margin-bottom: 16px; font-size: 13px; color: #697169; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.actions a { display: inline-flex; min-height: 46px; align-items: center; justify-content: center; gap: 10px; padding: 12px 18px; border-radius: 6px; font-size: 13px; font-weight: 550; transition: background-color .2s, border-color .2s; }
+.primary { background: #ff6a13; color: #251b12; border: 1px solid #ff6a13; }
+.primary:hover { background: #ef5800; border-color: #ef5800; }
+.secondary { border: 1px solid #d8dcd3; background: transparent; color: #3e4940; }
+.secondary:hover { border-color: #9ba897; background: #f1f2ed; }
+.actions a:focus-visible { outline: 2px solid #a74711; outline-offset: 4px; }
+.scene { position: relative; overflow: hidden; min-width: 0; padding: 52px 12px 24px; border: 1px solid #e3e6dd; border-radius: 20px; background: #f3f4ee; }
+.sceneGrid { position: absolute; inset: 0; opacity: .6; background-image: linear-gradient(#dfe4d940 1px, transparent 1px), linear-gradient(90deg, #dfe4d940 1px, transparent 1px); background-size: 28px 28px; mask-image: radial-gradient(ellipse at center, black, transparent 85%); }
+.drawingLabel { position: absolute; top: 24px; left: 24px; font-size: 9px; letter-spacing: .14em; color: #85907f; }
+.drawing { position: relative; width: 100%; height: auto; max-height: 500px; }
+.beams path { stroke-dasharray: 1; stroke-dashoffset: 0; animation: draw 12s ease-in-out infinite both; animation-delay: var(--phase, 0s); }
+.nodes { animation: nodes 12s ease-in-out infinite; }
+.sceneCaption { position: relative; display: flex; align-items: center; gap: 10px; padding: 0 12px; font-size: 9px; letter-spacing: .1em; color: #75816e; }
+.sceneCaption > span:first-child { width: 18px; height: 2px; background: #ff6a13; }
+.sceneCaption > span:last-child { margin-left: auto; color: #969e90; }
+.footer { border-top: 1px solid #e7e6e0; padding-top: 20px; color: #858c81; font-size: 10px; letter-spacing: .04em; }
+@keyframes draw { 0%, 8% { stroke-dashoffset: 1; opacity: 0; } 15% { opacity: 1; } 36%, 83% { stroke-dashoffset: 0; opacity: 1; } 97%, 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes nodes { 0%, 35%, 100% { opacity: 0; } 48%, 84% { opacity: 1; } }
+@media (max-width: 850px) { .page { padding-top: 24px; } .layout { grid-template-columns: 1fr; gap: 40px; margin-block: 44px; } .copy h1 { max-width: 650px; } .scene { width: 100%; max-width: 600px; justify-self: center; } .contacts { max-width: 500px; } }
+@media (max-width: 479px) { .page { padding-inline: 22px; } .header img { height: 44px; } .copy h1 { font-size: 39px; } .contacts { margin-top: 28px; } .actions a { padding-inline: 14px; font-size: 12px; } .scene { padding-top: 42px; border-radius: 12px; } .drawingLabel { left: 18px; font-size: 8px; } .sceneCaption { font-size: 8px; gap: 6px; } }
+@media (prefers-reduced-motion: reduce) { .beams path, .nodes { animation: none; opacity: 1; stroke-dashoffset: 0; } .actions a { transition: none; } }

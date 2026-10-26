@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import styles from "./LsfSystemsChapter.module.css";
 import { LsfChapter } from "@/components/lsf/LsfChapter";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
@@ -38,9 +39,57 @@ export function LsfSystemsChapter({ id, eyebrow, heading, subheading, position }
   const [pagina, setPagina] = useState(0);
   const familia = pagina === 0 ? null : LSF_FAMILIES[pagina - 1];
 
+  const bookRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const wheelState = useRef({ distance: 0, lastTurn: -Infinity, lastEvent: -Infinity });
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  const changePage = useCallback((next: number) => {
+    const chapter = document.getElementById(id);
+    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
+    if (next >= paginas.length) {
+      let following = chapter?.nextElementSibling;
+      while (following && !following.matches(".lsf-chapter")) following = following.nextElementSibling;
+      (following ?? chapter?.parentElement?.nextElementSibling)?.scrollIntoView({ behavior, block: "start" });
+      return;
+    }
+    if (next < 0) return;
+    setPagina(next);
+    chapter?.scrollIntoView({ behavior, block: "start" });
+  }, [id, paginas.length]);
+
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0, behavior: "instant" });
+  }, [pagina]);
+
+  useEffect(() => {
+    const book = bookRef.current;
+    if (!book) return;
+    const gesture = wheelState.current;
+    function onWheel(event: WheelEvent) {
+      // Only horizontal gestures turn pages. Vertical scrolling is never intercepted.
+      if (event.ctrlKey || Math.abs(event.deltaX) <= Math.abs(event.deltaY) * 1.25) return;
+      event.preventDefault();
+      const now = performance.now();
+      if (now - gesture.lastEvent > 180) gesture.distance = 0;
+      gesture.lastEvent = now;
+      if (now - gesture.lastTurn < 600) return;
+      const delta = event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? book!.clientWidth : 1);
+      if (Math.sign(gesture.distance) !== Math.sign(delta)) gesture.distance = 0;
+      gesture.distance += delta;
+      if (Math.abs(gesture.distance) >= 70) {
+        changePage(pagina + Math.sign(gesture.distance));
+        gesture.distance = 0;
+        gesture.lastTurn = now;
+      }
+    }
+    book.addEventListener("wheel", onWheel, { passive: false });
+    return () => book.removeEventListener("wheel", onWheel);
+  }, [pagina, changePage]);
+
   return (
-    <LsfChapter id={id} tone="muted" height="auto">
-      <div data-reveal className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <LsfChapter id={id} tone="muted" height="auto" className={styles.chapter}>
+      <div data-reveal className={`${styles.heading} mb-8 flex flex-wrap items-end justify-between gap-4`}>
         <div>
           {eyebrow ? (
             <span className="mb-3 block font-mono text-label-mono uppercase tracking-widest text-primary">
@@ -56,12 +105,12 @@ export function LsfSystemsChapter({ id, eyebrow, heading, subheading, position }
       </div>
 
       {/* Separadores do livro: a navegação principal em ecrã largo. */}
-      <div data-reveal className="mb-6 flex flex-wrap gap-2">
-        <Separador ativo={pagina === 0} onClick={() => setPagina(0)} icone="menu_book">
+      <div data-reveal className={`${styles.tabs} mb-6 flex flex-wrap gap-2`}>
+        <Separador ativo={pagina === 0} onClick={() => changePage(0)} icone="menu_book">
           O que é
         </Separador>
         {LSF_FAMILIES.map((f, i) => (
-          <Separador key={f.key} ativo={pagina === i + 1} onClick={() => setPagina(i + 1)}>
+          <Separador key={f.key} ativo={pagina === i + 1} onClick={() => changePage(i + 1)}>
             {f.title.replace(" em LSF", "").replace(" — 200 mm", "")}
           </Separador>
         ))}
@@ -69,36 +118,62 @@ export function LsfSystemsChapter({ id, eyebrow, heading, subheading, position }
 
       <div
         data-reveal
-        className="overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface shadow-[0_20px_60px_rgba(0,0,0,0.06)]"
+        ref={bookRef}
+        role="region"
+        aria-label="Livro das soluções construtivas em LSF"
+        onKeyDown={(event) => {
+          if (event.altKey || event.ctrlKey || event.metaKey || event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement || event.target instanceof HTMLTextAreaElement) return;
+          if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
+            event.preventDefault();
+            changePage(pagina + (event.key === "ArrowRight" ? 1 : -1));
+          }
+        }}
+        onTouchStart={(event) => {
+          if ((event.target as Element).closest("button, a, input, select, textarea")) return;
+          const touch = event.touches[0];
+          touchStart.current = event.touches.length === 1 ? { x: touch.clientX, y: touch.clientY } : null;
+        }}
+        onTouchCancel={() => { touchStart.current = null; }}
+        onTouchEnd={(event) => {
+          const start = touchStart.current;
+          touchStart.current = null;
+          if (!start) return;
+          const touch = event.changedTouches[0];
+          const dx = start.x - touch.clientX;
+          const dy = start.y - touch.clientY;
+          if (Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.7) changePage(pagina + Math.sign(dx));
+        }}
+        className={`${styles.book} overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface shadow-[0_20px_60px_rgba(0,0,0,0.06)]`}
+
       >
-        <div className="p-6 md:p-10">
+        <div ref={contentRef} tabIndex={0} aria-label="Conteúdo da página do livro" className={`${styles.content} p-6 md:p-10`}>
           {familia ? <PaginaDaFamilia familia={familia} /> : <PaginaDeAbertura />}
         </div>
 
-        <div className="flex items-center justify-between gap-4 border-t border-outline-variant/20 bg-surface-container-lowest px-6 py-4">
+        <div className={`${styles.controls} flex items-center justify-between gap-4 border-t border-outline-variant/20 bg-surface-container-lowest px-6 py-4`}>
           <button
             type="button"
-            onClick={() => setPagina((p) => Math.max(0, p - 1))}
+            onClick={() => changePage(pagina - 1)}
             disabled={pagina === 0}
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
           >
             <Icon name="arrow_back" className="text-base" />
             Anterior
           </button>
-          <span className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
+          <span aria-live="polite" aria-atomic="true" className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
             Página {pagina + 1} de {paginas.length}
           </span>
           <button
             type="button"
-            onClick={() => setPagina((p) => Math.min(paginas.length - 1, p + 1))}
-            disabled={pagina === paginas.length - 1}
+            onClick={() => changePage(pagina + 1)}
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
           >
-            Seguinte
+            {pagina === paginas.length - 1 ? "Continuar" : "Seguinte"}
             <Icon name="arrow_forward" className="text-base" />
           </button>
         </div>
       </div>
+      <p className={styles.hint}>Deslize para os lados para explorar · Faça scroll para continuar a leitura</p>
     </LsfChapter>
   );
 }

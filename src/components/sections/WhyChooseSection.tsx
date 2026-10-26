@@ -35,7 +35,7 @@ export function WhyChooseSection({
   className,
 }: WhyChooseSectionProps) {
   return (
-    <Reveal as="section" className={className ?? "bg-surface-container-lowest py-32"}>
+    <Reveal as="section" className={`site-why-choose ${className ?? "bg-surface-container-lowest py-32"}`}>
       <div className="mx-auto max-w-site px-5 md:px-20">
         {/* Sem imagem não há duas colunas para dividir: o texto ocupava
             metade da largura e deixava a outra metade em branco. */}

@@ -100,6 +100,7 @@ const navGroups: NavGroup[] = [
       { href: "/admin/site-settings", label: "Definições do Site", icon: "settings", resource: "site_settings" },
       { href: "/admin/users", label: "Utilizadores", icon: "manage_accounts", adminOnly: true },
       { href: "/admin/groups", label: "Grupos", icon: "shield_person", adminOnly: true },
+      { href: "/admin/logs", label: "Registo de atividade", icon: "fact_check", adminOnly: true },
     ],
   },
 ];

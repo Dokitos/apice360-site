@@ -31,7 +31,7 @@ const icons: Record<string, LucideIcon> = {
   gpp_bad: ShieldX, attach_file: Paperclip, description: FileText,
   drag_indicator: GripVertical, forward_to_inbox: Send, refresh: RefreshCw,
   visibility: Eye, movie: Video, notifications: Bell, folder: Folder,
-  checklist: ClipboardList, help: CircleHelp, fiber_new: Sparkles, verified: BadgeCheck,
+  checklist: ClipboardList, fact_check: ClipboardList, help: CircleHelp, fiber_new: Sparkles, verified: BadgeCheck,
   date_range: CalendarDays, calendar_month: CalendarDays, alternate_email: AtSign,
   inbox: Inbox, send: Send, archive: Archive, mark_email_unread: MailOpen,
   star: Star, star_border: Star, sync_alt: ArrowLeftRight, format_bold: Bold,
