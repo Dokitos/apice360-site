@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getCta, getPageSections, getPageSeo, getSiteSettings } from "@/lib/content";
 import { getLocale } from "@/lib/locale";
+import { getDictionary } from "@/lib/dictionary";
 import { KNOWN_PAGE_SECTION_KEYS } from "@/lib/known-page-sections";
 import { LsfDeck, type DeckChapter } from "@/components/lsf/LsfDeck";
 import {
@@ -37,7 +38,11 @@ export async function generateMetadata(): Promise<Metadata> {
 /** Ordem em que os capítulos conhecidos aparecem, independente do `order` da BD. */
 const CHAPTER_ORDER = KNOWN_PAGE_SECTION_KEYS.LSF;
 
-/** Textos de origem do capítulo das soluções, enquanto o painel não tiver os seus. */
+/**
+ * Linha sintética do capítulo das soluções, para ele existir mesmo sem
+ * registo no painel. Os textos vêm dos dicionários, traduzidos; aqui só fica
+ * a forma que o resto da página espera.
+ */
 const SECCAO_DE_SISTEMAS = {
   key: "systems",
   layout: "standard",
@@ -45,10 +50,9 @@ const SECCAO_DE_SISTEMAS = {
   imageUrl: null,
   iconName: null,
   ctaKey: null,
-  eyebrow: "Soluções construtivas",
-  heading: "Como se constrói, camada a camada.",
-  subheading:
-    "As soluções que usamos em paredes, pavimentos e coberturas, com a espessura real de cada camada. Escolha um separador para ver o corte de cada uma.",
+  eyebrow: null,
+  heading: null,
+  subheading: null,
   body: null,
   ctaLabel: null,
   items: [],
@@ -56,6 +60,7 @@ const SECCAO_DE_SISTEMAS = {
 
 export default async function LsfPage() {
   const locale = await getLocale();
+  const dict = getDictionary(locale);
   const [todasAsSeccoes, settings, cta] = await Promise.all([
     getPageSections("LSF", locale),
     getSiteSettings(locale),
@@ -114,9 +119,10 @@ export default async function LsfPage() {
               <LsfSystemsChapter
                 key={section.key}
                 id={`lsf-${section.key}`}
-                eyebrow={section.eyebrow}
-                heading={section.heading ?? SECCAO_DE_SISTEMAS.heading!}
-                subheading={section.subheading}
+                locale={locale}
+                eyebrow={section.eyebrow ?? dict.lsfPage.systemsEyebrow}
+                heading={section.heading ?? dict.lsfPage.systemsHeading}
+                subheading={section.subheading ?? dict.lsfPage.systemsSubheading}
                 position={position}
               />
             );

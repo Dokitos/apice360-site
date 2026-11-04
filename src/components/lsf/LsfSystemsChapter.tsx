@@ -1,22 +1,24 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import styles from "./LsfSystemsChapter.module.css";
+import { useState } from "react";
 import { LsfChapter } from "@/components/lsf/LsfChapter";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
+import { getDictionary } from "@/lib/dictionary";
+import type { SiteLocale } from "@/lib/locale";
 import {
   LSF_ADVANTAGES,
   LSF_FAMILIES,
   LSF_HIGHLIGHTS,
-  LSF_STRUCTURE_IMAGE,
   LSF_WHAT_IS,
+  texto,
   type System,
   type SystemFamily,
 } from "@/lib/lsf-systems";
 
 type Props = {
   id: string;
+  locale: SiteLocale;
   eyebrow: string | null;
   heading: string;
   subheading: string | null;
@@ -28,63 +30,20 @@ type Props = {
  * as vantagens, e depois uma página por família — paredes, pavimentos,
  * cobertura plana e cobertura inclinada.
  *
- * Cada solução é desenhada camada a camada, com a espessura a mandar na
- * proporção do desenho, porque é isso que torna a informação legível: uma
- * lista de oito linhas com milímetros diz pouco a quem nunca viu uma parede
- * em corte. A escala é comprimida pela raiz quadrada — a olho, 150 mm ao
- * lado de 1 mm numa escala fiel faria a camada fina desaparecer.
+ * Cada solução mostra o corte desenhado pela empresa, com a numeração da
+ * imagem a corresponder à da lista ao lado. Os nomes das camadas vêm
+ * traduzidos de src/lib/lsf-systems.ts; o texto de interface, dos
+ * dicionários, como no resto do site.
  */
-export function LsfSystemsChapter({ id, eyebrow, heading, subheading, position }: Props) {
+export function LsfSystemsChapter({ id, locale, eyebrow, heading, subheading, position }: Props) {
+  const t = getDictionary(locale).lsfPage;
   const paginas = ["resumo", ...LSF_FAMILIES.map((f) => f.key)];
   const [pagina, setPagina] = useState(0);
   const familia = pagina === 0 ? null : LSF_FAMILIES[pagina - 1];
 
-  const bookRef = useRef<HTMLDivElement>(null);
-  const wheelState = useRef({ distance: 0, lastTurn: -Infinity, lastEvent: -Infinity });
-  const touchStart = useRef<{ x: number; y: number } | null>(null);
-
-  const changePage = useCallback((next: number) => {
-    const chapter = document.getElementById(id);
-    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-    if (next >= paginas.length) {
-      let following = chapter?.nextElementSibling;
-      while (following && !following.matches(".lsf-chapter")) following = following.nextElementSibling;
-      (following ?? chapter?.parentElement?.nextElementSibling)?.scrollIntoView({ behavior, block: "start" });
-      return;
-    }
-    if (next < 0) return;
-    setPagina(next);
-    chapter?.scrollIntoView({ behavior, block: "start" });
-  }, [id, paginas.length]);
-
-  useEffect(() => {
-    const book = bookRef.current;
-    if (!book) return;
-    const gesture = wheelState.current;
-    function onWheel(event: WheelEvent) {
-      // Only horizontal gestures turn pages. Vertical scrolling is never intercepted.
-      if (event.ctrlKey || Math.abs(event.deltaX) <= Math.abs(event.deltaY) * 1.25) return;
-      event.preventDefault();
-      const now = performance.now();
-      if (now - gesture.lastEvent > 180) gesture.distance = 0;
-      gesture.lastEvent = now;
-      if (now - gesture.lastTurn < 600) return;
-      const delta = event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? book!.clientWidth : 1);
-      if (Math.sign(gesture.distance) !== Math.sign(delta)) gesture.distance = 0;
-      gesture.distance += delta;
-      if (Math.abs(gesture.distance) >= 70) {
-        changePage(pagina + Math.sign(gesture.distance));
-        gesture.distance = 0;
-        gesture.lastTurn = now;
-      }
-    }
-    book.addEventListener("wheel", onWheel, { passive: false });
-    return () => book.removeEventListener("wheel", onWheel);
-  }, [pagina, changePage]);
-
   return (
-    <LsfChapter id={id} tone="muted" height="auto" className={styles.chapter}>
-      <div data-reveal className={`${styles.heading} mb-8 flex flex-wrap items-end justify-between gap-4`}>
+    <LsfChapter id={id} tone="muted" height="auto">
+      <div data-reveal className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
           {eyebrow ? (
             <span className="mb-3 block font-mono text-label-mono uppercase tracking-widest text-primary">
@@ -100,75 +59,53 @@ export function LsfSystemsChapter({ id, eyebrow, heading, subheading, position }
       </div>
 
       {/* Separadores do livro: a navegação principal em ecrã largo. */}
-      <div data-reveal className={`${styles.tabs} mb-6 flex flex-wrap gap-2`}>
-        <Separador ativo={pagina === 0} onClick={() => changePage(0)} icone="menu_book">
-          O que é
+      <div data-reveal className="mb-6 flex flex-wrap gap-2">
+        <Separador ativo={pagina === 0} onClick={() => setPagina(0)} icone="menu_book">
+          {t.systemsWhatIsTab}
         </Separador>
         {LSF_FAMILIES.map((f, i) => (
-          <Separador key={f.key} ativo={pagina === i + 1} onClick={() => changePage(i + 1)}>
-            {f.title.replace(" em LSF", "").replace(" — 200 mm", "")}
+          <Separador key={f.key} ativo={pagina === i + 1} onClick={() => setPagina(i + 1)}>
+            {texto(f.tab, locale)}
           </Separador>
         ))}
       </div>
 
       <div
         data-reveal
-        ref={bookRef}
-        role="region"
-        aria-label="Livro das soluções construtivas em LSF"
-        onKeyDown={(event) => {
-          if (event.altKey || event.ctrlKey || event.metaKey || event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement || event.target instanceof HTMLTextAreaElement) return;
-          if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
-            event.preventDefault();
-            changePage(pagina + (event.key === "ArrowRight" ? 1 : -1));
-          }
-        }}
-        onTouchStart={(event) => {
-          if ((event.target as Element).closest("button, a, input, select, textarea")) return;
-          const touch = event.touches[0];
-          touchStart.current = event.touches.length === 1 ? { x: touch.clientX, y: touch.clientY } : null;
-        }}
-        onTouchCancel={() => { touchStart.current = null; }}
-        onTouchEnd={(event) => {
-          const start = touchStart.current;
-          touchStart.current = null;
-          if (!start) return;
-          const touch = event.changedTouches[0];
-          const dx = start.x - touch.clientX;
-          const dy = start.y - touch.clientY;
-          if (Math.abs(dx) > 65 && Math.abs(dx) > Math.abs(dy) * 1.7) changePage(pagina + Math.sign(dx));
-        }}
-        className={`${styles.book} overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface shadow-[0_20px_60px_rgba(0,0,0,0.06)]`}
-
+        className="overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface shadow-[0_20px_60px_rgba(0,0,0,0.06)]"
       >
-        <div tabIndex={0} aria-label="Conteúdo da página do livro" className={`${styles.content} p-6 md:p-10`}>
-          {familia ? <PaginaDaFamilia familia={familia} /> : <PaginaDeAbertura />}
+        <div className="p-6 md:p-10">
+          {familia ? (
+            <PaginaDaFamilia familia={familia} locale={locale} legenda={t.systemsSectionOf} />
+          ) : (
+            <PaginaDeAbertura locale={locale} />
+          )}
         </div>
 
-        <div className={`${styles.controls} flex items-center justify-between gap-4 border-t border-outline-variant/20 bg-surface-container-lowest px-6 py-4`}>
+        <div className="flex items-center justify-between gap-4 border-t border-outline-variant/20 bg-surface-container-lowest px-6 py-4">
           <button
             type="button"
-            onClick={() => changePage(pagina - 1)}
+            onClick={() => setPagina((p) => Math.max(0, p - 1))}
             disabled={pagina === 0}
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
           >
             <Icon name="arrow_back" className="text-base" />
-            Anterior
+            {t.systemsPrevious}
           </button>
-          <span aria-live="polite" aria-atomic="true" className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
-            Página {pagina + 1} de {paginas.length}
+          <span className="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
+            {t.systemsPageOf(pagina + 1, paginas.length)}
           </span>
           <button
             type="button"
-            onClick={() => changePage(pagina + 1)}
+            onClick={() => setPagina((p) => Math.min(paginas.length - 1, p + 1))}
+            disabled={pagina === paginas.length - 1}
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-bold uppercase tracking-wide text-on-surface-variant transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-30"
           >
-            {pagina === paginas.length - 1 ? "Continuar" : "Seguinte"}
+            {t.systemsNext}
             <Icon name="arrow_forward" className="text-base" />
           </button>
         </div>
       </div>
-      <p className={styles.hint}>Deslize para os lados para explorar · Faça scroll para continuar a leitura</p>
     </LsfChapter>
   );
 }
@@ -202,38 +139,33 @@ function Separador({
   );
 }
 
-function PaginaDeAbertura() {
+function PaginaDeAbertura({ locale }: { locale: SiteLocale }) {
+  const t = getDictionary(locale).lsfPage;
+
   return (
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-2">
       <div>
-        <h3 className="mb-4 font-heading text-headline-md">O que é o LSF?</h3>
-        <p className="mb-6 leading-relaxed text-on-surface-variant">{LSF_WHAT_IS}</p>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={LSF_STRUCTURE_IMAGE}
-          srcSet={`${LSF_STRUCTURE_IMAGE} 1x, ${emDobro(LSF_STRUCTURE_IMAGE)} 2x`}
-          alt="Estrutura em Light Steel Frame de uma moradia de dois pisos"
-          className="mb-8 w-full rounded-lg border border-outline-variant/20"
-        />
+        <h3 className="mb-4 font-heading text-headline-md">{t.systemsWhatIsHeading}</h3>
+        <p className="mb-8 leading-relaxed text-on-surface-variant">{texto(LSF_WHAT_IS, locale)}</p>
         <div className="flex flex-wrap gap-3">
           {LSF_HIGHLIGHTS.map((destaque) => (
             <span
-              key={destaque.label}
+              key={destaque.icon}
               className="flex items-center gap-2 rounded-full bg-primary/5 px-4 py-2 text-sm text-on-surface"
             >
               <Icon name={destaque.icon} className="text-base text-primary" />
-              {destaque.label}
+              {texto(destaque.label, locale)}
             </span>
           ))}
         </div>
       </div>
       <div>
-        <h3 className="mb-4 font-heading text-headline-md">Principais vantagens</h3>
+        <h3 className="mb-4 font-heading text-headline-md">{t.systemsAdvantages}</h3>
         <ul className="space-y-3">
           {LSF_ADVANTAGES.map((vantagem) => (
-            <li key={vantagem} className="flex items-start gap-3">
+            <li key={vantagem.PT} className="flex items-start gap-3">
               <Icon name="check_circle" className="mt-0.5 shrink-0 text-primary" />
-              <span>{vantagem}</span>
+              <span>{texto(vantagem, locale)}</span>
             </li>
           ))}
         </ul>
@@ -242,30 +174,54 @@ function PaginaDeAbertura() {
   );
 }
 
-function PaginaDaFamilia({ familia }: { familia: SystemFamily }) {
+function PaginaDaFamilia({
+  familia,
+  locale,
+  legenda,
+}: {
+  familia: SystemFamily;
+  locale: SiteLocale;
+  legenda: (title: string) => string;
+}) {
   return (
     <div>
       <div className="mb-8">
-        <h3 className="font-heading text-headline-md">{familia.title}</h3>
-        <p className="mt-1 text-sm uppercase tracking-wide text-on-surface-variant">{familia.subtitle}</p>
+        <h3 className="font-heading text-headline-md">{texto(familia.title, locale)}</h3>
+        <p className="mt-1 text-sm uppercase tracking-wide text-on-surface-variant">
+          {texto(familia.subtitle, locale)}
+        </p>
       </div>
       {/* Uma coluna por solução: com duas soluções numa grelha de quatro
           sobrava meia página em branco à direita. */}
       <div
         className={cn(
           "grid grid-cols-1 gap-6 md:grid-cols-2",
-          familia.systems.length >= 4 ? "xl:grid-cols-4" : familia.systems.length === 3 ? "xl:grid-cols-3" : "xl:max-w-3xl",
+          familia.systems.length >= 4
+            ? "xl:grid-cols-4"
+            : familia.systems.length === 3
+              ? "xl:grid-cols-3"
+              : "xl:max-w-3xl",
         )}
       >
         {familia.systems.map((sistema) => (
-          <CartaoDoSistema key={sistema.title} sistema={sistema} />
+          <CartaoDoSistema key={sistema.image} sistema={sistema} locale={locale} legenda={legenda} />
         ))}
       </div>
     </div>
   );
 }
 
-function CartaoDoSistema({ sistema }: { sistema: System }) {
+function CartaoDoSistema({
+  sistema,
+  locale,
+  legenda,
+}: {
+  sistema: System;
+  locale: SiteLocale;
+  legenda: (title: string) => string;
+}) {
+  const titulo = texto(sistema.title, locale);
+
   return (
     <article className="flex flex-col overflow-hidden rounded-xl border border-outline-variant/30 bg-surface-container-lowest">
       <header className="border-b border-outline-variant/20 bg-surface p-4">
@@ -275,37 +231,38 @@ function CartaoDoSistema({ sistema }: { sistema: System }) {
               {sistema.code}
             </span>
           ) : null}
-          <h4 className="font-heading text-base font-bold leading-tight">{sistema.title}</h4>
+          <h4 className="font-heading text-base font-bold leading-tight">{titulo}</h4>
         </div>
         {sistema.subtitle ? (
           <p className="mt-1 font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">
-            {sistema.subtitle}
+            {texto(sistema.subtitle, locale)}
           </p>
         ) : null}
       </header>
 
       <div className="p-4">
         {/* O corte da solução, recortado do infográfico da empresa. Os números
-            desenhados na imagem são os mesmos da lista por baixo.
-            eslint-disable-next-line @next/next/no-img-element */}
+            desenhados na imagem são os mesmos da lista por baixo. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={sistema.image}
           srcSet={`${sistema.image} 1x, ${emDobro(sistema.image)} 2x`}
-          alt={`Corte de ${sistema.title.toLowerCase()}, camada a camada`}
+          alt={legenda(titulo)}
           loading="lazy"
           className="w-full rounded-lg border border-outline-variant/20 bg-white"
         />
 
         <ol className="mt-4 space-y-1.5">
           {sistema.layers.map((camada, i) => (
-            <li key={camada.name} className="flex items-baseline gap-2 text-xs">
+            <li key={camada.name.PT} className="flex items-baseline gap-2 text-xs">
               <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-primary font-mono text-[9px] font-bold text-on-primary">
                 {i + 1}
               </span>
-              <span className="flex-1 leading-snug">{camada.name}</span>
+              <span className="flex-1 leading-snug">{texto(camada.name, locale)}</span>
               {camada.thickness ? (
-                <span className="shrink-0 font-mono text-[10px] text-on-surface-variant">{camada.thickness}</span>
+                <span className="shrink-0 font-mono text-[10px] text-on-surface-variant">
+                  {camada.thickness}
+                </span>
               ) : null}
             </li>
           ))}
@@ -315,7 +272,7 @@ function CartaoDoSistema({ sistema }: { sistema: System }) {
       {sistema.bestFor ? (
         <footer className="mt-auto border-t border-outline-variant/20 bg-primary/5 p-3 text-center">
           <p className="font-mono text-[10px] font-bold uppercase leading-snug tracking-wide text-primary">
-            {sistema.bestFor}
+            {texto(sistema.bestFor, locale)}
           </p>
         </footer>
       ) : null}
@@ -326,10 +283,9 @@ function CartaoDoSistema({ sistema }: { sistema: System }) {
 /**
  * O mesmo recorte ao dobro do tamanho, para ecrãs de alta densidade.
  *
- * Não tem mais detalhe — o infográfico de origem tem 1024px de largura e o
- * detalhe não existe no ficheiro. O que evita é a ampliação do browser, que
- * é bicúbica e sai visivelmente mais lavada do que a reamostragem com que
- * estes ficheiros foram feitos.
+ * Não tem mais detalhe do que o infográfico de origem; o que evita é a
+ * ampliação do browser, que é bicúbica e sai visivelmente mais lavada do que
+ * a reamostragem com que estes ficheiros foram feitos.
  */
 function emDobro(caminho: string): string {
   return caminho.replace(/\.webp$/, "@2x.webp");
